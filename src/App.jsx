@@ -5,6 +5,8 @@ import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HeaderButtons from './components/headerButtons'
 import Header from './components/header'
+import Sidebar from './components/slideBar'
+import MillDashboard from './pages/millDashboard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,7 +15,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes path="/">
-          <Route path='/' element={<Header/>}/>
+          <Route path='/' element={<MillDashboard/>}/>
         </Routes>
       </BrowserRouter>
     </>
