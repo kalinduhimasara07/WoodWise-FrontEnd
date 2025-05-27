@@ -38,7 +38,7 @@ export default function MillSidebar() {
         </div>
       </div> */}
 
-      {/* Main Navigation */}
+      {/* Navigation */}
       <nav className="flex-1 px-4">
         <ul className="space-y-2">
           {menuItems.map((item) => (
@@ -47,14 +47,11 @@ export default function MillSidebar() {
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
                   pathname === item.path
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                    ? 'bg-[#a86523] text-white'
+                    : 'text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                <item.icon
-                  size={30}
-                  color={pathname === item.path ? "white" : "#a86523"}
-                />
+                <item.icon size={30} color={pathname === item.path ? 'white' : '#a86523'} />
                 <span className="font-medium">{item.name}</span>
               </button>
             </li>
@@ -62,23 +59,20 @@ export default function MillSidebar() {
         </ul>
       </nav>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Items */}
       <div className="p-4 border-t border-gray-200">
         <ul className="space-y-2">
           {bottomItems.map((item) => (
             <li key={item.name}>
               <button
-                onClick={() => setActiveItem(item.name)}
+                onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
-                  activeItem === item.name
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                  pathname === item.path
+                    ? 'bg-[#a86523] text-white'
+                    : 'text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                <item.icon
-                  size={30}
-                  color={activeItem === item.name ? "white" : "#a86523"}
-                />
+                <item.icon size={30} color={pathname === item.path ? 'white' : '#a86523'} />
                 <span className="font-medium">{item.name}</span>
               </button>
             </li>
