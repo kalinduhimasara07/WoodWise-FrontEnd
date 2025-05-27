@@ -1,32 +1,28 @@
-import React, { useState } from 'react';
-import { AiOutlineDashboard } from 'react-icons/ai';
-import { GiWoodBeam } from 'react-icons/gi';
-import { 
-  MdDashboard, 
-  MdInventory, 
-  MdShoppingCart, 
-  MdLocalShipping, 
-  MdBusiness, 
-  MdMessage, 
-  MdLogout 
-} from 'react-icons/md';
-import { PiBuildingsDuotone } from 'react-icons/pi';
-import { TbWood } from 'react-icons/tb';
+import { useState } from "react";
+import { AiOutlineDashboard } from "react-icons/ai";
+import { GiWoodBeam } from "react-icons/gi";
+import { MdShoppingCart, MdMessage, MdLogout } from "react-icons/md";
+import { PiBuildingsDuotone } from "react-icons/pi";
+import { TbWood } from "react-icons/tb";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function Sidebar() {
-  const [activeItem, setActiveItem] = useState('Dashboard');
+export default function MillSidebar() {
+  const [activeItem, setActiveItem] = useState("Dashboard");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   const menuItems = [
-    { name: 'Dashboard', icon: AiOutlineDashboard, active: true },
-    { name: 'Inventory', icon: TbWood, active: false },
-    { name: 'Orders', icon: MdShoppingCart, active: false },
-    { name: 'Supplies', icon: GiWoodBeam, active: false },
-    { name: 'Suppliers', icon: PiBuildingsDuotone, active: false },
+    { name: "Dashboard", icon: AiOutlineDashboard, path: "/mill/dashboard" },
+    { name: "Inventory", icon: TbWood, path: "/mill/inventory" },
+    { name: "Orders", icon: MdShoppingCart, path: "/mill/orders" },
+    { name: "Supplies", icon: GiWoodBeam, path: "/mill/supplies" },
+    { name: "Suppliers", icon: PiBuildingsDuotone, path: "/mill/suppliers" },
   ];
 
   const bottomItems = [
-    { name: 'Messages', icon: MdMessage },
-    { name: 'Log Out', icon: MdLogout },
+    { name: "Messages", icon: MdMessage, path: "/mill/messages" },
+    { name: "Log Out", icon: MdLogout },
   ];
 
   return (
@@ -48,14 +44,17 @@ export default function Sidebar() {
           {menuItems.map((item) => (
             <li key={item.name}>
               <button
-                onClick={() => setActiveItem(item.name)}
+                onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
-                  activeItem === item.name
-                    ? 'bg-[#a86523] text-white'
-                    : 'text-gray-700 hover:bg-gray-200'
+                  pathname === item.path
+                    ? "bg-[#a86523] text-white"
+                    : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <item.icon size={30} color={activeItem === item.name ? 'white' : '#a86523'}/>
+                <item.icon
+                  size={30}
+                  color={pathname === item.path ? "white" : "#a86523"}
+                />
                 <span className="font-medium">{item.name}</span>
               </button>
             </li>
@@ -72,11 +71,14 @@ export default function Sidebar() {
                 onClick={() => setActiveItem(item.name)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
                   activeItem === item.name
-                    ? 'bg-[#a86523] text-white'
-                    : 'text-gray-700 hover:bg-gray-200'
+                    ? "bg-[#a86523] text-white"
+                    : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <item.icon size={30} color={activeItem === item.name ? 'white' : '#a86523'} />
+                <item.icon
+                  size={30}
+                  color={activeItem === item.name ? "white" : "#a86523"}
+                />
                 <span className="font-medium">{item.name}</span>
               </button>
             </li>

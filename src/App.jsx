@@ -1,25 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import HeaderButtons from './components/headerButtons'
-import Header from './components/header'
-import Sidebar from './components/slideBar'
-import MillDashboard from './pages/millDashboard'
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import StoreDashboard from "./pages/Store/storeDashboard";
+import MillDashboard from "./pages/Mill/millDashboard";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <BrowserRouter>
-        <Routes path="/">
-          <Route path='/' element={<MillDashboard/>}/>
+        <Routes path="/*">
+          <Route path="/mill/*" element={<MillDashboard />} />
+          <Route path="/store/*" element={<StoreDashboard />} />
         </Routes>
       </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
