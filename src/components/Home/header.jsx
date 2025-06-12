@@ -19,7 +19,9 @@ export default function Header() {
     <header className="bg-white shadow h-[70px]">
       <div className="mx-auto px-4 py-3 flex">
         {/* Logo Section */}
-        <div className="w-[35px] h-[35px] bg-[#A86523] border border-black mx-5 rounded-sm"></div>
+        <div className="w-[35px] h-[35px]  mx-5 ">
+          <img src="/logo.png" alt="" srcset="" />
+        </div>
         <div className="m-0 p-0">
           <h1 className="text-3xl font-poppins font-bold m-0 p-0">WoodWise</h1>
         </div>

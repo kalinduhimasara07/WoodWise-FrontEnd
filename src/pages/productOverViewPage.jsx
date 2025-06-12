@@ -8,6 +8,7 @@ import {
   Instagram,
   Maximize2,
 } from "lucide-react";
+import ThreeDScene from "../components/3D models/ThreeDScene";
 
 export default function ProductOverview() {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -207,6 +208,9 @@ export default function ProductOverview() {
           </div>
         </div>
       )}
+      <div className="w-[600px] h-[600px] flex items-center justify-center border-4 border-gray-700">
+        <ThreeDScene />
+      </div>
     </div>
   );
 }
