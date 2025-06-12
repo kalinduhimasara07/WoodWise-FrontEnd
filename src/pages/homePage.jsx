@@ -3,6 +3,7 @@ import Header from "../components/Home/header";
 import ImageSlider from "../components/Home/imageSlider";
 import LandingPage from "./landingPage";
 import Footer from "../components/Home/footer";
+import ProductOverview from "./productOverViewPage";
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <Header />
       <Routes path="/*">
         <Route path="/home" element={<LandingPage />} />
+        <Route path="/overview" element={<ProductOverview />} />
         <Route
           path="/furniture"
           element={
