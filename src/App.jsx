@@ -1,4 +1,4 @@
-import "./index.css";
+import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import StoreDashboard from "./pages/Store/storeDashboard";
