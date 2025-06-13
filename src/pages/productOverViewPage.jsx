@@ -24,6 +24,8 @@ export default function ProductOverview() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const [selectedModel, setSelectedModel] = useState("/models/table1.glb");
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -95,12 +97,14 @@ export default function ProductOverview() {
               <span>H: 30 Inches x W: 36 Inches</span>
             </p>
           </div>
-          
+
           <div>
             <p className="text-gray-600">
               <span className="font-semibold">Material:</span> Teak
             </p>
-            <label for="Material" className="text-gray-600 font-semibold">Choose a Material:</label>
+            <label className="text-gray-600 font-semibold">
+              Choose a Material:
+            </label>
             <select id="Material" name="fruits">
               <option value="Teak">Teak</option>
               <option value="Nedun">Nedun</option>
@@ -208,8 +212,24 @@ export default function ProductOverview() {
           </div>
         </div>
       )}
-      <div className="w-[600px] h-[600px] flex items-center justify-center border-4 border-gray-700">
-        <ThreeDScene />
+      <div className="flex">
+        <div className="w-[600px] h-[600px] flex items-center justify-center border-4 border-gray-700">
+          <ThreeDScene modelPath={selectedModel} />
+        </div>
+        <div className="mx-6">
+          <div
+            className="border-2 w-30 h-30 mb-4 cursor-pointer"
+            onClick={() => setSelectedModel("/models/table1.glb")}
+          >
+            <img src="/test1.png" alt="" className="w-30 h-30 object-contain"/>
+          </div>
+          <div
+            className="border-2 w-30 h-30 cursor-pointer"
+            onClick={() => setSelectedModel("/models/chair1.glb")}
+          >
+            <img src="/test2.png" alt="" className="w-30 h-30 object-contain"/>
+          </div>
+        </div>
       </div>
     </div>
   );

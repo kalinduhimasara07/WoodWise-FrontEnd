@@ -1,8 +1,8 @@
 // src/Model.jsx
-import React, { Suspense } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export default function Model() {
-  const gltf = useGLTF('/models/textured_mesh.glb') // Place the .glb file in the public/models folder
-  return <primitive object={gltf.scene} scale={1} />
+export default function Model({ url }) {
+  const { scene } = useGLTF(url)
+  return <primitive object={scene} scale={1} />
 }

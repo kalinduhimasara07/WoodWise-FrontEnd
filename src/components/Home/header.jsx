@@ -20,7 +20,7 @@ export default function Header() {
       <div className="mx-auto px-4 py-3 flex">
         {/* Logo Section */}
         <div className="w-[35px] h-[35px]  mx-5 ">
-          <img src="/logo.png" alt="" srcset="" />
+          <img src="/logo.png" alt="Logo" />
         </div>
         <div className="m-0 p-0">
           <h1 className="text-3xl font-poppins font-bold m-0 p-0">WoodWise</h1>
