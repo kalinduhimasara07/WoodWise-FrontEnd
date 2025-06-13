@@ -1,33 +1,13 @@
 import { useState } from 'react';
-import axios from 'axios';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
-        email: email,
-        password: password,
-      });
-
-      const { token, user } = res.data;
-      localStorage.setItem('token', token);
-
-      alert(`Login successful! Welcome ${user.username}`);
-      // navigate('/');
-
-    } catch (err) {
-      if (err.response && err.response.data.message) {
-        alert(err.response.data.message);
-      } else {
-        alert('Login failed. Please try again.');
-      }
-    }
-    console.log('Login attempt:', { email, password });
+    console.log('Login attempt:', { email, password, rememberMe });
   };
 
   return (
