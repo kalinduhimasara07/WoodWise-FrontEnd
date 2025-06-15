@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Upload, X, Save, Eye } from 'lucide-react';
+import { Plus, Upload, X, Save, Eye, Box } from 'lucide-react';
 
 function AddFurniture() {
     const [formData, setFormData] = useState({
@@ -22,6 +22,7 @@ function AddFurniture() {
         sku: '',
         tags: [],
         images: [],
+        models: [],
         inStock: true,
         featured: false
     });
@@ -106,10 +107,31 @@ function AddFurniture() {
             file: file,
             url: URL.createObjectURL(file)
         }));
-        
+
         setFormData(prev => ({
             ...prev,
             images: [...prev.images, ...newImages]
+        }));
+    };
+
+    const handleModelUpload = (e) => {
+        const files = Array.from(e.target.files);
+        const newModels = files.map((file, index) => ({
+            id: Date.now() + index,
+            file: file,
+            url: URL.createObjectURL(file)
+        }));
+        setFormData(prev => ({
+            ...prev,
+            models: [...prev.models, ...newModels]
+        }));
+        console.log(newModels)
+    };
+
+    const removeModel = (modelId) => {
+        setFormData(prev => ({
+            ...prev,
+            models: prev.models.filter(model => model.id !== modelId)
         }));
     };
 
@@ -149,6 +171,10 @@ function AddFurniture() {
                     formData.images.forEach(image => {
                         formDataToSend.append('images', image.file);
                     });
+                } else if (key === 'models') {
+                    formData.models.forEach(model => {
+                        formDataToSend.append('models', model.file);
+                    });
                 } else if (key === 'dimensions') {
                     formDataToSend.append('dimensions', JSON.stringify(formData.dimensions));
                 } else if (key === 'tags') {
@@ -184,6 +210,7 @@ function AddFurniture() {
                     sku: '',
                     tags: [],
                     images: [],
+                    models: [],
                     inStock: true,
                     featured: false
                 });
@@ -546,6 +573,53 @@ function AddFurniture() {
                                 </div>
                             )}
                         </div>
+
+                        {/* 3D Model Upload */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Product 3D Images
+                            </label>
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <input
+                                    type="file"
+                                    multiple
+                                    accept=".glb"
+                                    onChange={handleModelUpload}
+                                    className="hidden"
+                                    id="model-upload"
+                                />
+                                <label htmlFor="model-upload" className="cursor-pointer">
+                                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        Click to upload models or drag and drop
+                                    </p>
+                                    <p className="text-xs text-gray-500">GLB up to 20MB</p>
+                                </label>
+                            </div>
+
+                            {formData.models.length > 0 && (
+                                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {formData.models.map((model) => (
+                                        <div key={model.id} className="relative">
+                                            <div className="w-full h-24 flex items-center justify-center bg-gray-100 rounded-lg">
+                                                <Box className="w-10 h-10 text-gray-500" />
+                                            </div>
+                                            <span className="text-xs text-gray-600 mt-1 text-center px-1 truncate w-full">
+                                                {model.file.name}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => removeModel(model.id)}
+                                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
 
                         {/* Checkboxes */}
                         <div className="flex flex-wrap gap-6">
