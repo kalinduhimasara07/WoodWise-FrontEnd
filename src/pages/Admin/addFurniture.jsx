@@ -121,23 +121,23 @@ export default function AddFurniture() {
   };
 
   const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const newImages = [];
+  const files = Array.from(e.target.files);
+  const newImages = [];
 
-    for (let file of files) {
-      try {
-        const imageUrl = await mediaUpload(file); // Upload the image to Supabase
-        newImages.push({ url: imageUrl }); // Store the Supabase public URL in the images array
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      }
+  for (let file of files) {
+    try {
+      const imageUrl = await mediaUpload(file); // Upload the image to Supabase
+      newImages.push({ url: imageUrl }); // Store the Supabase public URL in the images array
+    } catch (error) {
+      console.error("Error uploading image:", error);
     }
+  }
 
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ...newImages], // Add the image URLs to the form data
-    }));
-  };
+  setFormData((prev) => ({
+    ...prev,
+    images: [...prev.images, ...newImages], // Add the image URLs to the form data
+  }));
+};
 
   const handleModelUpload = (e) => {
     const files = Array.from(e.target.files);
