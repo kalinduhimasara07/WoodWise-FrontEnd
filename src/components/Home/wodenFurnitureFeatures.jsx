@@ -15,8 +15,8 @@ export default function WoodenFurnitureFeatures() {
     },
     {
       icon: <Palette className="w-12 h-12 text-gray-600" strokeWidth={1.5} />,
-      title: "Premium Solid Wood",
-      description: "We use only carefully selected hardwoods like teak, oak and mahogany - renowned for nature."
+      title: "Artisanal Craftsmanship",
+      description: "Each piece is handmade by skilled artisans who brings decades of woodworking experience in detail to every item."
     }
   ];
 
