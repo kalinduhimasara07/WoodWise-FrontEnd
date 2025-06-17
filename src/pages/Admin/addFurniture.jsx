@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Plus, Upload, X, Save, Eye, Box } from "lucide-react";
 import mediaUpload from "../../utils/mediaUpload";
 
+//
+//fasdfadfadfad
+
 export default function AddFurniture() {
   const [formData, setFormData] = useState({
     name: "",
@@ -23,7 +26,7 @@ export default function AddFurniture() {
     sku: "",
     tags: [],
     images: [],
-    models: [],
+    models: [], // Ensure it's initialized as an empty array
     inStock: true,
     featured: false,
   });
@@ -121,36 +124,42 @@ export default function AddFurniture() {
   };
 
   const handleImageUpload = async (e) => {
-  const files = Array.from(e.target.files);
-  const newImages = [];
-
-  for (let file of files) {
-    try {
-      const imageUrl = await mediaUpload(file); // Upload the image to Supabase
-      newImages.push({ url: imageUrl }); // Store the Supabase public URL in the images array
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  }
-
-  setFormData((prev) => ({
-    ...prev,
-    images: [...prev.images, ...newImages], // Add the image URLs to the form data
-  }));
-};
-
-  const handleModelUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newModels = files.map((file, index) => ({
-      id: Date.now() + index,
-      file: file,
-      url: URL.createObjectURL(file),
-    }));
+    const newImages = [];
+
+    for (let file of files) {
+      try {
+        const imageUrl = await mediaUpload(file); // Upload the image to Supabase
+        newImages.push({ url: imageUrl }); // Store the Supabase public URL in the images array
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
-      models: [...prev.models, ...newModels],
+      images: [...prev.images, ...newImages], // Add the image URLs to the form data
     }));
-    console.log(newModels);
+  };
+
+  const handleModelUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    const newModels = [];
+
+    for (let file of files) {
+      try {
+        const modelUrl = await mediaUpload(file); // Upload the model to Supabase
+        newModels.push({ url: modelUrl, name: file.name }); // Add name and url to the model object
+      } catch (error) {
+        console.error("Error uploading model:", error);
+      }
+    }
+
+    // Check if the models array is not undefined or null
+    setFormData((prev) => ({
+      ...prev,
+      models: [...prev.models, ...newModels], // Add the model URLs to the form data
+    }));
   };
 
   const removeModel = (modelId) => {
@@ -200,9 +209,12 @@ export default function AddFurniture() {
             formDataToSend.append("images", image.url); // Append image URLs, not files
           });
         } else if (key === "models") {
-          formData.models.forEach((model) => {
-            formDataToSend.append("models", model.file);
-          });
+          // Only attempt to map over models if it's defined and an array
+          if (Array.isArray(formData.models) && formData.models.length > 0) {
+            formData.models.forEach((model) => {
+              formDataToSend.append("models", model.url); // Append model URLs
+            });
+          }
         } else if (key === "dimensions") {
           formDataToSend.append(
             "dimensions",
@@ -244,7 +256,7 @@ export default function AddFurniture() {
           sku: "",
           tags: [],
           images: [],
-          models: [],
+          models: [], // Reset models array
           inStock: true,
           featured: false,
         });
@@ -632,8 +644,8 @@ export default function AddFurniture() {
 
               {formData.images.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {formData.images.map((image) => (
-                    <div key={image.id} className="relative">
+                  {formData.images.map((image, index) => (
+                    <div key={image.id || index} className="relative">
                       <img
                         src={image.url}
                         alt="Product"
@@ -678,16 +690,16 @@ export default function AddFurniture() {
               {formData.models.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                   {formData.models.map((model) => (
-                    <div key={model.id} className="relative">
+                    <div key={model.url} className="relative">
                       <div className="w-full h-24 flex items-center justify-center bg-gray-100 rounded-lg">
                         <Box className="w-10 h-10 text-gray-500" />
                       </div>
                       <span className="text-xs text-gray-600 mt-1 text-center px-1 truncate w-full">
-                        {model.file.name}
+                        {model.name} {/* Use model.name here */}
                       </span>
                       <button
                         type="button"
-                        onClick={() => removeModel(model.id)}
+                        onClick={() => removeModel(model.url)} // Use model.url to remove
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
                       >
                         <X size={14} />
