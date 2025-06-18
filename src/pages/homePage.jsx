@@ -11,7 +11,7 @@ export default function HomePage() {
       <Header />
       <Routes path="/*">
         <Route path="/home" element={<LandingPage />} />
-        <Route path="/overview" element={<ProductOverview />} />
+        <Route path="/overview/:id" element={<ProductOverview />} />
         <Route
           path="/furniture"
           element={

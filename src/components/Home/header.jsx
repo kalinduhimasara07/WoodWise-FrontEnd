@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import HeaderButtons from "../Store/headerButtons"; // Import your HeaderButtons component
 import { ChevronDown, User } from "lucide-react";
 
@@ -19,12 +19,12 @@ export default function Header() {
     <header className="bg-white shadow h-[70px]">
       <div className="mx-auto px-4 py-3 flex">
         {/* Logo Section */}
-        <div className="w-[35px] h-[35px]  mx-5 ">
+        <Link to="/home"><div className="w-[35px] h-[35px]  mx-5 ">
           <img src="/logo.png" alt="Logo" />
-        </div>
-        <div className="m-0 p-0">
+        </div></Link>
+        <Link to="/home"><div className="m-0 p-0">
           <h1 className="text-3xl font-poppins font-bold m-0 p-0">WoodWise</h1>
-        </div>
+        </div></Link>
 
         {/* Navigation */}
         <nav className="flex items-center space-x-8 ml-auto text-xl">
