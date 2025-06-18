@@ -20,7 +20,15 @@ export default function LoginPage() {
       localStorage.setItem('token', token);
 
       alert(`Login successful! Welcome ${user.username}`);
-      navigate('/home');
+      console.log('Login successful:', token);
+      console.log('User data:', user);
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (user.role === 'millworker') {
+        navigate('/mill/dashboard');
+      } else if (user.role === 'storestaff') {
+        navigate('/store/dashboard');
+      }
 
     } catch (err) {
       if (err.response && err.response.data.message) {
