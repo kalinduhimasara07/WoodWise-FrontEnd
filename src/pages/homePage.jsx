@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <div className="h-screen">
       <Header />
-      <Routes path="/*">
+      {/* <Routes path="/*">
         <Route path="/home" element={<LandingPage />} />
         <Route path="/overview/:id" element={<ProductOverview />} />
         <Route
@@ -28,7 +28,7 @@ export default function HomePage() {
             </div>
           }
         />
-      </Routes>
+      </Routes> */}
       <Footer />
     </div>
   );
