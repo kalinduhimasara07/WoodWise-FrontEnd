@@ -1,3 +1,4 @@
+import SearchBar from "../Store/searchBar";
 import HeaderButtons from "./headerButtons";
 
 export default function Header() {
@@ -13,6 +14,7 @@ export default function Header() {
             <h2 className="text-xl font-semibold m-0 p-0">Mill</h2>
           </div>
         </div>
+        <SearchBar/>
         <div className="ml-auto">
           <HeaderButtons />
         </div>
