@@ -49,7 +49,7 @@ function AddUser() {
     };
 
    return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4">
+    <div className="w-full h-full bg-white rounded-4xl p-6 overflow-y-scroll">
       <div className="max-w-2xl mx-auto">
 
         <div className="text-center mb-8">

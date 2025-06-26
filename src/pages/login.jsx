@@ -15,7 +15,7 @@ export default function LoginPage() {
         email: email,
         password: password,
       });
-
+      console.log(res.data);
       const { token, user } = res.data;
       localStorage.setItem('token', token);
 
