@@ -60,7 +60,7 @@ const Footer = () => {
                     <a
                       href="mailto:woodwise@example.com"
                     >
-                      woodwise@example.com
+                      woodwise.services@gmail.com
                     </a>
                   </span>
                 </div>
