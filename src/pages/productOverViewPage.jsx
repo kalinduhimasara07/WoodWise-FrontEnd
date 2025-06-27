@@ -10,6 +10,7 @@ import {
 import ThreeDScene from "../components/3D models/ThreeDScene";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Loading from "../components/loader";
 
 export default function ProductOverview() {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -42,7 +43,7 @@ export default function ProductOverview() {
 
   //create loading function
   function loading() {
-    return <div>Loading...</div>;
+    return <div className="w-full h-[100vh] flex items-center justify-center"><Loading/></div>;
   }
 
   const openModal = () => setIsModalOpen(true);
@@ -80,7 +81,7 @@ export default function ProductOverview() {
 
               {/* Main Image */}
               <div className="flex-1">
-                <div className="rounded-2xl overflow-hidden bg-gray-100 relative">
+                <div className="rounded-2xl overflow-hidden bg-gray-100 relative border-1 border-amber-700">
                   <img
                     src={furnitureImages[selectedImage].url}
                     alt={`Modern Living Room - View ${selectedImage + 1}`}

@@ -19,17 +19,17 @@ export default function Header() {
     <header className="bg-white shadow h-[70px]">
       <div className="mx-auto px-4 py-3 flex">
         {/* Logo Section */}
-        <Link to="/home"><div className="w-[35px] h-[35px]  mx-5 ">
+        <Link to="/"><div className="w-[35px] h-[35px]  mx-5 ">
           <img src="/logo.png" alt="Logo" />
         </div></Link>
-        <Link to="/home"><div className="m-0 p-0">
+        <Link to="/"><div className="m-0 p-0">
           <h1 className="text-3xl font-poppins font-bold m-0 p-0">WoodWise</h1>
         </div></Link>
 
         {/* Navigation */}
         <nav className="flex items-center space-x-8 ml-auto text-xl">
           <a
-            onClick={() => handleNavClick("home", "/home")}
+            onClick={() => handleNavClick("home", "/")}
             className={`text-gray-900 hover:text-amber-700 transition-colors duration-200 font-medium ${
               activeNav === "home" ? "border-b-3 border-amber-700 pb-1" : ""
             }`}

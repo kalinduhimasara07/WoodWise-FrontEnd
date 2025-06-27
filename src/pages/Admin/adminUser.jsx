@@ -3,6 +3,7 @@ import { Trash2, UserPlus, Search, AlertTriangle, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "../../components/loader";
+import toast from "react-hot-toast";
 
 export default function AdminUserPage() {
   const navigate = useNavigate();
@@ -54,7 +55,25 @@ export default function AdminUserPage() {
       setShowDeleteModal(false);
       setUserToDelete(null);
       // You would replace this with actual API call:
-      // await fetch(`/api/users/${userToDelete._id}`, { method: 'DELETE' });
+      await axios.delete(`http://localhost:5000/api/auth/${userToDelete._id}`);
+      toast.success(`User deleted successfully`, {
+        style: {
+          border: "1px solid #059669",
+          padding: "16px",
+          color: "#065f46",
+          backgroundColor: "#ecfdf5",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        },
+        iconTheme: {
+          primary: "#059669",
+          secondary: "#ecfdf5",
+        },
+        duration: 5000,
+      });
     }
   };
 
@@ -221,7 +240,7 @@ export default function AdminUserPage() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">

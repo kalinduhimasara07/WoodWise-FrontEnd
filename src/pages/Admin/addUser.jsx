@@ -12,6 +12,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import BackButton from "../../components/backButton";
+import toast from "react-hot-toast";
 
 function AddUser() {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +23,7 @@ function AddUser() {
     password: "",
     role: "storestaff",
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -42,26 +44,80 @@ function AddUser() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("User created successfully!");
+        toast.success(`User registered successfully`, {
+          style: {
+            border: "1px solid #059669",
+            padding: "16px",
+            color: "#065f46",
+            backgroundColor: "#ecfdf5",
+            borderRadius: "12px",
+            fontSize: "14px",
+            fontWeight: "500",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          },
+          iconTheme: {
+            primary: "#059669",
+            secondary: "#ecfdf5",
+          },
+          duration: 5000,
+        });
         setFormData({
           username: "",
           email: "",
           password: "",
+          confirmPassword: "",
           role: "storestaff",
         });
+        // Optionally, redirect to the user list or another page
+        navigate(-1); // Go back to the previous page
       } else {
-        alert(data.message || "Registeration failed.");
+        toast.error(data.message || "Error registering user", {
+          style: {
+            border: "1px solid #dc2626",
+            padding: "16px",
+            color: "#991b1b",
+            backgroundColor: "#fef2f2",
+            borderRadius: "12px",
+            fontSize: "14px",
+            fontWeight: "500",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          },
+          iconTheme: {
+            primary: "#dc2626",
+            secondary: "#fef2f2",
+          },
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("An error occurred.");
+      toast.error("Error registering user", {
+        style: {
+          border: "1px solid #dc2626",
+          padding: "16px",
+          color: "#991b1b",
+          backgroundColor: "#fef2f2",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        },
+        iconTheme: {
+          primary: "#dc2626",
+          secondary: "#fef2f2",
+        },
+        duration: 5000,
+      });
     }
     console.log(formData);
   };
 
   return (
     <div className="w-full h-full bg-white rounded-4xl p-6 overflow-y-scroll">
-      <BackButton/>
+      <BackButton />
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -78,7 +134,7 @@ function AddUser() {
               <div className="grid grid-cols-2 gap-4">
                 <label
                   className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                    formData.role === "owner"
+                    formData.role === "admin"
                       ? "border-purple-500 bg-purple-50"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
@@ -86,14 +142,14 @@ function AddUser() {
                   <input
                     type="radio"
                     name="role"
-                    value="owner"
-                    checked={formData.role === "owner"}
+                    value="admin"
+                    checked={formData.role === "admin"}
                     onChange={handleInputChange}
                     className="sr-only"
                   />
                   <User className="w-5 h-5 text-purple-500 mr-3" />
                   <div>
-                    <div className="font-medium text-gray-900">Owner</div>
+                    <div className="font-medium text-gray-900">Admin</div>
                   </div>
                 </label>
                 <label

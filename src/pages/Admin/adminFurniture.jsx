@@ -13,8 +13,10 @@ import {
   Star,
   Image,
 } from "lucide-react";
+import axios from "axios";
 import Loading from "../../components/loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function AdminFurniture() {
   const [furniture, setFurniture] = useState([]);
@@ -25,137 +27,36 @@ export default function AdminFurniture() {
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedFurniture, setSelectedFurniture] = useState(null);
   const [furnitureToDelete, setFurnitureToDelete] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
     console.log("Navigate to:", path);
     navigate(path);
-    // Replace with your navigation logic
   };
 
-  // Mock data - replace with actual API call
+  // Fetch furniture data from backend
   useEffect(() => {
-    setTimeout(() => {
-      setFurniture([
-        {
-          _id: "1",
-          name: "Modern Oak Dining Table",
-          category: "Dining Room",
-          subcategory: "Tables",
-          price: 899.99,
-          salePrice: 749.99,
-          description:
-            "Beautiful modern oak dining table perfect for family gatherings. Seats up to 6 people comfortably.",
-          woodType: "Oak",
-          dimensions: { length: 180, width: 90, height: 75 },
-          weight: 45,
-          color: "Natural Oak",
-          brand: "WoodCraft",
-          stock: 15,
-          sku: "OAK-DT-001",
-          tags: ["modern", "dining", "oak", "family"],
-          images: [
-            {
-              url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-              size: 1024000,
-            },
-            {
-              url: "https://images.unsplash.com/photo-1549497538-303791108f95?w=400",
-              size: 856000,
-            },
-          ],
-          inStock: true,
-          featured: true,
-          createdAt: "2024-01-15T10:30:00Z",
-          updatedAt: "2024-03-10T14:22:00Z",
-        },
-        {
-          _id: "2",
-          name: "Luxury Teak Bedroom Set",
-          category: "Bedroom",
-          subcategory: "Sets",
-          price: 1299.99,
-          salePrice: null,
-          description:
-            "Premium teak bedroom set including bed frame, nightstands, and dresser.",
-          woodType: "Teak",
-          dimensions: { length: 200, width: 180, height: 120 },
-          weight: 85,
-          color: "Rich Teak",
-          brand: "LuxuryWood",
-          stock: 8,
-          sku: "TEAK-BS-002",
-          tags: ["luxury", "bedroom", "teak", "set"],
-          images: [
-            {
-              url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400",
-              size: 945000,
-            },
-          ],
-          inStock: true,
-          featured: false,
-          createdAt: "2024-02-20T09:15:00Z",
-          updatedAt: "2024-02-20T09:15:00Z",
-        },
-        {
-          _id: "3",
-          name: "Ergonomic Office Chair",
-          category: "Office",
-          subcategory: "Chairs",
-          price: 299.99,
-          salePrice: 249.99,
-          description:
-            "Comfortable ergonomic office chair with lumbar support and adjustable height.",
-          woodType: "Ash",
-          dimensions: { length: 60, width: 60, height: 120 },
-          weight: 18,
-          color: "Black",
-          brand: "ErgoDesk",
-          stock: 0,
-          sku: "ASH-OC-003",
-          tags: ["office", "ergonomic", "chair", "adjustable"],
-          images: [
-            {
-              url: "https://images.unsplash.com/photo-1541558869434-2840d308329a?w=400",
-              size: 712000,
-            },
-          ],
-          inStock: false,
-          featured: false,
-          createdAt: "2024-03-01T16:45:00Z",
-          updatedAt: "2024-03-15T11:30:00Z",
-        },
-        {
-          _id: "4",
-          name: "Bamboo Coffee Table",
-          category: "Living Room",
-          subcategory: "Tables",
-          price: 199.99,
-          salePrice: null,
-          description:
-            "Eco-friendly bamboo coffee table with modern minimalist design.",
-          woodType: "Bamboo",
-          dimensions: { length: 120, width: 60, height: 45 },
-          weight: 12,
-          color: "Natural Bamboo",
-          brand: "EcoFurn",
-          stock: 25,
-          sku: "BAMB-CT-004",
-          tags: ["eco-friendly", "bamboo", "coffee table", "minimalist"],
-          images: [
-            {
-              url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-              size: 890000,
-            },
-          ],
-          inStock: true,
-          featured: true,
-          createdAt: "2024-01-10T08:20:00Z",
-          updatedAt: "2024-01-10T08:20:00Z",
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
+    const fetchFurniture = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get("http://localhost:5000/api/furniture");
+
+        if (response.data.success) {
+          setFurniture(response.data.data);
+        } else {
+          setError("Failed to fetch furniture data");
+        }
+      } catch (error) {
+        console.error("Error fetching furniture:", error);
+        setError("Failed to connect to server");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFurniture();
   }, []);
 
   const categories = [
@@ -172,7 +73,8 @@ export default function AdminFurniture() {
   const filteredFurniture = furniture.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.brand &&
+        item.brand.toLowerCase().includes(searchTerm.toLowerCase())) ||
       item.sku.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       filterCategory === "all" || item.category === filterCategory;
@@ -190,16 +92,42 @@ export default function AdminFurniture() {
   };
 
   const handleEditClick = (item) => {
-    handleNavigation(`/admin/furniture/edit/${item._id}`);
+    handleNavigation(`/admin/furniture/edit/${item.sku}`);
   };
 
   const handleDeleteConfirm = async () => {
     if (furnitureToDelete) {
-      setFurniture(
-        furniture.filter((item) => item._id !== furnitureToDelete._id)
-      );
-      setShowDeleteModal(false);
-      setFurnitureToDelete(null);
+      try {
+        await axios.delete(
+          `http://localhost:5000/api/furniture/${furnitureToDelete._id}`
+        );
+        toast.success(`Furniture deleted successfully`, {
+          style: {
+            border: "1px solid #059669",
+            padding: "16px",
+            color: "#065f46",
+            backgroundColor: "#ecfdf5",
+            borderRadius: "12px",
+            fontSize: "14px",
+            fontWeight: "500",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          },
+          iconTheme: {
+            primary: "#059669",
+            secondary: "#ecfdf5",
+          },
+          duration: 5000,
+        });
+        setFurniture(
+          furniture.filter((item) => item._id !== furnitureToDelete._id)
+        );
+        setShowDeleteModal(false);
+        setFurnitureToDelete(null);
+      } catch (error) {
+        console.error("Error deleting furniture:", error);
+        // You might want to show an error message to the user here
+      }
     }
   };
 
@@ -222,6 +150,26 @@ export default function AdminFurniture() {
     return (
       <div className="w-full h-full bg-white rounded-4xl p-6">
         <Loading />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-full bg-white rounded-3xl p-6 flex items-center justify-center">
+        <div className="text-center">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Error Loading Data
+          </h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
@@ -333,7 +281,8 @@ export default function AdminFurniture() {
                 filteredFurniture.map((item) => (
                   <tr
                     key={item._id}
-                    className="hover:bg-white transition-colors border-b border-gray-200 last:border-b-0"
+                    className="hover:bg-white transition-colors border-b border-gray-200 last:border-b-0 cursor-pointer"
+                    onClick={() => handleViewClick(item)}
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
@@ -407,7 +356,10 @@ export default function AdminFurniture() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-2">
+                      <div
+                        className="flex items-center gap-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button
                           onClick={() => handleViewClick(item)}
                           className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors"
@@ -453,7 +405,7 @@ export default function AdminFurniture() {
 
       {/* View Modal */}
       {showViewModal && selectedFurniture && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -538,7 +490,7 @@ export default function AdminFurniture() {
                         Brand
                       </label>
                       <div className="text-gray-900">
-                        {selectedFurniture.brand}
+                        {selectedFurniture.brand || "N/A"}
                       </div>
                     </div>
                     <div>
@@ -596,16 +548,18 @@ export default function AdminFurniture() {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">
-                      Dimensions (L × W × H)
-                    </label>
-                    <div className="text-gray-900">
-                      {selectedFurniture.dimensions.length} ×{" "}
-                      {selectedFurniture.dimensions.width} ×{" "}
-                      {selectedFurniture.dimensions.height} cm
+                  {selectedFurniture.dimensions && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">
+                        Dimensions (L × W × H)
+                      </label>
+                      <div className="text-gray-900">
+                        {selectedFurniture.dimensions.length} ×{" "}
+                        {selectedFurniture.dimensions.width} ×{" "}
+                        {selectedFurniture.dimensions.height} cm
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {selectedFurniture.tags &&
                     selectedFurniture.tags.length > 0 && (
@@ -668,7 +622,7 @@ export default function AdminFurniture() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">

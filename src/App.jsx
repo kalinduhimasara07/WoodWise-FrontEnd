@@ -10,6 +10,7 @@ import LandingPage from "./pages/landingPage";
 import ProductOverview from "./pages/productOverViewPage";
 import AdminHomePage from "./pages/Admin/adminHome";
 import { Toaster } from "react-hot-toast";
+import FurnitureShowcase from "./pages/furnitureShowcase";
 
 function App() {
   return (
@@ -17,30 +18,23 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-right" reverseOrder={false} />
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/*" element={<LandingPage />} />
           <Route path="/mill/*" element={<MillDashboard />} />
           <Route path="/store/*" element={<StoreDashboard />} />
           <Route path="/admin/*" element={<AdminHomePage />} />
           {/* <Route path="/admin/add-furniture" element={<AddFurniture />} /> */}
           {/* <Route path="/admin/add-user" element={<AddUser />} /> */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/overview" element={<ProductOverview />} />
-          <Route
-            path="/furniture"
-            element={
-              <div className="flex items-center justify-center text-4xl">
-                Furniture Page
-              </div>
-            }
-          />
-          <Route
+          {/* <Route path="/furniture/:id" element={<ProductOverview />} /> */}
+          {/* <Route path="/furniture" element={<FurnitureShowcase />} /> */}
+          {/* <Route
             path="/category"
             element={
               <div className="flex items-center justify-center text-4xl">
                 Category Page
               </div>
             }
-          />
+          /> */}
         </Routes>
       </BrowserRouter>
     </>
