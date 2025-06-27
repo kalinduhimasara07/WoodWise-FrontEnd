@@ -217,11 +217,12 @@ function AddUser() {
             </div>
 
             <button
-              onClick={handleRegister}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-            >
-              Register
-            </button>
+  onClick={handleRegister}
+  className="w-full bg-gradient-to-r from-[#a86523] via-[#d98c3b] to-[#a86523] text-white py-3 px-4 rounded-lg font-medium hover:from-[#9c732b] hover:to-[#9c732b] transition-all transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#a86523] focus:ring-offset-2"
+>
+  Register
+</button>
+
           </div>
         </div>
       </div>

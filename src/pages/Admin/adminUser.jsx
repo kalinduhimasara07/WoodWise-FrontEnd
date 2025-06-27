@@ -1,73 +1,44 @@
-import React, { useState, useEffect, use } from 'react';
-import { Trash2, UserPlus, Search, AlertTriangle, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import Loading from '../../components/loader';
+import React, { useState, useEffect } from "react";
+import { Trash2, UserPlus, Search, AlertTriangle, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Loading from "../../components/loader";
 
 export default function AdminUserPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleNavigation = (path) => {
     // Replace with your navigation logic
-    console.log('Navigate to:', path);
+    console.log("Navigate to:", path);
     navigate(path);
     // Example: window.location.href = path;
   };
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  // Mock data - replace with actual API call
+  // Fetch users from backend
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setUsers([
-        {
-          _id: '1',
-          username: 'john_doe',
-          email: 'john@example.com',
-          role: 'owner',
-          createdAt: '2024-01-15'
-        },
-        {
-          _id: '2',
-          username: 'sarah_wilson',
-          email: 'sarah@example.com',
-          role: 'millworker',
-          createdAt: '2024-02-20'
-        },
-        {
-          _id: '3',
-          username: 'mike_staff',
-          email: 'mike@example.com',
-          role: 'storestaff',
-          createdAt: '2024-03-10'
-        },
-        {
-          _id: '4',
-          username: 'alice_owner',
-          email: 'alice@example.com',
-          role: 'owner',
-          createdAt: '2024-01-25'
-        },
-        {
-          _id: '5',
-          username: 'bob_worker',
-          email: 'bob@example.com',
-          role: 'millworker',
-          createdAt: '2024-03-01'
-        }
-      ]);
-      setLoading(false);
-    }, 1000);
+    axios
+      .get("http://localhost:5000/api/auth/") // Replace with your actual API endpoint
+      .then((response) => {
+        setUsers(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoading(false);
+      });
   }, []);
 
   // Filter users based on search term and role
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = filterRole === 'all' || user.role === filterRole;
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = filterRole === "all" || user.role === filterRole;
     return matchesSearch && matchesRole;
   });
 
@@ -79,7 +50,7 @@ export default function AdminUserPage() {
   const handleDeleteConfirm = async () => {
     if (userToDelete) {
       // Simulate API delete call
-      setUsers(users.filter(user => user._id !== userToDelete._id));
+      setUsers(users.filter((user) => user._id !== userToDelete._id));
       setShowDeleteModal(false);
       setUserToDelete(null);
       // You would replace this with actual API call:
@@ -89,29 +60,21 @@ export default function AdminUserPage() {
 
   const getRoleBadgeColor = (role) => {
     switch (role) {
-      case 'owner':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'millworker':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'storestaff':
-        return 'bg-green-100 text-green-800 border-green-200';
+      case "admin":
+        return "bg-purple-100 text-purple-800 border-purple-200";
+      case "millworker":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "storestaff":
+        return "bg-green-100 text-green-800 border-green-200";
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
   };
 
   if (loading) {
     return (
-      <div className='w-full h-full bg-white rounded-4xl p-6'>
-        <Loading/>
+      <div className="w-full h-full bg-white rounded-4xl p-6">
+        <Loading />
       </div>
     );
   }
@@ -124,7 +87,7 @@ export default function AdminUserPage() {
           <Users className="h-8 w-8 text-blue-600" />
           <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
         </div>
-        <button 
+        <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition-colors shadow-lg hover:shadow-xl"
           onClick={() => handleNavigation("/admin/user/add-user")}
         >
@@ -140,21 +103,23 @@ export default function AdminUserPage() {
           <div className="text-2xl font-bold text-blue-900">{users.length}</div>
         </div>
         <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
-          <div className="text-purple-800 text-sm font-medium">Owners</div>
+          <div className="text-purple-800 text-sm font-medium">Admin</div>
           <div className="text-2xl font-bold text-purple-900">
-            {users.filter(u => u.role === 'owner').length}
+            {users.filter((u) => u.role === "admin").length}
           </div>
         </div>
         <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
           <div className="text-green-800 text-sm font-medium">Store Staff</div>
           <div className="text-2xl font-bold text-green-900">
-            {users.filter(u => u.role === 'storestaff').length}
+            {users.filter((u) => u.role === "storestaff").length}
           </div>
         </div>
         <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
-          <div className="text-orange-800 text-sm font-medium">Mill Workers</div>
+          <div className="text-orange-800 text-sm font-medium">
+            Mill Workers
+          </div>
           <div className="text-2xl font-bold text-orange-900">
-            {users.filter(u => u.role === 'millworker').length}
+            {users.filter((u) => u.role === "millworker").length}
           </div>
         </div>
       </div>
@@ -177,7 +142,7 @@ export default function AdminUserPage() {
           onChange={(e) => setFilterRole(e.target.value)}
         >
           <option value="all">All Roles</option>
-          <option value="owner">Owner</option>
+          <option value="admin">Admin</option>
           <option value="millworker">Mill Worker</option>
           <option value="storestaff">Store Staff</option>
         </select>
@@ -189,30 +154,43 @@ export default function AdminUserPage() {
           <table className="w-full">
             <thead className="bg-gray-100 sticky top-0">
               <tr>
-                <th className="text-left p-4 font-semibold text-gray-700">Username</th>
-                <th className="text-left p-4 font-semibold text-gray-700">Email</th>
-                <th className="text-left p-4 font-semibold text-gray-700">Role</th>
-                <th className="text-left p-4 font-semibold text-gray-700">Created</th>
-                <th className="text-left p-4 font-semibold text-gray-700">Actions</th>
+                <th className="text-left p-4 font-semibold text-gray-700">
+                  Username
+                </th>
+                <th className="text-left p-4 font-semibold text-gray-700">
+                  Email
+                </th>
+                <th className="text-left p-4 font-semibold text-gray-700">
+                  Role
+                </th>
+                <th className="text-left p-4 font-semibold text-gray-700">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
-                  <tr key={user._id} className="hover:bg-white transition-colors border-b border-gray-200 last:border-b-0">
+                  <tr
+                    key={user._id}
+                    className="hover:bg-white transition-colors border-b border-gray-200 last:border-b-0"
+                  >
                     <td className="p-4">
-                      <div className="font-medium text-gray-900">{user.username}</div>
+                      <div className="font-medium text-gray-900">
+                        {user.username}
+                      </div>
                     </td>
                     <td className="p-4">
                       <div className="text-gray-600">{user.email}</div>
                     </td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getRoleBadgeColor(user.role)}`}>
+                      <span
+                        className={`px-3 py-1 text-xs font-medium rounded-full border ${getRoleBadgeColor(
+                          user.role
+                        )}`}
+                      >
                         {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                       </span>
-                    </td>
-                    <td className="p-4">
-                      <div className="text-gray-600 text-sm">{formatDate(user.createdAt)}</div>
                     </td>
                     <td className="p-4">
                       <button
@@ -227,10 +205,12 @@ export default function AdminUserPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-12 text-gray-500">
+                  <td colSpan="4" className="text-center py-12 text-gray-500">
                     <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                     <div className="text-lg font-medium">No users found</div>
-                    <div className="text-sm">Try adjusting your search or filters</div>
+                    <div className="text-sm">
+                      Try adjusting your search or filters
+                    </div>
                   </td>
                 </tr>
               )}
@@ -250,7 +230,8 @@ export default function AdminUserPage() {
               <h3 className="text-xl font-bold text-gray-900">Delete User</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete user "{userToDelete?.username}"? This action cannot be undone.
+              Are you sure you want to delete user "{userToDelete?.username}"?
+              This action cannot be undone.
             </p>
             <div className="flex gap-3 justify-end">
               <button
