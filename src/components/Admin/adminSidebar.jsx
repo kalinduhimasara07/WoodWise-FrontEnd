@@ -87,7 +87,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div className="w-64 h-[calc(100vh-70px)] pt-2 bg-[#d9d9d9] flex flex-col">
+    <div className="w-64 h-[calc(100vh-70px)] pt-2 bg-[#d9d9d9] flex flex-col overflow-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {/* Navigation */}
       <nav className="flex-1 px-4">
         <ul className="space-y-2">
