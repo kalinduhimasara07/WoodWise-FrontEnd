@@ -28,7 +28,7 @@ export default function MillHomePage() {
   );
 }
 
-function MillDashboard() {
+export function MillDashboard() {
   return (
     <div className="w-full h-full bg-white rounded-4xl p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

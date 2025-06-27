@@ -25,7 +25,7 @@ export default function StoreHome() {
 }
 
 
-function StoreDashboard() {
+export function StoreDashboard() {
     return (
         <div className="w-full h-full bg-white rounded-4xl p-6">
             <h1 className="text-3xl">Store Dashboard</h1>
