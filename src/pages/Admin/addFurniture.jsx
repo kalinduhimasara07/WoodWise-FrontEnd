@@ -37,6 +37,10 @@ export default function AddFurniture() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  //image upload loader
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
+  const [isUploadingModels, setIsUploadingModels] = useState(false);
+
   const categories = [
     "Living Room",
     "Bedroom",
@@ -129,6 +133,8 @@ export default function AddFurniture() {
     const files = Array.from(e.target.files);
     const newImages = [];
 
+    setIsUploadingImages(true); // Show loader when image upload starts
+
     for (let file of files) {
       try {
         const imageUrl = await mediaUpload(file); // Upload the image to Supabase
@@ -142,26 +148,31 @@ export default function AddFurniture() {
       ...prev,
       images: [...prev.images, ...newImages], // Add the image URLs to the form data
     }));
+
+    setIsUploadingImages(false); // Hide loader after image upload completes
   };
 
   const handleModelUpload = async (e) => {
     const files = Array.from(e.target.files);
     const newModels = [];
 
+    setIsUploadingModels(true); // Show loader when model upload starts
+
     for (let file of files) {
       try {
         const modelUrl = await mediaUpload(file); // Upload the model to Supabase
-        newModels.push({ url: modelUrl, name: file.name }); // Add name and url to the model object
+        newModels.push({ url: modelUrl, name: file.name }); // Add name and URL to the model object
       } catch (error) {
         console.error("Error uploading model:", error);
       }
     }
 
-    // Check if the models array is not undefined or null
     setFormData((prev) => ({
       ...prev,
       models: [...prev.models, ...newModels], // Add the model URLs to the form data
     }));
+
+    setIsUploadingModels(false); // Hide loader after model upload completes
   };
 
   const removeModel = (modelId) => {
@@ -660,6 +671,7 @@ export default function AddFurniture() {
             </div>
 
             {/* Image Upload */}
+            {/* Image Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Product Images
@@ -684,6 +696,12 @@ export default function AddFurniture() {
                 </label>
               </div>
 
+              {isUploadingImages && (
+                <div className="mt-4 flex justify-center">
+                  <div className="h-8 w-8 border-4 border-blue-200 rounded-full border-t-blue-700 animate-spin"></div>
+                </div>
+              )}
+
               {formData.images.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                   {formData.images.map((image, index) => (
@@ -707,9 +725,10 @@ export default function AddFurniture() {
             </div>
 
             {/* 3D Model Upload */}
+            {/* 3D Model Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Product 3D Images
+                Product 3D Models
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 <input
@@ -728,6 +747,12 @@ export default function AddFurniture() {
                   <p className="text-xs text-gray-500">GLB up to 20MB</p>
                 </label>
               </div>
+
+              {isUploadingModels && (
+                <div className="mt-4 flex justify-center">
+                  <div className="h-8 w-8 border-4 border-blue-200 rounded-full border-t-blue-700 animate-spin"></div>
+                </div>
+              )}
 
               {formData.models.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
