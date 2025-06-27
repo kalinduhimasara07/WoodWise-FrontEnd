@@ -24,8 +24,8 @@ export default function mediaUpload(file) {
       .then((response) => {
         const publicUrl = supabase.storage.from("images").getPublicUrl(newName)
           .data.publicUrl;
-        // console.log("Image uploaded successfully:", response);
-        // console.log("Public URL:", publicUrl);
+        console.log("Image uploaded successfully:", response);
+        console.log("Public URL:", publicUrl);
         resolve(publicUrl);
       })
       .catch((error) => {

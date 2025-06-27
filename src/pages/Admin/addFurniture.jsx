@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Plus, Upload, X, Save, Eye, Box } from "lucide-react";
 import mediaUpload from "../../utils/mediaUpload";
 import BackButton from "../../components/backButton";
+import toast from "react-hot-toast";
 
 //
 //fasdfadfadfad
@@ -239,7 +240,16 @@ export default function AddFurniture() {
       const result = await response.json();
 
       if (result.success) {
-        alert("Furniture item added successfully!");
+        // alert("Furniture item added successfully!");
+        toast.success("Furniture item added successfully!", {
+          className:
+            "border border-emerald-600 p-4 text-emerald-800 bg-emerald-50 rounded-xl text-sm font-medium shadow-xl",
+          iconTheme: {
+            primary: "#059669",
+            secondary: "#ecfdf5",
+          },
+          duration: 5000,
+        });
         // Reset form
         setFormData({
           name: "",
@@ -262,11 +272,29 @@ export default function AddFurniture() {
           featured: false,
         });
       } else {
-        alert("Error: " + result.message);
+        // alert("Error: " + result.message);
+        toast.error("Error: " + result.message, {
+          className:
+            "border border-red-600 p-4 text-red-800 bg-red-50 rounded-xl text-sm font-medium shadow-xl",
+          iconTheme: {
+            primary: "#dc2626",
+            secondary: "#fef2f2",
+          },
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error adding furniture item");
+      // alert("Error adding furniture item");
+      toast.error("Error adding furniture item", {
+        className:
+          "border border-red-600 p-4 text-red-800 bg-red-50 rounded-xl text-sm font-medium shadow-xl",
+        iconTheme: {
+          primary: "#dc2626",
+          secondary: "#fef2f2",
+        },
+        duration: 5000,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -274,8 +302,20 @@ export default function AddFurniture() {
 
   const handlePreview = () => {
     if (!validateForm()) return;
-    alert(
-      "Preview functionality would show how the product appears on the website"
+    // alert(
+    //   "Preview functionality would show how the product appears on the website"
+    // );
+    toast(
+      "Preview functionality would show how the product appears on the website",
+      {
+        className:
+          "border border-blue-600 p-4 text-blue-800 bg-blue-50 rounded-xl text-sm font-medium shadow-xl",
+        iconTheme: {
+          primary: "#2563eb",
+          secondary: "#eff6ff",
+        },
+        duration: 5000,
+      }
     );
   };
 
