@@ -8,7 +8,8 @@ import AddFurniture from "./pages/Admin/addFurniture";
 import AddUser from "./pages/Admin/addUser";
 import LandingPage from "./pages/landingPage";
 import ProductOverview from "./pages/productOverViewPage";
-import AdminHomePage from "./pages/Admin/adminDashboard";
+import AdminHomePage from "./pages/Admin/adminHome";
+
 
 function App() {
   return (
