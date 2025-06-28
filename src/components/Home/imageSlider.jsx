@@ -18,7 +18,12 @@ export default function ImageSlider() {
     },
     {
       id: 3,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/056/802/377/small_2x/a-white-and-orange-framed-picture-hangs-on-a-wall-in-a-room-with-a-table-free-photo.jpeg",
+      image: "https://www.cantori.it/public/images/665_cantori-iseodivano6.jpeg",
+      alt: "Stylish modern interior"
+    },
+    {
+      id: 4,
+      image: "https://www.cantori.it/public/images/3480_cantori-slideshow-01.jpg",
       alt: "Stylish modern interior"
     }
   ];

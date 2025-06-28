@@ -198,10 +198,10 @@ const FurnitureCard = ({ furniture }) => {
             {hasDiscount ? (
               <>
                 <span className="text-xl font-bold text-green-600">
-                  {formatPrice(furniture.salePrice)}
+                  Rs {formatPrice(furniture.salePrice)}
                 </span>
                 <span className="text-sm text-gray-500 line-through">
-                  {formatPrice(furniture.price)}
+                  Rs {formatPrice(furniture.price)}
                 </span>
               </>
             ) : (
@@ -356,7 +356,7 @@ const FurnitureShowcase = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-6xl font-bold text-gray-900 mb-4">
             Our Furniture Collection
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">

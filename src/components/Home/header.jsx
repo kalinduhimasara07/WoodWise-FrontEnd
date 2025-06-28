@@ -1,120 +1,108 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import HeaderButtons from "../Store/headerButtons"; // Import your HeaderButtons component
-import { ChevronDown, User } from "lucide-react";
+import React from "react";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation to get the current path
+
+// You can install react-icons by running: npm install react-icons
+// Then, you can uncomment the following lines to use them.
+// import { FiUser, FiShoppingCart } from 'react-icons/fi';
 
 export default function Header() {
-  // State to track the active navigation item
-  const [activeNav, setActiveNav] = useState("home");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate function for navigation
+  // Get the current location object, which contains the pathname
+  const location = useLocation();
+  const { pathname } = location;
 
-  // Function to handle the navigation and active class
-  const handleNavClick = (navItem, url) => {
-    setActiveNav(navItem);
-    navigate(url); // Navigate to the URL based on the clicked button
-  };
+  // A helper function to determine if a link is active
+  const isActive = (path) => pathname === path;
 
   return (
-    <header className="bg-white shadow h-[70px]">
-      <div className="mx-auto px-4 py-3 flex">
-        {/* Logo Section */}
-        <Link to="/"><div className="w-[35px] h-[35px]  mx-5 ">
-          <img src="/logo.png" alt="Logo" />
-        </div></Link>
-        <Link to="/"><div className="m-0 p-0">
-          <h1 className="text-3xl font-poppins font-bold m-0 p-0">WoodWise</h1>
-        </div></Link>
+    <header className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo Section */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center space-x-3">
+              <img className="h-10 w-auto" src="/logo.png" alt="WoodWise Logo" />
+              <span className="text-3xl font-poppins font-bold text-gray-800">
+                WoodWise
+              </span>
+            </Link>
+          </div>
 
-        {/* Navigation */}
-        <nav className="flex items-center space-x-8 ml-auto text-xl">
-          <a
-            onClick={() => handleNavClick("home", "/")}
-            className={`text-gray-900 hover:text-amber-700 transition-colors duration-200 font-medium ${
-              activeNav === "home" ? "border-b-3 border-amber-700 pb-1" : ""
-            }`}
-          >
-            Home
-          </a>
-          <a
-            onClick={() => handleNavClick("furniture", "/furniture")}
-            className={`text-gray-600 hover:text-amber-700 transition-colors duration-200 font-medium ${
-              activeNav === "furniture"
-                ? "border-b-3 border-amber-700 pb-1"
-                : ""
-            }`}
-          >
-            Furniture
-          </a>
-          <a
-            onClick={() => handleNavClick("category", "/category")}
-            className={`text-gray-600 hover:text-amber-700 transition-colors duration-200 font-medium ${
-              activeNav === "category" ? "border-b-3 border-amber-700 pb-1" : ""
-            }`}
-          >
-            Category
-          </a>
-        </nav>
+          {/* Centered Navigation */}
+          <nav className="hidden md:flex flex-grow justify-center">
+            <div className="flex items-baseline space-x-10">
+              <Link
+                to="/"
+                className={`relative text-lg font-medium text-gray-600 hover:text-amber-700 transition-colors duration-300
+                  ${isActive("/") ? "text-amber-700" : ""}
+                `}
+              >
+                Home
+                {isActive("/") && (
+                  <span className="absolute left-0 -bottom-2 block h-0.5 w-full bg-amber-700 transform transition-transform duration-300" />
+                )}
+              </Link>
+              <Link
+                to="/furniture"
+                className={`relative text-lg font-medium text-gray-600 hover:text-amber-700 transition-colors duration-300
+                  ${isActive("/furniture") ? "text-amber-700" : ""}
+                `}
+              >
+                Furniture
+                {isActive("/furniture") && (
+                  <span className="absolute left-0 -bottom-2 block h-0.5 w-full bg-amber-700 transform transition-transform duration-300" />
+                )}
+              </Link>
+              <Link
+                to="/category"
+                className={`relative text-lg font-medium text-gray-600 hover:text-amber-700 transition-colors duration-300
+                  ${isActive("/category") ? "text-amber-700" : ""}
+                `}
+              >
+                Category
+                {isActive("/category") && (
+                  <span className="absolute left-0 -bottom-2 block h-0.5 w-full bg-amber-700 transform transition-transform duration-300" />
+                )}
+              </Link>
+              {/* aboutus */}
+              <Link
+                to="/aboutus"
+                className={`relative text-lg font-medium text-gray-600 hover:text-amber-700 transition-colors duration-300
+                  ${isActive("/aboutus") ? "text-amber-700" : ""}
+                `}
+              >
+                About
+                {isActive("/aboutus") && (
+                  <span className="absolute left-0 -bottom-2 block h-0.5 w-full bg-amber-700 transform transition-transform duration-300" />
+                )}
+              </Link>
+              {/* Contact Us */}
+              <Link
+                to="/contactus"
+                className={`relative text-lg font-medium text-gray-600 hover:text-amber-700 transition-colors duration-300
+                  ${isActive("/contactus") ? "text-amber-700" : ""}
+                `}
+              >
+                Contact
+                {isActive("/contactus") && (
+                  <span className="absolute left-0 -bottom-2 block h-0.5 w-full bg-amber-700 transform transition-transform duration-300" />
+                )}
+              </Link>
+            </div>
+          </nav>
 
-        {/* HeaderButtons Component */}
-        <div className="ml-auto">
-          {/* User Profile Button with Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 px-1 py-1 text-[#737791] hover:text-gray-800 hover:bg-gray-100 rounded-2xl border-1 border-[#737791] transition-colors duration-200"
-            >
-              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                <User size={18} className="text-gray-600" />
-              </div>
-              <ChevronDown
-                size={16}
-                className={`transition-transform duration-200 ${
-                  isDropdownOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+          {/* Right-side Icons (Optional but recommended) */}
+          <div className="hidden md:flex items-center space-x-5">
+             {/* You can use react-icons here */}
+            
+            <Link to="/cart" className="text-gray-500 hover:text-amber-700">
+              {/* <FiShoppingCart size={24} /> */}
+              <span className="text-2xl">🛒</span> {/* Placeholder icon */}
+            </Link>
+          </div>
 
-            {/* Dropdown Menu */}
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                <div className="py-1">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900">
-                      John Doe
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      john.doe@example.com
-                    </p>
-                  </div>
-
-                  <button className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                    <UserCircle size={16} />
-                    Profile
-                  </button>
-
-                  <button className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                    <Settings size={16} />
-                    Settings
-                  </button>
-
-                  <div className="border-t border-gray-100 mt-1 pt-1">
-                    <button className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                      <LogOut size={16} />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Backdrop to close dropdown when clicking outside */}
-            {isDropdownOpen && (
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setIsDropdownOpen(false)}
-              ></div>
-            )}
+          {/* Mobile Menu Button (for smaller screens) */}
+          <div className="md:hidden">
+            {/* You can add a hamburger menu button here */}
           </div>
         </div>
       </div>

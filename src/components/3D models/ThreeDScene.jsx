@@ -13,20 +13,20 @@ export default function ThreeDScene({ modelPath }) {
       {/* Strong directional light from top-right */}
       <directionalLight
         position={[5, 5, 5]}
-        intensity={2}
+        intensity={4}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
       />
 
       {/* Fill light from the left to reduce harsh shadows */}
-      <directionalLight position={[-5, 5, 5]} intensity={1} />
+      <directionalLight position={[-5, 5, 5]} intensity={2} />
 
       {/* Optional spotlight for extra focus */}
       <spotLight
         position={[2, 5, 2]}
         angle={0.3}
-        intensity={1.5}
+        intensity={2}
         penumbra={1}
         castShadow
       />

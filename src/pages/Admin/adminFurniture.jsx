@@ -364,21 +364,21 @@ export default function AdminFurniture() {
                       >
                         <button
                           onClick={() => handleViewClick(item)}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors"
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors cursor-pointer"
                           title="View details"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleEditClick(item)}
-                          className="text-green-600 hover:text-green-800 hover:bg-green-50 p-2 rounded-lg transition-colors"
+                          className="text-green-600 hover:text-green-800 hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
                           title="Edit furniture"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteClick(item)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors cursor-pointer"
                           title="Delete furniture"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -408,7 +408,7 @@ export default function AdminFurniture() {
       {/* View Modal */}
       {showViewModal && selectedFurniture && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-2xl font-bold text-gray-900">
@@ -641,13 +641,13 @@ export default function AdminFurniture() {
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteConfirm}
-                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors cursor-pointer"
               >
                 Delete
               </button>

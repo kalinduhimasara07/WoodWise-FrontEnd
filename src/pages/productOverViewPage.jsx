@@ -236,7 +236,7 @@ export default function ProductOverview() {
           {/* 3D Model and Gallery */}
           <div className="flex gap-6">
             {/* Main 3D Model Display */}
-            <div className="w-[600px] h-[600px] flex items-center justify-center border-4 border-gray-700">
+            <div className="w-[600px] h-[600px] flex items-center justify-center border-1 border-amber-700 rounded-2xl overflow-hidden bg-gray-100">
               <ThreeDScene modelPath={furnitureModels[selectedModel]?.url || "/path/to/defaultModel.glb"} />
             </div>
 
