@@ -11,6 +11,7 @@ import Home from "./home";
 import ProductOverview from "./productOverViewPage";
 import CategoryPage from "./categoryPage";
 import AboutUs from "./aboutUs";
+import ContactUs from "./contactUs";
 
 export default function LandingPage() {
   return (
@@ -22,6 +23,7 @@ export default function LandingPage() {
         <Route path="/furniture/:id" element={<ProductOverview />} />
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/contactus" element={<ContactUs />} />
       </Routes>
 
       <Footer />

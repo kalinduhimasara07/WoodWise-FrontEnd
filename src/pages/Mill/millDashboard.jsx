@@ -6,6 +6,8 @@ import MillOrderPage from "./millOrderPage";
 import MillSupplies from "./millSupplies";
 import MillSuppliers from "./millSupliers";
 import MillMessages from "./millMessages";
+import AddTimber from "./addTimber";
+import EditTimber from "./editTimber";
 
 export default function MillHomePage() {
   return (
@@ -17,6 +19,8 @@ export default function MillHomePage() {
         </div>
         <Routes>
           <Route path="/dashboard" element={<MillDashboard />} />
+          <Route path="/inventory/add-timber" element={<AddTimber />} />
+          <Route path="/inventory/edit-timber/:id" element={<EditTimber />} />
           <Route path="/inventory" element={<MillInventory />} />
           <Route path="/orders" element={<MillOrderPage />} />
           <Route path="/supplies" element={<MillSupplies />} />
@@ -59,7 +63,9 @@ export function MillDashboard() {
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Ongoing Production Orders</h2>
+        <h2 className="text-2xl font-semibold mb-4">
+          Ongoing Production Orders
+        </h2>
         <table className="min-w-full text-sm">
           <thead className="bg-gray-200">
             <tr>
