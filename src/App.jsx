@@ -11,12 +11,14 @@ import ProductOverview from "./pages/productOverViewPage";
 import AdminHomePage from "./pages/Admin/adminHome";
 import { Toaster } from "react-hot-toast";
 import FurnitureShowcase from "./pages/furnitureShowcase";
+import ScrollToTop from "./utils/scrollToTop";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Toaster position="top-right" reverseOrder={false} />
+        <ScrollToTop />
         <Routes>
           <Route path="/*" element={<LandingPage />} />
           <Route path="/mill/*" element={<MillDashboard />} />

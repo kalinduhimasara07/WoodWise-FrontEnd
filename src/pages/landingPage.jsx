@@ -9,6 +9,7 @@ import { Route, Routes } from "react-router-dom";
 import FurnitureShowcase from "./furnitureShowcase";
 import Home from "./home";
 import ProductOverview from "./productOverViewPage";
+import CategoryPage from "./categoryPage";
 
 export default function LandingPage() {
   return (
@@ -18,19 +19,10 @@ export default function LandingPage() {
         <Route path="/" element={<Home />} />
         <Route path="/furniture" element={<FurnitureShowcase />} />
         <Route path="/furniture/:id" element={<ProductOverview />} />
-        <Route
-          path="/category"
-          element={
-            <div className="flex items-center justify-center text-4xl">
-              Category Page
-            </div>
-          }
-        />
+        <Route path="/category" element={<CategoryPage />} />
       </Routes>
-      
+
       <Footer />
     </div>
   );
 }
-
-

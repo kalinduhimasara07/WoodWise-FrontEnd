@@ -8,6 +8,7 @@ import {
   Heart,
   Loader2,
 } from "lucide-react";
+import Loading from "../components/loader";
 
 // You'll need to install axios: npm install axios
 // For now, I'll use fetch API which is built-in
@@ -316,7 +317,7 @@ const FurnitureShowcase = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <Loading/>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             Loading Furniture...
           </h2>
