@@ -10,6 +10,7 @@ import FurnitureShowcase from "./furnitureShowcase";
 import Home from "./home";
 import ProductOverview from "./productOverViewPage";
 import CategoryPage from "./categoryPage";
+import AboutUs from "./aboutUs";
 
 export default function LandingPage() {
   return (
@@ -20,6 +21,7 @@ export default function LandingPage() {
         <Route path="/furniture" element={<FurnitureShowcase />} />
         <Route path="/furniture/:id" element={<ProductOverview />} />
         <Route path="/category" element={<CategoryPage />} />
+        <Route path="/aboutus" element={<AboutUs />} />
       </Routes>
 
       <Footer />
