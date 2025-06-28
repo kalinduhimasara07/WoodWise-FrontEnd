@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Edit, Trash } from "lucide-react"; // Import Lucide icons
+import { Edit, Trash, AlertTriangle } from "lucide-react"; // Import Lucide icons
+import axios from "axios"; // Import Axios
 import Loading from "../../components/loader";
+import toast from "react-hot-toast";
 
 export default function MillInventory() {
   const [timberData, setTimberData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // State for modal visibility
+  const [furnitureToDelete, setFurnitureToDelete] = useState(null); // Store the timber item to delete
   const navigate = useNavigate();
 
   // Fetch timber inventory data
@@ -35,10 +39,32 @@ export default function MillInventory() {
     fetchTimberData();
   }, []);
 
+  // Handle delete click, show confirmation modal
   const handleDelete = (id) => {
-    // Placeholder for delete functionality
-    console.log(`Delete timber item with ID: ${id}`);
-    // You would call the delete API here
+    const timberItem = timberData.find((item) => item._id === id);
+    setFurnitureToDelete(timberItem); // Set the timber item to delete
+    setShowDeleteModal(true); // Show the modal
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/timber/${furnitureToDelete._id}`);
+      const result = response.data;
+      
+      if (result.success) {
+        toast.success("Timber item deleted successfully!");
+        // Refresh the timber data after successful deletion
+        setTimberData(timberData.filter(item => item._id !== furnitureToDelete._id));
+      } else {
+        toast.error("Error deleting timber item.");
+      }
+    } catch (error) {
+      toast.error("Error deleting timber item.");
+    } finally {
+      setShowDeleteModal(false); // Close the modal
+      setFurnitureToDelete(null); // Clear the selected item
+    }
   };
 
   return (
@@ -49,8 +75,7 @@ export default function MillInventory() {
           Timber Inventory
         </h1>
         <p className="text-sm text-gray-600">
-          Manage timber stock levels, monitor thresholds, and update inventory
-          status.
+          Manage timber stock levels, monitor thresholds, and update inventory status.
         </p>
       </div>
 
@@ -71,7 +96,7 @@ export default function MillInventory() {
             <tr>
               <th className="py-3 px-4 text-left">Category</th>
               <th className="py-3 px-4 text-left">Grade</th>
-              <th className="py-3 px-4 text-left">Dimensions (L x W x H)</th> {/* Moved to 3rd column */}
+              <th className="py-3 px-4 text-left">Dimensions (L x W x H)</th>
               <th className="py-3 px-4 text-left">Price per Unit ($)</th>
               <th className="py-3 px-4 text-left">Stock</th>
               <th className="py-3 px-4 text-left">SKU</th>
@@ -84,10 +109,10 @@ export default function MillInventory() {
             {loading ? (
               <tr>
                 <td colSpan="9" className="text-center py-4">
-                  <Loading/>
+                  <Loading />
                 </td>
               </tr>
-            ) : Array.isArray(timberData) && timberData.length > 0 ? (
+            ) : timberData.length > 0 ? (
               timberData.map((timber) => (
                 <tr key={timber._id} className="hover:bg-gray-100">
                   <td className="py-3 px-4">{timber.category}</td>
@@ -134,6 +159,39 @@ export default function MillInventory() {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-red-100 rounded-full">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">
+                Delete Timber Item
+              </h3>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete "{furnitureToDelete?.category}"? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
