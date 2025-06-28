@@ -7,7 +7,7 @@ import toast from "react-hot-toast"; // Assuming you're using react-hot-toast fo
 export default function AddTimber() {
   const [formData, setFormData] = useState({
     category: "",
-    grade: "",
+    grade: "Standard", // Default value set to "Standard"
     pricePerUnit: "",
     description: "",
     dimensions: {
@@ -25,16 +25,36 @@ export default function AddTimber() {
 
   // Categories and wood types based on the timber model
   const categories = [
-    "Teak",
-    "Oak",
-    "Mahogany",
-    "Pine",
-    "Walnut",
-    "Bamboo",
-    "Ash",
-    "Rosewood",
-    "Rubberwood",
-  ];
+  "Teak",
+  "Oak",
+  "Mahogany",
+  "Pine",
+  "Walnut",
+  "Bamboo",
+  "Ash",
+  "Rosewood",
+  "Rubberwood",
+  "Bodhi",
+  "Mango",
+  "Yaka",
+  "Halmilla",
+  "Vatica",
+  "Rambutan",
+  "Kumbuk",
+  "Balan",
+  "Dumbara",
+  "Hedar",
+  "Sassafras",
+  "Kachchan",
+  "Millettia",
+  "Koss",
+  "Lunumidella",
+  "Kandula",
+  "Berrya",
+  "Cinnamon",
+  "Ruhuna",
+];
+
 
   const grades = ["Premium", "Standard", "Economy"];
 
@@ -105,7 +125,7 @@ export default function AddTimber() {
         toast.success("Timber item added successfully!");
         setFormData({
           category: "",
-          grade: "",
+          grade: "Standard", // Reset default grade to Standard after submission
           pricePerUnit: "",
           description: "",
           dimensions: { length: "", width: "", height: "" },

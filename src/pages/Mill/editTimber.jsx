@@ -30,7 +30,34 @@ export default function EditTimber() {
 
   // Categories and grades based on the timber model
   const categories = [
-    "Teak", "Oak", "Mahogany", "Pine", "Walnut", "Bamboo", "Ash", "Rosewood", "Rubberwood",
+    "Teak",
+    "Oak",
+    "Mahogany",
+    "Pine",
+    "Walnut",
+    "Bamboo",
+    "Ash",
+    "Rosewood",
+    "Rubberwood",
+    "Bodhi",
+    "Mango",
+    "Yaka",
+    "Halmilla",
+    "Vatica",
+    "Rambutan",
+    "Kumbuk",
+    "Balan",
+    "Dumbara",
+    "Hedar",
+    "Sassafras",
+    "Kachchan",
+    "Millettia",
+    "Koss",
+    "Lunumidella",
+    "Kandula",
+    "Berrya",
+    "Cinnamon",
+    "Ruhuna",
   ];
 
   const grades = ["Premium", "Standard", "Economy"];
@@ -89,11 +116,14 @@ export default function EditTimber() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/timber/${timber._id}`, {
-        method: "PUT",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/timber/${timber._id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(formData),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const result = await response.json();
 
@@ -118,9 +148,12 @@ export default function EditTimber() {
         <div className="bg-white rounded-lg shadow-lg">
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900">Edit Timber Item</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Edit Timber Item
+            </h1>
             <p className="mt-1 text-sm text-gray-600">
-              Update the details below to modify the timber item in your collection
+              Update the details below to modify the timber item in your
+              collection
             </p>
           </div>
 
@@ -128,82 +161,120 @@ export default function EditTimber() {
             {/* Category and Grade */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Timber Type *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Timber Type *
+                </label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.category ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.category ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Timber Type</option>
                   {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
-                {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
+                {errors.category && (
+                  <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Grade *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Grade *
+                </label>
                 <select
                   name="grade"
                   value={formData.grade}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.grade ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.grade ? "border-red-500" : "border-gray-300"
+                  }`}
                 >
                   <option value="">Select Grade</option>
                   {grades.map((grade) => (
-                    <option key={grade} value={grade}>{grade}</option>
+                    <option key={grade} value={grade}>
+                      {grade}
+                    </option>
                   ))}
                 </select>
-                {errors.grade && <p className="mt-1 text-sm text-red-600">{errors.grade}</p>}
+                {errors.grade && (
+                  <p className="mt-1 text-sm text-red-600">{errors.grade}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">SKU *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  SKU *
+                </label>
                 <input
                   type="text"
                   name="sku"
                   value={formData.sku}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.sku ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.sku ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="Enter SKU"
                 />
-                {errors.sku && <p className="mt-1 text-sm text-red-600">{errors.sku}</p>}
+                {errors.sku && (
+                  <p className="mt-1 text-sm text-red-600">{errors.sku}</p>
+                )}
               </div>
             </div>
 
             {/* Price, Stock, and Dimensions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Price ($) *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price ($) *
+                </label>
                 <input
                   type="number"
                   name="pricePerUnit"
                   value={formData.pricePerUnit}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.pricePerUnit ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.pricePerUnit ? "border-red-500" : "border-gray-300"
+                  }`}
                   step="0.01"
                   placeholder="0.00"
                 />
-                {errors.pricePerUnit && <p className="mt-1 text-sm text-red-600">{errors.pricePerUnit}</p>}
+                {errors.pricePerUnit && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.pricePerUnit}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Stock Quantity *
+                </label>
                 <input
                   type="number"
                   name="stock"
                   value={formData.stock}
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.stock ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.stock ? "border-red-500" : "border-gray-300"
+                  }`}
                   placeholder="0"
                 />
-                {errors.stock && <p className="mt-1 text-sm text-red-600">{errors.stock}</p>}
+                {errors.stock && (
+                  <p className="mt-1 text-sm text-red-600">{errors.stock}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Dimensions (inches) *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Dimensions (inches) *
+                </label>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <input
@@ -239,22 +310,34 @@ export default function EditTimber() {
                     />
                   </div>
                 </div>
-                {errors.dimensions && <p className="mt-1 text-sm text-red-600">{errors.dimensions}</p>}
+                {errors.dimensions && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.dimensions}
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description *
+              </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={4}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.description ? "border-red-500" : "border-gray-300"}`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.description ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="Enter detailed description"
               />
-              {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
+              {errors.description && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.description}
+                </p>
+              )}
             </div>
 
             {/* Action Buttons */}
