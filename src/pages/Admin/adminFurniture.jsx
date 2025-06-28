@@ -92,7 +92,9 @@ export default function AdminFurniture() {
   };
 
   const handleEditClick = (item) => {
-    handleNavigation(`/admin/furniture/edit/${item.sku}`);
+    navigate(`/admin/furniture/edit/${item.sku}`, {
+      state: { furniture: item },
+    });
   };
 
   const handleDeleteConfirm = async () => {
@@ -134,7 +136,7 @@ export default function AdminFurniture() {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "LKR",
     }).format(price);
   };
 

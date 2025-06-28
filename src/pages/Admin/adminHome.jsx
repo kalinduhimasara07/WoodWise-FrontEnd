@@ -15,6 +15,8 @@ import { StoreDashboard } from "../Store/storeDashboard";
 import StoreInventory from "../Store/storeInventory";
 import StoreOrdersPage from "../Store/storeOrderPage";
 import StoreShowCase from "../Store/storeShowcase";
+import { Edit } from "lucide-react";
+import EditFurniture from "./editFurniture";
 
 export default function AdminHomePage() {
   return (
@@ -39,6 +41,7 @@ export default function AdminHomePage() {
           <Route path="/store/inventory" element={<StoreInventory />} />
           <Route path="/store/orders" element={<StoreOrdersPage />} />
           <Route path="/store/showcase" element={<StoreShowCase />} />
+          <Route path="/furniture/edit/:sku" element={<EditFurniture />} />
           {/* <Route path="/orders" element={<MillOrderPage />} />
             <Route path="/supplies" element={<MillSupplies />} />
             <Route path="/suppliers" element={<MillSuppliers />} />
