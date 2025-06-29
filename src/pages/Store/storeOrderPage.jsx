@@ -1,211 +1,844 @@
-import { useState } from 'react';
-import { Filter, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useMemo, useEffect } from "react";
+import {
+  Search,
+  Plus,
+  Eye,
+  Edit,
+  Filter,
+  Calendar,
+  User,
+  Package,
+  DollarSign,
+  Phone,
+  Mail,
+  MapPin,
+  FileText,
+  Users,
+  CreditCard,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
+import Loading from "../../components/loader";
 
-export default function StoreOrdersPage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('Order History');
-  const itemsPerPage = 7;
+const StoreOrdersPage = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(null);
+  const [updatingPayment, setUpdatingPayment] = useState(null);
 
-  const orderData = [
-    { product: 'Maggi', orderValue: 'Rs 4306', quantity: '43 Packets', orderId: '7535', deliveredDate: '11/12/22', status: 'Delayed', statusColor: 'text-orange-500' },
-    { product: 'Bru', orderValue: 'Rs ₹2557', quantity: '22 Packets', orderId: '5724', deliveredDate: '21/12/22', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Red Bull', orderValue: 'Rs 4075', quantity: '36 Packets', orderId: '2775', deliveredDate: '5/12/22', status: 'Returned', statusColor: 'text-red-500' },
-    { product: 'Bourn Vita', orderValue: 'Rs 5052', quantity: '14 Packets', orderId: '2275', deliveredDate: '8/12/22', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Horlicks', orderValue: 'Rs 5370', quantity: '5 Packets', orderId: '2427', deliveredDate: '9/1/23', status: 'Returned', statusColor: 'text-red-500' },
-    { product: 'Harpic', orderValue: 'Rs 6065', quantity: '10 Packets', orderId: '2578', deliveredDate: '9/1/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Ariel', orderValue: 'Rs 4078', quantity: '23 Packets', orderId: '2757', deliveredDate: '15/12/23', status: 'Delayed', statusColor: 'text-orange-500' },
-    { product: 'Scotch Brite', orderValue: 'Rs 3559', quantity: '43 Packets', orderId: '3757', deliveredDate: '6/6/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Coca cola', orderValue: 'Rs 2055', quantity: '41 Packets', orderId: '2474', deliveredDate: '11/11/22', status: 'Delayed', statusColor: 'text-orange-500' },
-    { product: 'Nestlé Milo', orderValue: 'Rs 3890', quantity: '30 Packets', orderId: '8632', deliveredDate: '12/3/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Pepsi', orderValue: 'Rs 2980', quantity: '25 Packets', orderId: '8621', deliveredDate: '18/2/23', status: 'Delayed', statusColor: 'text-orange-500' },
-    { product: 'Dettol', orderValue: 'Rs 4520', quantity: '20 Packets', orderId: '8712', deliveredDate: '22/1/23', status: 'Returned', statusColor: 'text-red-500' },
-    { product: 'Tide', orderValue: 'Rs 4999', quantity: '18 Packets', orderId: '8891', deliveredDate: '2/5/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Nescafé', orderValue: 'Rs 4100', quantity: '24 Packets', orderId: '8456', deliveredDate: '9/4/23', status: 'Delayed', statusColor: 'text-orange-500' },
-    { product: 'Sprite', orderValue: 'Rs 3305', quantity: '28 Packets', orderId: '8590', deliveredDate: '10/3/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Vim Liquid', orderValue: 'Rs 3888', quantity: '12 Bottles', orderId: '8743', deliveredDate: '5/2/23', status: 'Returned', statusColor: 'text-red-500' },
-    { product: 'Lux Soap', orderValue: 'Rs 3220', quantity: '40 Packets', orderId: '8977', deliveredDate: '11/6/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Dove Shampoo', orderValue: 'Rs 4785', quantity: '16 Bottles', orderId: '8112', deliveredDate: '15/6/23', status: 'Delayed', statusColor: 'text-orange-500' },
-    { product: 'Vim Liquid', orderValue: 'Rs 3888', quantity: '12 Bottles', orderId: '8743', deliveredDate: '5/2/23', status: 'Returned', statusColor: 'text-red-500' },
-    { product: 'Lux Soap', orderValue: 'Rs 3220', quantity: '40 Packets', orderId: '8977', deliveredDate: '11/6/23', status: 'Successful', statusColor: 'text-green-500' },
-    { product: 'Dove Shampoo', orderValue: 'Rs 4785', quantity: '16 Bottles', orderId: '8112', deliveredDate: '15/6/23', status: 'Delayed', statusColor: 'text-orange-500' }
+  const statusOptions = [
+    "All",
+    "Pending",
+    "In Production",
+    "Ready for Delivery",
+    "Completed",
+    "Cancelled",
   ];
 
-  // Pagination logic
-  const totalPages = Math.ceil(orderData.length / itemsPerPage);
-  const paginatedOrders = orderData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const statusColors = {
+    Pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    "In Production": "bg-blue-100 text-blue-800 border-blue-200",
+    "Ready for Delivery": "bg-purple-100 text-purple-800 border-purple-200",
+    Completed: "bg-green-100 text-green-800 border-green-200",
+    Cancelled: "bg-red-100 text-red-800 border-red-200",
+  };
 
-  const pageTransition = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.3 }
-};
+  // Fetch orders from backend
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch("http://localhost:5000/api/orders/");
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setOrders(result.data);
+      } else {
+        throw new Error(result.message || "Failed to fetch orders");
+      }
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update order status
+  const updateOrderStatus = async (orderNumber, newStatus) => {
+    try {
+      setUpdatingStatus(orderNumber);
+
+      const response = await fetch("http://localhost:5000/api/orders/status", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderNumber: orderNumber,
+          newStatus: newStatus,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update the local state with the updated order
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.orderNumber === orderNumber
+              ? {
+                  ...order,
+                  status: newStatus,
+                  updatedAt: result.data.updatedAt,
+                }
+              : order
+          )
+        );
+
+        // Update selected order if it's currently open in modal
+        if (selectedOrder && selectedOrder.orderNumber === orderNumber) {
+          setSelectedOrder({
+            ...selectedOrder,
+            status: newStatus,
+            updatedAt: result.data.updatedAt,
+          });
+        }
+      } else {
+        throw new Error(result.message || "Failed to update order status");
+      }
+    } catch (err) {
+      console.error("Error updating order status:", err);
+      setError(err.message);
+      // Optionally show an alert or toast notification
+      alert(`Error updating order status: ${err.message}`);
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
+  // Toggle payment completion status
+  const togglePaymentComplete = async (orderNumber) => {
+    try {
+      setUpdatingPayment(orderNumber);
+
+      const response = await fetch(
+        "http://localhost:5000/api/orders/payment-status",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderNumber: orderNumber,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update the local state with the updated order
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.orderNumber === orderNumber
+              ? {
+                  ...order,
+                  isPaymentCompleted: result.data.isPaymentCompleted,
+                  updatedAt: result.data.updatedAt,
+                }
+              : order
+          )
+        );
+
+        // Update selected order if it's currently open in modal
+        if (selectedOrder && selectedOrder.orderNumber === orderNumber) {
+          setSelectedOrder({
+            ...selectedOrder,
+            isPaymentCompleted: result.data.isPaymentCompleted,
+            updatedAt: result.data.updatedAt,
+          });
+        }
+      } else {
+        throw new Error(result.message || "Failed to update payment status");
+      }
+    } catch (err) {
+      console.error("Error updating payment status:", err);
+      setError(err.message);
+      alert(`Error updating payment status: ${err.message}`);
+    } finally {
+      setUpdatingPayment(null);
+    }
+  };
+
+  // Load orders on component mount
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  // Filter and search orders
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const matchesSearch =
+        order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerInfo.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        order.customerInfo.contactNumber.includes(searchTerm) ||
+        (order.millWorker &&
+          order.millWorker.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      const matchesStatus =
+        statusFilter === "All" || order.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [orders, searchTerm, statusFilter]);
+
+  // Calculate summary statistics
+  const stats = useMemo(() => {
+    const totalOrders = orders.length;
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0
+    );
+    const pendingOrders = orders.filter(
+      (order) => order.status === "Pending"
+    ).length;
+    const completedOrders = orders.filter(
+      (order) => order.status === "Completed"
+    ).length;
+    const paidOrders = orders.filter(
+      (order) => order.isPaymentCompleted
+    ).length;
+
+    return {
+      totalOrders,
+      totalRevenue,
+      pendingOrders,
+      completedOrders,
+      paidOrders,
+    };
+  }, [orders]);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "LKR",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const openOrderModal = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedOrder(null);
+  };
+
+  // Handle refresh
+  const handleRefresh = () => {
+    fetchOrders();
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-gray-50 w-full h-full rounded-3xl p-6 flex items-center justify-center">
+        <div className="text-center">
+          <Loading />
+          <p className="text-gray-600">Loading orders...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gray-50 w-full h-full rounded-3xl p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <p className="font-bold">Error loading orders</p>
+            <p>{error}</p>
+          </div>
+          <button
+            onClick={handleRefresh}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full px-6 py-2 bg-gray-50 h-[clac(100vh-70px)] overflow-y-auto rounded-4xl">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-2 ">
-        <h1 className="text-2xl font-bold text-gray-900">Store Orders</h1>
-        <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-          On Going Orders
-        </button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="mb-2 ">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Overall Orders</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
-          {/* Total Orders */}
-          <div className="bg-white p-3 border-r-2">
-            <div className="text-blue-500 font-semibold mb-1">Total Orders</div>
-            <div className="text-2xl font-bold text-gray-900 mb-2">37</div>
-            <div className="text-sm text-gray-500">Last 7 days</div>
-          </div>
-
-          {/* Total Received */}
-          <div className="bg-white p-3 border-r-2 ">
-            <div className="text-orange-500 font-semibold mb-1">Total Received</div>
-            <div className='flex'>
-                <div className=''>
-                    <div className="text-2xl font-bold text-gray-900 mb-2">32</div>
-                    <div className="text-sm text-gray-500">Last 7 days</div>
-                </div>
-                <div className="text-right ml-20">
-                <div className="text-sm text-gray-500">Revenue</div>
-                <div className="font-semibold text-gray-900">Rs 25000</div>
-                </div>
+    <div className="bg-gray-50 w-full h-full rounded-3xl p-6 overflow-auto">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Furniture Orders
+              </h1>
+              <p className="text-gray-600">
+                Manage and track all furniture orders
+              </p>
             </div>
-          </div>
-
-          {/* Total Returned */}
-          <div className="bg-white p-3 border-r-2 ">
-            <div className="text-blue-500 font-semibold mb-1">Total Returned</div>
-            <div className='flex '>
-                <div className=''>
-                    <div className="text-2xl font-bold text-gray-900 mb-2">5</div>
-                    <div className="text-sm text-gray-500">Last 7 days</div>
-                </div>
-                <div className="text-right ml-20">
-                <div className="text-sm text-gray-500">Cost</div>
-                <div className="font-semibold text-gray-900">Rs 2500</div>
-                </div>
-            </div>
-          </div>
-
-          {/* Processing */}
-          <div className="bg-white p-3">
-            <div className="text-orange-500 font-semibold mb-1">Processing</div>
-            <div className='flex '>
-                <div className=''>
-                    <div className="text-2xl font-bold text-gray-900 mb-2">12</div>
-                    <div className="text-sm text-gray-500">Ordered</div>
-                </div>
-                <div className="text-right ml-20">
-                <div className="text-sm text-gray-500">Cost</div>
-                <div className="font-semibold text-gray-900">Rs 2356</div>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Order History Section */}
-      <div className="bg-white rounded-lg shadow-sm ">
-        {/* Section Header */}
-        <div className="flex justify-between items-center p-2 ">
-          <h2 className="text-lg font-semibold text-gray-900">Order History</h2>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <Filter size={16} />
-              Filters
-            </button>
-            <button className="bg-[#a86523e7] hover:bg-[#a86523] text-white px-4 py-2 rounded-lg font-medium transition-colors">
-              Order History
+            <button
+              onClick={handleRefresh}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Refresh
             </button>
           </div>
         </div>
 
-        {/* Order History Table */}
-      <div className="bg-white mt-4 rounded-md shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full overflow-hidden">
-            <thead className="bg-gray-50 border-b-2 border-gray-300">
-              <tr>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Products</th>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Order Value</th>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Quantity</th>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Order ID</th>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Delivered Date</th>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Status</th>
-                <th className="text-left px-6 py-2 font-semibold text-gray-900">Operation</th>
-              </tr>
-            </thead>
-            <AnimatePresence mode="wait">
-  <motion.tbody
-    key={currentPage}
-    initial={pageTransition.initial}
-    animate={pageTransition.animate}
-    exit={pageTransition.exit}
-    transition={pageTransition.transition}
-  >
-    {paginatedOrders.map((order, index) => (
-                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                  <td className="px-6 py-2 font-medium text-gray-900">{order.product}</td>
-                  <td className="px-6 py-2 text-gray-700">{order.orderValue}</td>
-                  <td className="px-6 py-2 text-gray-700">{order.quantity}</td>
-                  <td className="px-6 py-2 text-gray-700">{order.orderId}</td>
-                  <td className="px-6 py-2 text-gray-700">{order.deliveredDate}</td>
-                  <td className="px-6 py-2">
-                    <span className={`font-medium ${order.statusColor}`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-2">
-                    <button className="text-blue-600 hover:text-blue-800 font-medium">
-                      View More
-                    </button>
-                  </td>
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Orders
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.totalOrders}
+                </p>
+              </div>
+              <Package className="h-8 w-8 text-blue-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Revenue
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {formatCurrency(stats.totalRevenue)}
+                </p>
+              </div>
+              <DollarSign className="h-8 w-8 text-green-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Pending Orders
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.pendingOrders}
+                </p>
+              </div>
+              <Calendar className="h-8 w-8 text-yellow-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Completed Orders
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.completedOrders}
+                </p>
+              </div>
+              <Users className="h-8 w-8 text-purple-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Paid Orders</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.paidOrders}
+                </p>
+              </div>
+              <CreditCard className="h-8 w-8 text-indigo-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Search and Filter */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search by order number, customer name, phone, or mill worker..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Filter className="h-5 w-5 text-gray-400" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                {statusOptions.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              New Order
+            </button>
+          </div>
+        </div>
+
+        {/* Orders Table */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Order Details
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Customer
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Items
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Amount
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Status
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Payment
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Mill Worker
+                  </th>
+                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-  </motion.tbody>
-</AnimatePresence>
-          </table>
-        </div>
-        </div>
-
-
-        {/* Pagination */}
-        {/* Pagination Controls */}
-        <div className="flex justify-between items-center px-6 py-1 border-t">
-          <button
-          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-          className={`flex items-center gap-2 px-4 text-gray-700 font-bold hover:text-gray-900 disabled:opacity-50 ${
-            currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'
-          }`}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft size={16} />
-          Previous
-        </button>
-          <div className="text-sm text-gray-600">
-            Page {currentPage} of {totalPages}
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredOrders.map((order) => (
+                  <tr key={order._id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {order.orderNumber}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {formatDate(order.createdAt)}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          by {order.orderedBy}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {order.customerInfo.name}
+                        </p>
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                          <Phone className="h-3 w-3" />
+                          {order.customerInfo.contactNumber}
+                        </p>
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                          <Mail className="h-3 w-3" />
+                          {order.customerInfo.email}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {order.furnitureItems.length} item
+                          {order.furnitureItems.length > 1 ? "s" : ""}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {order.furnitureItems
+                            .slice(0, 2)
+                            .map((item) => item.sku)
+                            .join(", ")}
+                          {order.furnitureItems.length > 2 && "..."}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {formatCurrency(order.totalAmount)}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Advance: {formatCurrency(order.advanceAmount)}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          Balance:{" "}
+                          {formatCurrency(
+                            order.totalAmount - order.advanceAmount
+                          )}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          updateOrderStatus(order.orderNumber, e.target.value)
+                        }
+                        disabled={updatingStatus === order.orderNumber}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                          statusColors[order.status]
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          updatingStatus === order.orderNumber
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                        }`}
+                      >
+                        {statusOptions.slice(1).map((status) => (
+                          <option key={status} value={status}>
+                            {status}
+                          </option>
+                        ))}
+                      </select>
+                      {updatingStatus === order.orderNumber && (
+                        <div className="text-xs text-blue-600 mt-1">
+                          Updating...
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col items-start">
+                        <button
+                          onClick={() =>
+                            togglePaymentComplete(order.orderNumber)
+                          }
+                          disabled={updatingPayment === order.orderNumber}
+                          className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            order.isPaymentCompleted
+                              ? "bg-green-100 text-green-800 border border-green-200 hover:bg-green-200"
+                              : "bg-red-100 text-red-800 border border-red-200 hover:bg-red-200"
+                          } ${
+                            updatingPayment === order.orderNumber
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                          }`}
+                        >
+                          {order.isPaymentCompleted ? (
+                            <CheckCircle className="h-3 w-3" />
+                          ) : (
+                            <XCircle className="h-3 w-3" />
+                          )}
+                          {order.isPaymentCompleted ? "Paid" : "Pending"}
+                        </button>
+                        {updatingPayment === order.orderNumber && (
+                          <div className="text-xs text-blue-600 mt-1">
+                            Updating...
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {order.millWorker || "Not Assigned"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Updated: {formatDate(order.updatedAt)}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openOrderModal(order)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="View Details"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <button
-        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-        className={`flex items-center gap-2 px-4 text-gray-700 font-bold hover:text-gray-900 disabled:opacity-50 ${
-          currentPage === totalPages ? 'cursor-not-allowed' : 'cursor-pointer'
-        }`}
-        disabled={currentPage === totalPages}
-      >
-        Next
-        <ChevronRight size={16} />
-      </button>
 
-          
+          {filteredOrders.length === 0 && (
+            <div className="text-center py-12">
+              <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">No orders found</p>
+              <p className="text-gray-400">
+                Try adjusting your search or filter criteria
+              </p>
+            </div>
+          )}
         </div>
+      </div>
+
+      {/* Order Details Modal */}
+      {showModal && selectedOrder && (
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Order Details
+                </h2>
+                <button
+                  onClick={closeModal}
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Order Summary */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Order Information
+                  </h3>
+                  <div className="space-y-2">
+                    <p>
+                      <span className="font-medium">Order Number:</span>{" "}
+                      {selectedOrder.orderNumber}
+                    </p>
+                    <p>
+                      <span className="font-medium">Status:</span>
+                      <span
+                        className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                          statusColors[selectedOrder.status]
+                        }`}
+                      >
+                        {selectedOrder.status}
+                      </span>
+                    </p>
+                    <p>
+                      <span className="font-medium">Payment Status:</span>
+                      <span
+                        className={`ml-2 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit ${
+                          selectedOrder.isPaymentCompleted
+                            ? "bg-green-100 text-green-800 border border-green-200"
+                            : "bg-red-100 text-red-800 border border-red-200"
+                        }`}
+                      >
+                        {selectedOrder.isPaymentCompleted ? (
+                          <CheckCircle className="h-3 w-3" />
+                        ) : (
+                          <XCircle className="h-3 w-3" />
+                        )}
+                        {selectedOrder.isPaymentCompleted ? "Paid" : "Pending"}
+                      </span>
+                    </p>
+                    <p>
+                      <span className="font-medium">Ordered By:</span>{" "}
+                      {selectedOrder.orderedBy}
+                    </p>
+                    <p>
+                      <span className="font-medium">Mill Worker:</span>{" "}
+                      {selectedOrder.millWorker || "Not Assigned"}
+                    </p>
+                    <p>
+                      <span className="font-medium">Created:</span>{" "}
+                      {formatDate(selectedOrder.createdAt)}
+                    </p>
+                    <p>
+                      <span className="font-medium">Updated:</span>{" "}
+                      {formatDate(selectedOrder.updatedAt)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Customer Information
+                  </h3>
+                  <div className="space-y-2">
+                    <p className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-gray-400" />
+                      {selectedOrder.customerInfo.name}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-gray-400" />
+                      {selectedOrder.customerInfo.contactNumber}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 text-gray-400" />
+                      {selectedOrder.customerInfo.email}
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 text-gray-400 mt-1" />
+                      {selectedOrder.customerInfo.address}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Furniture Items */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Furniture Items
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full border border-gray-200 rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
+                          SKU
+                        </th>
+                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
+                          Quantity
+                        </th>
+                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
+                          Unit Price
+                        </th>
+                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
+                          Total
+                        </th>
+                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
+                          Note
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {selectedOrder.furnitureItems.map((item, index) => (
+                        <tr key={index}>
+                          <td className="px-4 py-3 font-medium">{item.sku}</td>
+                          <td className="px-4 py-3">{item.quantity}</td>
+                          <td className="px-4 py-3">
+                            {formatCurrency(item.unitPrice)}
+                          </td>
+                          <td className="px-4 py-3 font-medium">
+                            {formatCurrency(item.quantity * item.unitPrice)}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600">
+                            {item.note}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Payment Summary */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  Payment Summary
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Total Amount:</span>
+                    <span className="font-semibold">
+                      {formatCurrency(selectedOrder.totalAmount)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Advance Amount:</span>
+                    <span className="font-semibold text-green-600">
+                      {formatCurrency(selectedOrder.advanceAmount)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between border-t border-gray-200 pt-2">
+                    <span className="font-medium">Balance Amount:</span>
+                    <span className="font-bold text-red-600">
+                      {formatCurrency(
+                        selectedOrder.totalAmount - selectedOrder.advanceAmount
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="font-medium">Payment Status:</span>
+                    <span
+                      className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
+                        selectedOrder.isPaymentCompleted
+                          ? "bg-green-100 text-green-800 border border-green-200"
+                          : "bg-red-100 text-red-800 border border-red-200"
+                      }`}
+                    >
+                      {selectedOrder.isPaymentCompleted ? (
+                        <CheckCircle className="h-4 w-4" />
+                      ) : (
+                        <XCircle className="h-4 w-4" />
+                      )}
+                      {selectedOrder.isPaymentCompleted
+                        ? "Fully Paid"
+                        : "Payment Pending"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notes */}
+              {selectedOrder.notes && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Notes
+                  </h3>
+                  <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">
+                    {selectedOrder.notes}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-        </div>
   );
-}
+};
+
+export default StoreOrdersPage;

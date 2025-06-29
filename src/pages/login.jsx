@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -128,12 +127,6 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="text-white text-sm">Password</label>
-                <button
-                  type="button"
-                  className="text-gray-400 text-sm hover:text-white transition-colors"
-                >
-                  forgot password?
-                </button>
               </div>
               <input
                 type="password"
@@ -144,19 +137,6 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 text-orange-500 bg-transparent border-gray-600 rounded focus:ring-orange-500 focus:ring-2"
-              />
-              <label htmlFor="remember" className="ml-2 text-gray-400 text-sm">
-                Remember for 30 days
-              </label>
-            </div>
-
             <button
               type="button"
               onClick={handleSubmit}
@@ -164,13 +144,6 @@ export default function LoginPage() {
             >
               Login
             </button>
-          </div>
-
-          <div className="mt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              Don't have an account?{" "}
-              <button className="text-white hover:underline">Sign Up</button>
-            </p>
           </div>
         </div>
       </div>

@@ -8,11 +8,13 @@ import StoreMessages from "./storeMessages";
 import PlaceOrder from "./addOrder";
 
 export default function StoreHome() {
-    return (
+  return (
+    <div>
+      <Header />
+      <div className="flex h-[calc(100vh-70px)] bg-[#d9d9d9]">
         <div>
-            <Header/>
-            <div className="flex h-[calc(100vh-70px)] bg-[#d9d9d9]">
-                <div><StoreSidebar/></div>
+             <StoreSidebar/>
+        </div>
                     <Routes>
                         <Route path="/dashboard" element={<StoreDashboard />} />
                         <Route path="/inventory" element={<StoreInventory />} />
@@ -21,17 +23,18 @@ export default function StoreHome() {
                         <Route path="/messages" element={<StoreMessages />} />
                         <Route path="/add-order" element={<PlaceOrder />} />
                     </Routes>
-            </div>
-        </div>
-    )
+      </div>
+    </div>
+  );
 }
 
-
 export function StoreDashboard() {
-    return (
-        <div className="w-full h-full bg-white rounded-4xl p-6">
-            <h1 className="text-3xl">Store Dashboard</h1>
-            <p className="mt-4 text-gray-600">This is where you can manage your store's operations.</p>
-        </div>
-    );
+  return (
+    <div className="w-full h-full bg-white rounded-4xl p-6">
+      <h1 className="text-3xl">Store Dashboard</h1>
+      <p className="mt-4 text-gray-600">
+        This is where you can manage your store's operations.
+      </p>
+    </div>
+  );
 }
