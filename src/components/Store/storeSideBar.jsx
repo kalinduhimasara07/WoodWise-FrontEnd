@@ -1,23 +1,27 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AiOutlineDashboard } from 'react-icons/ai';
-import { HiOutlineDesktopComputer } from 'react-icons/hi';
-import { MdShoppingCart, MdMessage, MdLogout } from 'react-icons/md';
-import { RiSofaLine } from 'react-icons/ri';
+import { useLocation, useNavigate } from "react-router-dom";
+import { AiOutlineDashboard } from "react-icons/ai";
+import { HiOutlineDesktopComputer } from "react-icons/hi";
+import { MdShoppingCart, MdMessage, MdLogout } from "react-icons/md";
+import { RiSofaLine } from "react-icons/ri";
 
 export default function StoreSidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const menuItems = [
-    { name: 'Dashboard', icon: AiOutlineDashboard, path: '/store/dashboard' },
-    { name: 'Inventory', icon: RiSofaLine, path: '/store/inventory' },
-    { name: 'Orders', icon: MdShoppingCart, path: '/store/orders' },
-    { name: 'Showcase', icon: HiOutlineDesktopComputer, path: '/store/showcase' },
+    { name: "Dashboard", icon: AiOutlineDashboard, path: "/store/dashboard" },
+    { name: "Inventory", icon: RiSofaLine, path: "/store/inventory" },
+    { name: "Orders", icon: MdShoppingCart, path: "/store/orders" },
+    {
+      name: "Showcase",
+      icon: HiOutlineDesktopComputer,
+      path: "/store/showcase",
+    },
   ];
 
   const bottomItems = [
-    { name: 'Messages', icon: MdMessage, path: '/store/messages' },
-    { name: 'Log Out', icon: MdLogout},
+    { name: "Messages", icon: MdMessage, path: "/store/messages" },
+    { name: "Log Out", icon: MdLogout, path: "/login" },
   ];
 
   return (
@@ -31,11 +35,14 @@ export default function StoreSidebar() {
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
                   pathname === item.path
-                    ? 'bg-[#a86523] text-white'
-                    : 'text-gray-700 hover:bg-gray-200'
+                    ? "bg-[#a86523] text-white"
+                    : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <item.icon size={30} color={pathname === item.path ? 'white' : '#a86523'} />
+                <item.icon
+                  size={30}
+                  color={pathname === item.path ? "white" : "#a86523"}
+                />
                 <span className="font-medium">{item.name}</span>
               </button>
             </li>
@@ -52,11 +59,14 @@ export default function StoreSidebar() {
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
                   pathname === item.path
-                    ? 'bg-[#a86523] text-white'
-                    : 'text-gray-700 hover:bg-gray-200'
+                    ? "bg-[#a86523] text-white"
+                    : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <item.icon size={30} color={pathname === item.path ? 'white' : '#a86523'} />
+                <item.icon
+                  size={30}
+                  color={pathname === item.path ? "white" : "#a86523"}
+                />
                 <span className="font-medium">{item.name}</span>
               </button>
             </li>

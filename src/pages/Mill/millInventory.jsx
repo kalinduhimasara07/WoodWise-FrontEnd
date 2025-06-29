@@ -457,7 +457,7 @@ export default function MillInventory() {
                       {timber.sku}
                     </td>
                     <td className="py-3 px-4">
-                      {timber.inStock ? (
+                      {timber.stock > 0 ? (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           In Stock
                         </span>
@@ -470,7 +470,7 @@ export default function MillInventory() {
                     <td className="py-3 px-4 text-gray-500">
                       {new Date(timber.updatedAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 text-center sticky right-0 bg-white">
+                    <td className="py-3 px-4 text-center sticky right-0 ">
                       <div className="flex justify-center gap-3">
                         <button
                           onClick={() =>
