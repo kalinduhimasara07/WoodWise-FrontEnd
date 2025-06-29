@@ -5,6 +5,7 @@ import StoreOrdersPage from "./storeOrderPage";
 import StoreInventory from "./storeInventory";
 import StoreShowCase from "./storeShowcase";
 import StoreMessages from "./storeMessages";
+import PlaceOrder from "./addOrder";
 
 export default function StoreHome() {
   return (
@@ -12,15 +13,16 @@ export default function StoreHome() {
       <Header />
       <div className="flex h-[calc(100vh-70px)] bg-[#d9d9d9]">
         <div>
-          <StoreSidebar />
+             <StoreSidebar/>
         </div>
-        <Routes>
-          <Route path="/dashboard" element={<StoreDashboard />} />
-          <Route path="/inventory" element={<StoreInventory />} />
-          <Route path="/orders" element={<StoreOrdersPage />} />
-          <Route path="/showcase" element={<StoreShowCase />} />
-          <Route path="/messages" element={<StoreMessages />} />
-        </Routes>
+                    <Routes>
+                        <Route path="/dashboard" element={<StoreDashboard />} />
+                        <Route path="/inventory" element={<StoreInventory />} />
+                        <Route path="/orders" element={<StoreOrdersPage />} />
+                        <Route path="/showcase" element={<StoreShowCase/>} />
+                        <Route path="/messages" element={<StoreMessages />} />
+                        <Route path="/add-order" element={<PlaceOrder />} />
+                    </Routes>
       </div>
     </div>
   );
