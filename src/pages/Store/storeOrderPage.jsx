@@ -19,6 +19,7 @@ import {
   XCircle,
 } from "lucide-react";
 import Loading from "../../components/loader";
+import { useNavigate } from "react-router-dom";
 
 const StoreOrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -30,6 +31,7 @@ const StoreOrdersPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(null);
   const [updatingPayment, setUpdatingPayment] = useState(null);
+  const navigate = useNavigate();
 
   const statusOptions = [
     "All",
@@ -281,6 +283,11 @@ const StoreOrdersPage = () => {
     );
   }
 
+
+  const handleNewOrder = () => {
+    navigate("/store/orders/add-order");
+  };
+
   if (error) {
     return (
       <div className="bg-gray-50 w-full h-full rounded-3xl p-6 flex items-center justify-center">
@@ -421,7 +428,7 @@ const StoreOrdersPage = () => {
                 ))}
               </select>
             </div>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+            <button onClick={handleNewOrder} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
               <Plus className="h-5 w-5" />
               New Order
             </button>

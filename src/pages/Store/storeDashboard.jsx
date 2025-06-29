@@ -13,16 +13,16 @@ export default function StoreHome() {
       <Header />
       <div className="flex h-[calc(100vh-70px)] bg-[#d9d9d9]">
         <div>
-             <StoreSidebar/>
+          <StoreSidebar />
         </div>
-                    <Routes>
-                        <Route path="/dashboard" element={<StoreDashboard />} />
-                        <Route path="/inventory" element={<StoreInventory />} />
-                        <Route path="/orders" element={<StoreOrdersPage />} />
-                        <Route path="/showcase" element={<StoreShowCase/>} />
-                        <Route path="/messages" element={<StoreMessages />} />
-                        <Route path="/add-order" element={<PlaceOrder />} />
-                    </Routes>
+        <Routes>
+          <Route path="/dashboard" element={<StoreDashboard />} />
+          <Route path="/inventory" element={<StoreInventory />} />
+          <Route path="/orders" element={<StoreOrdersPage />} />
+          <Route path="/orders/add-order" element={<PlaceOrder />} />
+          <Route path="/showcase" element={<StoreShowCase />} />
+          <Route path="/messages" element={<StoreMessages />} />
+        </Routes>
       </div>
     </div>
   );
