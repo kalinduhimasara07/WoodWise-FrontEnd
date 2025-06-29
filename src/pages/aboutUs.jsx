@@ -8,7 +8,7 @@ import {
   ArrowRight,
   CheckCircle,
 } from "lucide-react";
-import { motion } from 'framer-motion'; // Importing motion for animations
+import { motion } from "framer-motion"; // Importing motion for animations
 
 const AboutUs = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -167,7 +167,7 @@ const AboutUs = () => {
       </div>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-r from-slate-600 via-gray-900 to-slate-500 relative overflow-hidden">
+      <section className="m-20 rounded-[100px] py-20 bg-gradient-to-r from-slate-600 via-gray-900 to-slate-500 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -177,17 +177,21 @@ const AboutUs = () => {
         ></div>
         <div className="max-w-7xl mx-auto px-4 relative">
           <div className="text-center mb-12">
-            <h2 className="text-5xl font-bold text-white mb-4">Our Achievements</h2>
+            <h2 className="text-5xl font-bold text-white mb-4">
+              Our Achievements
+            </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div 
+                <div
                   key={index}
                   className={`bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-8 text-center group hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2 ${
-                    isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+                    isVisible
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-10 opacity-0"
                   }`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
