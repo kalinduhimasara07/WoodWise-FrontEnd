@@ -1,11 +1,40 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import BackButton from "../../components/backButton";
 import toast from "react-hot-toast";
 
 export default function PlaceOrder() {
+  const [furnitureData, setFurnitureData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [furnitureItems, setFurnitureItems] = useState([
     { sku: "", quantity: 1, unitPrice: "", note: "" },
   ]);
+
+  useEffect(() => {
+    const fetchFurniture = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5000/api/furniture');
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Fetched furniture data:', data);
+        setFurnitureData(data.data || []);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching furniture data:', err);
+        setError('Failed to load furniture data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFurniture();
+  }, []);
 
   const [order, setOrder] = useState({
     totalAmount: 0,
@@ -248,6 +277,27 @@ export default function PlaceOrder() {
                 className="grid grid-cols-6 gap-4 mb-2 items-end"
               >
                 <div>
+                  <select
+                    required
+                    className="w-[750px] px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mt-2"
+                    value={item.sku}
+                    onChange={(e) => {
+                      const selectedSku = e.target.value;
+                      const selectedFurniture = furnitureData.find((f) => f.sku === selectedSku);
+                      updateItem(index, "sku", selectedSku);
+                      if (selectedFurniture) {
+                        updateItem(index, "unitPrice", selectedFurniture.salePrice);
+                      }
+                    }}
+                  >
+                    <option value="">Select Furniture</option>
+                    {furnitureData.map((furniture) => (
+                      <option key={furniture.sku} value={furniture.sku}>
+                        {furniture.name + ' - ' + furniture.sku}
+                      </option>
+                    ))}
+                  </select>
+
                   <label className="block text-sm text-gray-600 mb-1">
                     SKU *
                   </label>
@@ -257,7 +307,9 @@ export default function PlaceOrder() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={item.sku}
                     onChange={(e) => updateItem(index, "sku", e.target.value)}
+                    readOnly
                   />
+
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-1">
@@ -315,6 +367,7 @@ export default function PlaceOrder() {
                 >
                   Remove
                 </button>
+                <hr className="my-4 w-[1500px] rounded" style={{ borderTopWidth: '6px', borderColor: '#d1d5db' }} />
               </div>
             ))}
             <button

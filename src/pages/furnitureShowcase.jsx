@@ -11,8 +11,6 @@ import {
 import Loading from "../components/loader";
 import { useNavigate } from "react-router-dom";
 
-// You'll need to install axios: npm install axios
-// For now, I'll use fetch API which is built-in
 const API_BASE_URL = "http://localhost:5000/api";
 
 const categories = [
