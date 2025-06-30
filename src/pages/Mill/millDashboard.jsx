@@ -8,6 +8,7 @@ import MillSuppliers from "./millSupliers";
 import MillMessages from "./millMessages";
 import AddTimber from "./addTimber";
 import EditTimber from "./editTimber";
+import NotFoundPage from "../../components/notFoundPage";
 
 export default function MillHomePage() {
   return (
@@ -26,6 +27,7 @@ export default function MillHomePage() {
           <Route path="/supplies" element={<MillSupplies />} />
           <Route path="/suppliers" element={<MillSuppliers />} />
           <Route path="/messages" element={<MillMessages />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </div>

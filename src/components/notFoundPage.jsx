@@ -1,13 +1,14 @@
-import { Home, ArrowLeft } from 'lucide-react';
+import { Home, ArrowLeft } from "lucide-react";
+import { use } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function NotFoundPage() {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+    <div className="w-full h-full bg-white rounded-4xl p-6 flex flex-col items-center justify-center px-4">
       <div className="text-center space-y-8 max-w-md mx-auto">
         {/* 404 Number */}
-        <h1 className="text-8xl font-bold text-gray-900">
-          404
-        </h1>
+        <h1 className="text-8xl font-bold text-gray-900">404</h1>
 
         {/* Error Message */}
         <div className="space-y-4">
@@ -21,12 +22,18 @@ export default function NotFoundPage() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-          <button className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+          >
             <ArrowLeft className="w-4 h-4" />
             <span>Go Back</span>
           </button>
-          
-          <button className="flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200">
+
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200"
+          >
             <Home className="w-4 h-4" />
             <span>Home</span>
           </button>

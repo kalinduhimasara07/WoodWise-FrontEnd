@@ -92,7 +92,7 @@ export default function StoreInventory() {
   };
 
   const handleEditClick = (item) => {
-    navigate(`/admin/furniture/edit/${item.sku}`, {
+    navigate(`/store/inventory/edit-furniture/${item.sku}`, {
       state: { furniture: item },
     });
   };

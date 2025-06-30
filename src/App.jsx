@@ -7,6 +7,7 @@ import LandingPage from "./pages/landingPage";
 import AdminHomePage from "./pages/Admin/adminHome";
 import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./utils/scrollToTop";
+import NotFoundPage from "./components/notFoundPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/store/*" element={<StoreDashboard />} />
           <Route path="/admin/*" element={<AdminHomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </>

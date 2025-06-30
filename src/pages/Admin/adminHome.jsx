@@ -21,6 +21,7 @@ import AddTimber from "./Mill/addTimber";
 import StoreOrdersPage from "./Store/storeOrderPage";
 import PlaceOrder from "./Store/addOrder";
 import StoreInventory from "./Store/storeInventory";
+import NotFoundPage from "../../components/notFoundPage";
 
 export default function AdminHomePage() {
   return (
@@ -49,10 +50,7 @@ export default function AdminHomePage() {
           <Route path="/store/orders/add-order" element={<PlaceOrder />} />
           <Route path="/store/showcase" element={<StoreShowCase />} />
           <Route path="/furniture/edit/:sku" element={<EditFurniture />} />
-          {/* <Route path="/orders" element={<MillOrderPage />} />
-            <Route path="/supplies" element={<MillSupplies />} />
-            <Route path="/suppliers" element={<MillSuppliers />} />
-            <Route path="/messages" element={<MillMessages />} /> */}
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </div>
