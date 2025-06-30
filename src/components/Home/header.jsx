@@ -106,6 +106,13 @@ export default function Header() {
                 </span>
               </button>
             ) : null}
+            {location.state && location.state.from === "adminstoreShowcase" ? (
+              <button onClick={() => navigate("/admin/store/showcase")} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 transition-colors duration-300 rounded-4xl">
+                <span className=" cursor-pointer">
+                  Back to Admin Store
+                </span>
+              </button>
+            ) : null}
             <Link to="/cart" className="text-gray-500 hover:text-amber-700">
               {/* <FiShoppingCart size={24} /> */}
               <span className="text-2xl">🛒</span> {/* Placeholder icon */}

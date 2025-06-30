@@ -73,7 +73,7 @@ export default function AdminSidebar() {
           path: "/admin/store/orders",
           paths: ["/admin/store/orders", "/admin/store/orders/add-order"],
         },
-        { name: "Showcase", path: "/admin/store/showcase" },
+        { name: "Showcase", path: "/admin/store/showcase", paths: ["/admin/store/showcase","/admin/store/showcase/:id"], },
       ],
     },
   ];

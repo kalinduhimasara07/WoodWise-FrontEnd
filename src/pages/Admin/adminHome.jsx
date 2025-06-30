@@ -13,7 +13,7 @@ import { MillDashboard } from "../Mill/millDashboard";
 import { StoreDashboard } from "../Store/storeDashboard";
 
 
-import StoreShowCase from "../Store/storeShowcase";
+
 import { Edit } from "lucide-react";
 import EditFurniture from "./editFurniture";
 import MillInventory from "./Mill/millInventory";
@@ -22,6 +22,8 @@ import StoreOrdersPage from "./Store/storeOrderPage";
 import PlaceOrder from "./Store/addOrder";
 import StoreInventory from "./Store/storeInventory";
 import NotFoundPage from "../../components/notFoundPage";
+import StoreShowCase from "./Store/storeShowcase";
+import ProductOverview from "./Store/productOverViewPage";
 
 export default function AdminHomePage() {
   return (
@@ -49,6 +51,7 @@ export default function AdminHomePage() {
           <Route path="/store/orders" element={<StoreOrdersPage />} />
           <Route path="/store/orders/add-order" element={<PlaceOrder />} />
           <Route path="/store/showcase" element={<StoreShowCase />} />
+          <Route path="/store/showcase/:id" element={<ProductOverview />} />
           <Route path="/furniture/edit/:sku" element={<EditFurniture />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
