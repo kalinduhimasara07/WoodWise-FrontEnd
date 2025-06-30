@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation to get the current path
+import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useLocation to get the current path
 
 // You can install react-icons by running: npm install react-icons
 // Then, you can uncomment the following lines to use them.
@@ -9,6 +9,9 @@ export default function Header() {
   // Get the current location object, which contains the pathname
   const location = useLocation();
   const { pathname } = location;
+  const navigate = useNavigate(); // Import useNavigate to programmatically navigate
+
+  // For debugging purposes, you can see the current path in the console
 
   // A helper function to determine if a link is active
   const isActive = (path) => pathname === path;
@@ -20,7 +23,11 @@ export default function Header() {
           {/* Logo Section */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center space-x-3">
-              <img className="h-10 w-auto" src="/logo.png" alt="WoodWise Logo" />
+              <img
+                className="h-10 w-auto"
+                src="/logo.png"
+                alt="WoodWise Logo"
+              />
               <span className="text-3xl font-poppins font-bold text-gray-800">
                 WoodWise
               </span>
@@ -92,8 +99,13 @@ export default function Header() {
 
           {/* Right-side Icons (Optional but recommended) */}
           <div className="hidden md:flex items-center space-x-5">
-             {/* You can use react-icons here */}
-            
+            {location.state && location.state.from === "storeShowcase" ? (
+              <button onClick={() => navigate("/store/showcase")} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 transition-colors duration-300 rounded-4xl">
+                <span className=" cursor-pointer">
+                  Back to Store
+                </span>
+              </button>
+            ) : null}
             <Link to="/cart" className="text-gray-500 hover:text-amber-700">
               {/* <FiShoppingCart size={24} /> */}
               <span className="text-2xl">🛒</span> {/* Placeholder icon */}

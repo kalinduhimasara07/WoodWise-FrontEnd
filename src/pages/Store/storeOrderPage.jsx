@@ -325,7 +325,7 @@ const StoreOrdersPage = () => {
   }
 
   return (
-    <div className="bg-gray-50 w-full h-full rounded-3xl p-6 overflow-auto">
+    <div className="bg-gray-50 w-full h-full rounded-3xl p-6 overflow-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

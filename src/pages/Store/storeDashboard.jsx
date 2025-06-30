@@ -9,6 +9,7 @@ import PlaceOrder from "./addOrder";
 import AddFurniture from "./addFurniture";
 import NotFoundPage from "../../components/notFoundPage";
 import EditFurniture from "./editFurniture";
+import ProductOverview from "./productOverViewPage";
 
 export default function StoreHome() {
   return (
@@ -22,10 +23,14 @@ export default function StoreHome() {
           <Route path="/dashboard" element={<StoreDashboard />} />
           <Route path="/inventory" element={<StoreInventory />} />
           <Route path="/inventory/add-furniture" element={<AddFurniture />} />
-          <Route path="/inventory/edit-furniture/:id" element={<EditFurniture />} />
+          <Route
+            path="/inventory/edit-furniture/:id"
+            element={<EditFurniture />}
+          />
           <Route path="/orders" element={<StoreOrdersPage />} />
           <Route path="/orders/add-order" element={<PlaceOrder />} />
           <Route path="/showcase" element={<StoreShowCase />} />
+          <Route path="/showcase/:id" element={<ProductOverview />} />
           <Route path="/messages" element={<StoreMessages />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>

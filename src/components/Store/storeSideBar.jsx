@@ -15,6 +15,9 @@ export default function StoreSidebar() {
   // Define inventory-related paths
   const inventoryPaths = ["/store/inventory", "/store/inventory/add-furniture"];
 
+  // Define showcase-related paths
+  const showcasePaths = ["/store/showcase", "/store/showcase/:id"];
+
   // Check if current path is order-related
   const isOrderPath = orderPaths.some((path) => pathname.startsWith(path));
 
@@ -43,6 +46,7 @@ export default function StoreSidebar() {
       name: "Showcase",
       icon: HiOutlineDesktopComputer,
       path: "/store/showcase",
+      subPaths: showcasePaths, // Store all showcase paths for reference
     },
   ];
 
@@ -58,6 +62,9 @@ export default function StoreSidebar() {
     }
     if (item.name === "Inventory") {
       return inventoryPaths.some((path) => pathname.startsWith(path));
+    }
+    if (item.name === "Showcase") {
+      return showcasePaths.some((path) => pathname.startsWith(path));
     }
     return pathname === item.path;
   };

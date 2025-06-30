@@ -9,6 +9,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Loading from "../components/loader";
+import { useNavigate } from "react-router-dom";
 
 // You'll need to install axios: npm install axios
 // For now, I'll use fetch API which is built-in
@@ -72,13 +73,14 @@ const FurnitureCard = ({ furniture }) => {
     return `${price}`;
   };
 
+  const navigate = useNavigate();
   // Navigate to furniture detail page
   const handleCardClick = () => {
-    window.location.href = `/furniture/${furniture.sku}`;
+    navigate(`/furniture/${furniture.sku}`);
   };
 
   return (
-    <div 
+    <div
       className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer"
       onClick={handleCardClick}
     >
@@ -127,7 +129,7 @@ const FurnitureCard = ({ furniture }) => {
           >
             <Heart size={16} fill={isWishlisted ? "currentColor" : "none"} />
           </button>
-          <button 
+          <button
             onClick={(e) => e.stopPropagation()}
             className="p-2 bg-white text-gray-600 rounded-full shadow-lg hover:bg-blue-50 transition-all duration-200"
           >
@@ -317,7 +319,7 @@ const FurnitureShowcase = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loading/>
+          <Loading />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             Loading Furniture...
           </h2>
