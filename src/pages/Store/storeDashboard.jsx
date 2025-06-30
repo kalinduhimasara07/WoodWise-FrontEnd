@@ -6,6 +6,7 @@ import StoreInventory from "./storeInventory";
 import StoreShowCase from "./storeShowcase";
 import StoreMessages from "./storeMessages";
 import PlaceOrder from "./addOrder";
+import AddFurniture from "./addFurniture";
 
 export default function StoreHome() {
   return (
@@ -18,6 +19,7 @@ export default function StoreHome() {
         <Routes>
           <Route path="/dashboard" element={<StoreDashboard />} />
           <Route path="/inventory" element={<StoreInventory />} />
+          <Route path="/inventory/add-furniture" element={<AddFurniture />} />
           <Route path="/orders" element={<StoreOrdersPage />} />
           <Route path="/orders/add-order" element={<PlaceOrder />} />
           <Route path="/showcase" element={<StoreShowCase />} />

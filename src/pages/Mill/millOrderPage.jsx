@@ -427,13 +427,13 @@ const MillOrderPage = () => {
                 ))}
               </select>
             </div>
-            <button
+            {/* <button
               onClick={handleNewOrder}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
               <Plus className="h-5 w-5" />
               New Order
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -637,7 +637,7 @@ const MillOrderPage = () => {
       {/* Order Details Modal */}
       {showModal && selectedOrder && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-gray-900">
@@ -645,7 +645,7 @@ const MillOrderPage = () => {
                 </h2>
                 <button
                   onClick={closeModal}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+                  className="text-4xl p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
                 >
                   ×
                 </button>

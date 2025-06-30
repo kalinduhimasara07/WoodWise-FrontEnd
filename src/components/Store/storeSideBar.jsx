@@ -3,15 +3,42 @@ import { AiOutlineDashboard } from "react-icons/ai";
 import { HiOutlineDesktopComputer } from "react-icons/hi";
 import { MdShoppingCart, MdMessage, MdLogout } from "react-icons/md";
 import { RiSofaLine } from "react-icons/ri";
+import { useEffect } from "react";
 
 export default function StoreSidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  // Define order-related paths
+  const orderPaths = ["/store/orders", "/store/orders/add-order"];
+
+  // Define inventory-related paths
+  const inventoryPaths = ["/store/inventory", "/store/inventory/add-furniture"];
+
+  // Check if current path is order-related
+  const isOrderPath = orderPaths.some((path) => pathname.startsWith(path));
+
+  // Default to orders if on store root
+  useEffect(() => {
+    if (pathname === "/store" || pathname === "/store/") {
+      navigate("/store/dashboard", { replace: true });
+    }
+  }, [pathname, navigate]);
+
   const menuItems = [
     { name: "Dashboard", icon: AiOutlineDashboard, path: "/store/dashboard" },
-    { name: "Inventory", icon: RiSofaLine, path: "/store/inventory" },
-    { name: "Orders", icon: MdShoppingCart, path: "/store/orders" },
+    {
+      name: "Inventory",
+      icon: RiSofaLine,
+      path: "/store/inventory",
+      subPaths: inventoryPaths, // Store all inventory paths for reference
+    },
+    {
+      name: "Orders",
+      icon: MdShoppingCart,
+      path: "/store/orders",
+      subPaths: orderPaths, // Store all order paths for reference
+    },
     {
       name: "Showcase",
       icon: HiOutlineDesktopComputer,
@@ -24,6 +51,17 @@ export default function StoreSidebar() {
     { name: "Log Out", icon: MdLogout, path: "/login" },
   ];
 
+  // Function to check if item should be active
+  const isItemActive = (item) => {
+    if (item.name === "Orders") {
+      return isOrderPath;
+    }
+    if (item.name === "Inventory") {
+      return inventoryPaths.some((path) => pathname.startsWith(path));
+    }
+    return pathname === item.path;
+  };
+
   return (
     <div className="w-64 h-[calc(100vh-70px)] pt-2 bg-[#d9d9d9] flex flex-col">
       {/* Navigation */}
@@ -34,14 +72,14 @@ export default function StoreSidebar() {
               <button
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
-                  pathname === item.path
+                  isItemActive(item)
                     ? "bg-[#a86523] text-white"
                     : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 <item.icon
                   size={30}
-                  color={pathname === item.path ? "white" : "#a86523"}
+                  color={isItemActive(item) ? "white" : "#a86523"}
                 />
                 <span className="font-medium">{item.name}</span>
               </button>

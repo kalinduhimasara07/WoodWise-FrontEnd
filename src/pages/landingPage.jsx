@@ -12,6 +12,7 @@ import ProductOverview from "./productOverViewPage";
 import CategoryPage from "./categoryPage";
 import AboutUs from "./aboutUs";
 import ContactUs from "./contactUs";
+import NotFoundPage from "../components/notFoundPage";
 
 export default function LandingPage() {
   return (
@@ -24,6 +25,7 @@ export default function LandingPage() {
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
 
       <Footer />

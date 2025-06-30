@@ -6,17 +6,21 @@ import AddFurniture from "./addFurniture";
 import AdminUserPage from "./adminUser";
 import AdminFurniture from "./adminFurniture";
 import AdminDashboard from "./adminDashboard";
-import MillInventory from "../Mill/millInventory";
 import MillOrderPage from "../Mill/millOrderPage";
 import MillSupplies from "../Mill/millSupplies";
 import MillSuppliers from "../Mill/millSupliers";
 import { MillDashboard } from "../Mill/millDashboard";
 import { StoreDashboard } from "../Store/storeDashboard";
-import StoreInventory from "../Store/storeInventory";
-import StoreOrdersPage from "../Store/storeOrderPage";
+
+
 import StoreShowCase from "../Store/storeShowcase";
 import { Edit } from "lucide-react";
 import EditFurniture from "./editFurniture";
+import MillInventory from "./Mill/millInventory";
+import AddTimber from "./Mill/addTimber";
+import StoreOrdersPage from "./Store/storeOrderPage";
+import PlaceOrder from "./Store/addOrder";
+import StoreInventory from "./Store/storeInventory";
 
 export default function AdminHomePage() {
   return (
@@ -34,12 +38,15 @@ export default function AdminHomePage() {
           <Route path="/furniture" element={<AdminFurniture />} />
           <Route path="/mill/dashboard" element={<MillDashboard />} />
           <Route path="/mill/inventory" element={<MillInventory />} />
+          <Route path="/mill/inventory/add-timber" element={<AddTimber />} />
           <Route path="/mill/orders" element={<MillOrderPage />} />
           <Route path="/mill/supplies" element={<MillSupplies />} />
           <Route path="/mill/suppliers" element={<MillSuppliers />} />
           <Route path="/store/dashboard" element={<StoreDashboard />} />
           <Route path="/store/inventory" element={<StoreInventory />} />
+          <Route path="/store/inventory/add-furniture" element={<AddFurniture />} />
           <Route path="/store/orders" element={<StoreOrdersPage />} />
+          <Route path="/store/orders/add-order" element={<PlaceOrder />} />
           <Route path="/store/showcase" element={<StoreShowCase />} />
           <Route path="/furniture/edit/:sku" element={<EditFurniture />} />
           {/* <Route path="/orders" element={<MillOrderPage />} />

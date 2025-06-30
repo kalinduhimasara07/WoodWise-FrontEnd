@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { GiWoodBeam } from "react-icons/gi";
 import { MdShoppingCart, MdMessage, MdLogout } from "react-icons/md";
@@ -12,10 +12,34 @@ export default function MillSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
 
+  // Helper function to check if a path is active for items with multiple paths
+  const isPathActive = (paths) => {
+    if (Array.isArray(paths)) {
+      return paths.some((path) => pathname.startsWith(path));
+    }
+    return pathname === paths;
+  };
+
+  useEffect(() => {
+    if (pathname === "/mill" || pathname === "/mill/") {
+      navigate("/mill/dashboard", { replace: true });
+    }
+  }, [pathname, navigate]);
+
   const menuItems = [
     { name: "Dashboard", icon: AiOutlineDashboard, path: "/mill/dashboard" },
-    { name: "Inventory", icon: TbWood, path: "/mill/inventory" },
-    { name: "Orders", icon: MdShoppingCart, path: "/mill/orders" },
+    {
+      name: "Inventory",
+      icon: TbWood,
+      path: ["/mill/inventory", "/mill/inventory/add-timber"],
+      defaultPath: "/mill/inventory",
+    },
+    {
+      name: "Orders",
+      icon: MdShoppingCart,
+      path: ["/mill/orders", "/mill/orders/add-order"],
+      defaultPath: "/mill/orders",
+    },
     { name: "Supplies", icon: GiWoodBeam, path: "/mill/supplies" },
     { name: "Suppliers", icon: PiBuildingsDuotone, path: "/mill/suppliers" },
   ];
@@ -24,6 +48,16 @@ export default function MillSidebar() {
     { name: "Messages", icon: MdMessage, path: "/mill/messages" },
     { name: "Log Out", icon: MdLogout, path: "/login" },
   ];
+
+  const handleNavigation = (item) => {
+    if (item.defaultPath) {
+      // If the item has multiple paths, navigate to the default path
+      navigate(item.defaultPath);
+    } else {
+      // For single path items, navigate normally
+      navigate(item.path);
+    }
+  };
 
   return (
     <div className="w-64 h-[calc(100vh-70px)] pt-2 bg-[#d9d9d9] flex flex-col">
@@ -44,16 +78,16 @@ export default function MillSidebar() {
           {menuItems.map((item) => (
             <li key={item.name}>
               <button
-                onClick={() => navigate(item.path)}
+                onClick={() => handleNavigation(item)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
-                  pathname === item.path
+                  isPathActive(item.path)
                     ? "bg-[#a86523] text-white"
                     : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 <item.icon
                   size={30}
-                  color={pathname === item.path ? "white" : "#a86523"}
+                  color={isPathActive(item.path) ? "white" : "#a86523"}
                 />
                 <span className="font-medium">{item.name}</span>
               </button>

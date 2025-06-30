@@ -14,9 +14,9 @@ import {
   Image,
 } from "lucide-react";
 import axios from "axios";
-import Loading from "../../components/loader";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import Loading from "../../../components/loader";
 
 export default function StoreInventory() {
   const [furniture, setFurniture] = useState([]);
@@ -188,7 +188,9 @@ export default function StoreInventory() {
         </div>
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition-colors shadow-lg hover:shadow-xl"
-          onClick={() => handleNavigation("/store/inventory/add-furniture")}
+          onClick={() =>
+            handleNavigation("/admin/store/inventory/add-furniture")
+          }
         >
           <Plus className="h-5 w-5" />
           Add Furniture

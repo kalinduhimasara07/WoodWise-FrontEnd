@@ -36,8 +36,20 @@ export default function AdminSidebar() {
       hasDropdown: true,
       subItems: [
         { name: "Dashboard", path: "/admin/mill/dashboard" },
-        { name: "Inventory", path: "/admin/mill/inventory" },
-        { name: "Orders", path: "/admin/mill/orders" },
+        {
+          name: "Inventory",
+          path: "/admin/mill/inventory",
+          paths: ["/admin/mill/inventory", "/admin/mill/inventory/add-timber"],
+        },
+        {
+          name: "Orders",
+          path: "/admin/mill/orders",
+          paths: [
+            "/admin/mill/orders",
+            "/admin/mill/orders/add",
+            "/admin/mill/orders/edit",
+          ],
+        },
         { name: "Supplies", path: "/admin/mill/supplies" },
         { name: "Suppliers", path: "/admin/mill/suppliers" },
       ],
@@ -48,8 +60,19 @@ export default function AdminSidebar() {
       hasDropdown: true,
       subItems: [
         { name: "Dashboard", path: "/admin/store/dashboard" },
-        { name: "Inventory", path: "/admin/store/inventory" },
-        { name: "Orders", path: "/admin/store/orders" },
+        {
+          name: "Inventory",
+          path: "/admin/store/inventory",
+          paths: [
+            "/admin/store/inventory",
+            "/admin/store/inventory/add-furniture",
+          ],
+        },
+        {
+          name: "Orders",
+          path: "/admin/store/orders",
+          paths: ["/admin/store/orders", "/admin/store/orders/add-order"],
+        },
         { name: "Showcase", path: "/admin/store/showcase" },
       ],
     },
@@ -60,11 +83,23 @@ export default function AdminSidebar() {
     { name: "Log Out", icon: MdLogout, path: "/login" },
   ];
 
+  // Default to dashboard if on admin root
+  useEffect(() => {
+    if (pathname === "/admin" || pathname === "/admin/") {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [pathname, navigate]);
+
   // Update the active item whenever the pathname changes
   useEffect(() => {
     const activeMenu = menuItems.find((item) => {
       if (item.hasDropdown) {
-        return item.subItems.some((subItem) => pathname === subItem.path);
+        return item.subItems.some((subItem) => {
+          if (subItem.paths) {
+            return subItem.paths.some((path) => pathname.startsWith(path));
+          }
+          return pathname === subItem.path;
+        });
       }
       return item.paths
         ? item.paths.some((path) => pathname.startsWith(path)) // For multiple paths
@@ -91,12 +126,24 @@ export default function AdminSidebar() {
 
   const isItemActive = (item) => {
     if (item.hasDropdown) {
-      return item.subItems.some((subItem) => pathname === subItem.path);
+      return item.subItems.some((subItem) => {
+        if (subItem.paths) {
+          return subItem.paths.some((path) => pathname.startsWith(path));
+        }
+        return pathname === subItem.path;
+      });
     }
     return (
       (item.paths && item.paths.some((path) => pathname.startsWith(path))) ||
       pathname === item.path
     );
+  };
+
+  const isSubItemActive = (subItem) => {
+    if (subItem.paths) {
+      return subItem.paths.some((path) => pathname.startsWith(path));
+    }
+    return pathname === subItem.path;
   };
 
   return (
@@ -144,7 +191,7 @@ export default function AdminSidebar() {
                           <button
                             onClick={() => navigate(subItem.path)}
                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors duration-200 ${
-                              pathname === subItem.path
+                              isSubItemActive(subItem)
                                 ? "bg-[#a86523] text-white"
                                 : "text-gray-600 hover:bg-gray-200"
                             }`}

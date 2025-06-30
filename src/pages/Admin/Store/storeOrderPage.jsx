@@ -19,8 +19,9 @@ import {
   XCircle,
   AlertTriangle,
 } from "lucide-react";
-import Loading from "../../components/loader";
+
 import { useNavigate } from "react-router-dom";
+import Loading from "../../../components/loader";
 
 const StoreOrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -302,7 +303,7 @@ const StoreOrdersPage = () => {
   }
 
   const handleNewOrder = () => {
-    navigate("/store/orders/add-order");
+    navigate("/admin/store/orders/add-order");
   };
 
   if (error) {
