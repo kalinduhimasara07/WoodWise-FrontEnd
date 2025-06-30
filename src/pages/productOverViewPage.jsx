@@ -11,6 +11,7 @@ import ThreeDScene from "../components/3D models/ThreeDScene";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Loading from "../components/loader";
+import NotFoundPage from "../components/notFoundPage";
 
 export default function ProductOverview() {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -21,22 +22,30 @@ export default function ProductOverview() {
   const [furnitureModels, setFurnitureModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState(0);
   const { id } = useParams();
+  const [notFound, setNotFound] = useState(false);
 
   //fetch the data from the api
   useEffect(() => {
   axios
     .get("http://localhost:5000/api/furniture/" + id)
     .then((response) => {
-      setFurniture(response.data);
-      setFurnitureImages(response.data.data.images);
-      setFurnitureModels(response.data.data.models);
-      setIsLoading(false);
+      if (!response.data || !response.data.data) {
+        setNotFound(true); // No item data found
+        setIsLoading(false);
+      } else {
+        setFurniture(response.data);
+        setFurnitureImages(response.data.data.images || []);
+        setFurnitureModels(response.data.data.models || []);
+        setIsLoading(false);
+      }
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
+      setNotFound(true); // Error or 404 from server
       setIsLoading(false);
     });
-}, []);
+}, [id]);
+
 
 
   console.log(furniture);
@@ -53,6 +62,8 @@ export default function ProductOverview() {
     <div>
       {isLoading ? (
         loading()
+      ) : notFound ? (
+        NotFoundPage()
       ) : (
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
