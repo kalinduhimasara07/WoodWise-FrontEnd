@@ -70,7 +70,7 @@ export default function ProductOverview() {
           {loading()}
         </div>
       ) : notFound ? (
-        NotFoundPage()
+        <NotFoundPage />
       ) : (
         <div className="mx-auto px-4 py-8 w-full h-full bg-white rounded-4xl p-6 overflow-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
