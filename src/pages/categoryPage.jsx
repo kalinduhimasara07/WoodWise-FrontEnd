@@ -65,7 +65,7 @@ const CategoryPage = () => {
 
                 {Object.keys(groupedFurniture).map(category => (
                     <div key={category} className="mb-16">
-                        <h2 className="text-5xl font-semibold text-gray-700 mx-10 mb-12 p-3 bg-amber-100 border-l-6 border-amber-500 pl-4">{category}</h2>
+                        <h2 className="text-3xl font-semibold text-gray-700 mx-10 mb-12 p-3 bg-amber-100 border-l-6 border-amber-500 pl-4">{category}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             {groupedFurniture[category].map(item => (
                                 <FurnitureCard key={item._id} furniture={item} />

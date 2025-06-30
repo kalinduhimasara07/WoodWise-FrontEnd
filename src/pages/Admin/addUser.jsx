@@ -10,6 +10,7 @@ import {
   Building,
   MapPin,
   CheckCircle,
+  X,
 } from "lucide-react";
 import BackButton from "../../components/backButton";
 import toast from "react-hot-toast";
@@ -21,6 +22,7 @@ function AddUser() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: "storestaff",
   });
   const navigate = useNavigate();
@@ -33,7 +35,68 @@ function AddUser() {
     }));
   };
 
+  // Password validation function
+  const validatePassword = (password) => {
+    const validations = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+    };
+    return validations;
+  };
+
+  const passwordValidation = validatePassword(formData.password);
+  const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
+
   const handleRegister = async () => {
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match", {
+        style: {
+          border: "1px solid #dc2626",
+          padding: "16px",
+          color: "#991b1b",
+          backgroundColor: "#fef2f2",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        },
+        iconTheme: {
+          primary: "#dc2626",
+          secondary: "#fef2f2",
+        },
+        duration: 5000,
+      });
+      return;
+    }
+
+    // Check if password meets all requirements
+    const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+    if (!isPasswordValid) {
+      toast.error("Password does not meet all requirements", {
+        style: {
+          border: "1px solid #dc2626",
+          padding: "16px",
+          color: "#991b1b",
+          backgroundColor: "#fef2f2",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        },
+        iconTheme: {
+          primary: "#dc2626",
+          secondary: "#fef2f2",
+        },
+        duration: 5000,
+      });
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
@@ -131,7 +194,7 @@ function AddUser() {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 User Role:
               </label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <label
                   className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
                     formData.role === "admin"
@@ -269,7 +332,13 @@ function AddUser() {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder="Confirm password"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                      formData.confirmPassword !== "" && !passwordsMatch
+                        ? "border-red-500"
+                        : formData.confirmPassword !== "" && passwordsMatch
+                        ? "border-green-500"
+                        : "border-gray-300"
+                    }`}
                     required
                   />
                   <button
@@ -284,6 +353,21 @@ function AddUser() {
                     )}
                   </button>
                 </div>
+                {formData.confirmPassword !== "" && (
+                  <div className="mt-2 flex items-center text-sm">
+                    {passwordsMatch ? (
+                      <div className="flex items-center text-green-600">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Passwords match
+                      </div>
+                    ) : (
+                      <div className="flex items-center text-red-600">
+                        <X className="w-4 h-4 mr-1" />
+                        Passwords do not match
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -293,20 +377,44 @@ function AddUser() {
               </p>
               <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
                 <div className="flex items-center">
-                  <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
-                  At least 8 characters
+                  {passwordValidation.length ? (
+                    <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
+                  ) : (
+                    <X className="w-3 h-3 text-red-500 mr-1" />
+                  )}
+                  <span className={passwordValidation.length ? "text-green-600" : "text-red-600"}>
+                    At least 8 characters
+                  </span>
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
-                  One uppercase letter
+                  {passwordValidation.uppercase ? (
+                    <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
+                  ) : (
+                    <X className="w-3 h-3 text-red-500 mr-1" />
+                  )}
+                  <span className={passwordValidation.uppercase ? "text-green-600" : "text-red-600"}>
+                    One uppercase letter
+                  </span>
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
-                  One lowercase letter
+                  {passwordValidation.lowercase ? (
+                    <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
+                  ) : (
+                    <X className="w-3 h-3 text-red-500 mr-1" />
+                  )}
+                  <span className={passwordValidation.lowercase ? "text-green-600" : "text-red-600"}>
+                    One lowercase letter
+                  </span>
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
-                  One number
+                  {passwordValidation.number ? (
+                    <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
+                  ) : (
+                    <X className="w-3 h-3 text-red-500 mr-1" />
+                  )}
+                  <span className={passwordValidation.number ? "text-green-600" : "text-red-600"}>
+                    One number
+                  </span>
                 </div>
               </div>
             </div>

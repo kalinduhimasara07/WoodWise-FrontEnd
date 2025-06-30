@@ -150,7 +150,7 @@ export default function AdminDashboard() {
           },
           {
             type: "info",
-            message: "12 new user registrations today",
+            message: "12 new orders placed today",
             icon: Users,
           },
           {

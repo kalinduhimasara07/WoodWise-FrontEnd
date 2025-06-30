@@ -212,13 +212,15 @@ export default function AdminUserPage() {
                       </span>
                     </td>
                     <td className="p-4">
-                      <button
-                        onClick={() => handleDeleteClick(user)}
-                        className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
-                        title="Delete user"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      {user.role === "admin" ? null : (
+                        <button
+                          onClick={() => handleDeleteClick(user)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                          title="Delete user"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))
