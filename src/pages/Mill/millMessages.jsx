@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock, CheckCircle, Eye, User, RefreshCw, AlertCircle, Factory } from 'lucide-react';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
-const MessageComponent = ({ 
+const MessageComponent = ({
   message,
   currentUserId = "millStaff",
-  onMarkAsRead = null 
+  onMarkAsRead = null
 }) => {
   const [isRead, setIsRead] = useState(message.readers?.includes(currentUserId) || false);
   const [isMarkingAsRead, setIsMarkingAsRead] = useState(false);
@@ -15,13 +15,13 @@ const MessageComponent = ({
     const date = new Date(timestamp);
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
+
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -66,24 +66,24 @@ const MessageComponent = ({
             </span>
           </div>
         )}
-        
+
         {/* Message Bubble */}
         <div className={`relative px-4 py-3 rounded-2xl shadow-sm ${
-          isOwnMessage 
-            ? 'bg-green-500 text-white' 
+          isOwnMessage
+            ? 'bg-green-500 text-white'
             : 'bg-white border border-gray-200'
         }`}>
           {/* Unread Indicator */}
           {!isRead && !isOwnMessage && (
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
           )}
-          
+
           <p className={`text-sm leading-relaxed ${
             isOwnMessage ? 'text-white' : 'text-gray-800'
           }`}>
             {message.message}
           </p>
-          
+
           {/* Message Footer */}
           <div className={`flex items-center justify-between mt-2 text-xs ${
             isOwnMessage ? 'text-green-100' : 'text-gray-500'
@@ -92,14 +92,14 @@ const MessageComponent = ({
               <Clock className="w-3 h-3" />
               <span>{formatTimestamp(message.timestamp)}</span>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               {/* Read Count */}
               <div className="flex items-center space-x-1">
                 <Eye className="w-3 h-3" />
                 <span>{message.readers?.length || 0}</span>
               </div>
-              
+
               {/* Status Indicator */}
               {message.status === 'read' && (
                 <CheckCircle className="w-3 h-3 text-green-400" />
@@ -107,7 +107,7 @@ const MessageComponent = ({
             </div>
           </div>
         </div>
-        
+
         {/* Mark as Read Button */}
         {!isRead && !isOwnMessage && (
           <button
@@ -123,7 +123,7 @@ const MessageComponent = ({
             <span>{isMarkingAsRead ? 'Marking...' : 'Mark as read'}</span>
           </button>
         )}
-        
+
         {/* Readers List (expandable) */}
         {isOwnMessage && message.readers?.length > 0 && (
           <div className="mt-2 text-xs text-right">
@@ -191,13 +191,13 @@ const MessageInput = ({ onSendMessage, currentUserId, disabled = false, isSendin
             className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 pr-12 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             style={{ minHeight: '44px', maxHeight: '120px' }}
           />
-          
+
           {/* Character count */}
           <div className="absolute bottom-1 right-2 text-xs text-gray-400">
             {message.length}/500
           </div>
         </div>
-        
+
         <button
           type="submit"
           disabled={!message.trim() || disabled || isSending}
@@ -226,7 +226,7 @@ const MessageInput = ({ onSendMessage, currentUserId, disabled = false, isSendin
           )}
         </button>
       </form>
-      
+
       {/* Typing indicator */}
       {isTyping && !isSending && (
         <div className="mt-2 text-xs text-gray-500 flex items-center">
@@ -249,16 +249,25 @@ const MillMessages = () => {
   const [error, setError] = useState(null);
   const [isSending, setIsSending] = useState(false);
   const currentUserId = "millStaff"; // Set to millStaff for mill component
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   // Fetch all messages from backend
   const fetchMessages = async () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch(`${API_BASE_URL}/messages/`);
       const data = await response.json();
-      
+
       if (data.success) {
         // Sort messages by timestamp (oldest first for chat display)
         const sortedMessages = data.data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -287,9 +296,9 @@ const MillMessages = () => {
           userId: currentUserId
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         // Update the message in local state
         setMessages(prevMessages =>
@@ -312,7 +321,7 @@ const MillMessages = () => {
   const handleSendMessage = async (messageText) => {
     try {
       setIsSending(true);
-      
+
       const response = await fetch(`${API_BASE_URL}/messages/`, {
         method: 'POST',
         headers: {
@@ -323,9 +332,9 @@ const MillMessages = () => {
           messageContent: messageText
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         // Add the new message to local state
         setMessages(prevMessages => [...prevMessages, data.data]);
@@ -391,7 +400,7 @@ const MillMessages = () => {
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
-        
+
         {/* Error Display */}
         {error && (
           <div className="mx-4 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
@@ -405,7 +414,7 @@ const MillMessages = () => {
             </button>
           </div>
         )}
-        
+
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {messages.length === 0 ? (
@@ -423,8 +432,9 @@ const MillMessages = () => {
               />
             ))
           )}
+          <div ref={messagesEndRef} />
         </div>
-        
+
         {/* Message Input */}
         <MessageInput
           onSendMessage={handleSendMessage}

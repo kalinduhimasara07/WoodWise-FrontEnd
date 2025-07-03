@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Clock,
   CheckCircle,
@@ -303,6 +303,17 @@ const AdminMessages = () => {
   const [error, setError] = useState(null);
   const [isSending, setIsSending] = useState(false);
   const currentUserId = "admin"; // Admin user ID
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Automatically scroll to the bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
 
   // Fetch all messages from backend
   const fetchMessages = async () => {
@@ -469,7 +480,10 @@ const AdminMessages = () => {
         )}
 
         {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+        <div 
+            className="flex-1 overflow-y-auto p-4 space-y-4" 
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {messages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <User className="w-12 h-12 mx-auto mb-2 text-gray-300" />
@@ -485,6 +499,7 @@ const AdminMessages = () => {
               />
             ))
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Message Input */}

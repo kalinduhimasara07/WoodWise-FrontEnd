@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Clock,
   CheckCircle,
@@ -303,6 +303,15 @@ const StoreMessages = () => {
   const [error, setError] = useState(null);
   const [isSending, setIsSending] = useState(false);
   const currentUserId = "storeStaff"; // You can make this dynamic based on logged-in user
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   // Fetch all messages from backend
   const fetchMessages = async () => {
@@ -488,6 +497,7 @@ const StoreMessages = () => {
               />
             ))
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Message Input */}
