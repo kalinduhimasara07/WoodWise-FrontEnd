@@ -367,7 +367,7 @@ export default function PlaceOrder() {
                 >
                   Remove
                 </button>
-                <hr className="my-4 w-[1500px] rounded" style={{ borderTopWidth: '6px', borderColor: '#d1d5db' }} />
+                <hr className="my-4 w-[1000px] rounded" style={{ borderTopWidth: '6px', borderColor: '#d1d5db' }} />
               </div>
             ))}
             <button

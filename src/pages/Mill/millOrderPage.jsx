@@ -8,15 +8,15 @@ import {
   Calendar,
   User,
   Package,
-  DollarSign,
   Phone,
   Mail,
   MapPin,
   FileText,
   Users,
-  CreditCard,
-  CheckCircle,
-  XCircle,
+  Info,
+  Ruler,
+  Palette,
+  Tag,
 } from "lucide-react";
 import Loading from "../../components/loader";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,8 @@ const MillOrderPage = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(null);
-  const [updatingPayment, setUpdatingPayment] = useState(null);
+  const [furnitureDetails, setFurnitureDetails] = useState({});
+  const [loadingFurniture, setLoadingFurniture] = useState({});
   const navigate = useNavigate();
 
   const statusOptions = [
@@ -48,6 +49,45 @@ const MillOrderPage = () => {
     "Ready for Delivery": "bg-purple-100 text-purple-800 border-purple-200",
     Completed: "bg-green-100 text-green-800 border-green-200",
     Cancelled: "bg-red-100 text-red-800 border-red-200",
+  };
+
+  // Fetch furniture details by ID
+  const fetchFurnitureDetails = async (furnitureId) => {
+    console.log("Fetching furniture details for ID:", furnitureId);
+    if (furnitureDetails[furnitureId] || loadingFurniture[furnitureId]) {
+      return;
+    }
+
+    try {
+      setLoadingFurniture((prev) => ({ ...prev, [furnitureId]: true }));
+
+      const response = await fetch(
+        `http://localhost:5000/api/furniture/${furnitureId}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setFurnitureDetails((prev) => ({
+          ...prev,
+          [furnitureId]: result.data,
+        }));
+      } else {
+        throw new Error(result.message || "Failed to fetch furniture details");
+      }
+    } catch (err) {
+      console.error("Error fetching furniture details:", err);
+      setFurnitureDetails((prev) => ({
+        ...prev,
+        [furnitureId]: null,
+      }));
+    } finally {
+      setLoadingFurniture((prev) => ({ ...prev, [furnitureId]: false }));
+    }
   };
 
   // Fetch orders from backend
@@ -126,68 +166,9 @@ const MillOrderPage = () => {
     } catch (err) {
       console.error("Error updating order status:", err);
       setError(err.message);
-      // Optionally show an alert or toast notification
       alert(`Error updating order status: ${err.message}`);
     } finally {
       setUpdatingStatus(null);
-    }
-  };
-
-  // Toggle payment completion status
-  const togglePaymentComplete = async (orderNumber) => {
-    try {
-      setUpdatingPayment(orderNumber);
-
-      const response = await fetch(
-        "http://localhost:5000/api/orders/payment-status",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            orderNumber: orderNumber,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Update the local state with the updated order
-        setOrders((prevOrders) =>
-          prevOrders.map((order) =>
-            order.orderNumber === orderNumber
-              ? {
-                  ...order,
-                  isPaymentCompleted: result.data.isPaymentCompleted,
-                  updatedAt: result.data.updatedAt,
-                }
-              : order
-          )
-        );
-
-        // Update selected order if it's currently open in modal
-        if (selectedOrder && selectedOrder.orderNumber === orderNumber) {
-          setSelectedOrder({
-            ...selectedOrder,
-            isPaymentCompleted: result.data.isPaymentCompleted,
-            updatedAt: result.data.updatedAt,
-          });
-        }
-      } else {
-        throw new Error(result.message || "Failed to update payment status");
-      }
-    } catch (err) {
-      console.error("Error updating payment status:", err);
-      setError(err.message);
-      alert(`Error updating payment status: ${err.message}`);
-    } finally {
-      setUpdatingPayment(null);
     }
   };
 
@@ -218,36 +199,28 @@ const MillOrderPage = () => {
   // Calculate summary statistics
   const stats = useMemo(() => {
     const totalOrders = orders.length;
-    const totalRevenue = orders.reduce(
-      (sum, order) => sum + order.totalAmount,
-      0
-    );
     const pendingOrders = orders.filter(
       (order) => order.status === "Pending"
+    ).length;
+    const inProductionOrders = orders.filter(
+      (order) => order.status === "In Production"
     ).length;
     const completedOrders = orders.filter(
       (order) => order.status === "Completed"
     ).length;
-    const paidOrders = orders.filter(
-      (order) => order.isPaymentCompleted
-    ).length;
+    const totalItems = orders.reduce(
+      (sum, order) => sum + order.furnitureItems.length,
+      0
+    );
 
     return {
       totalOrders,
-      totalRevenue,
       pendingOrders,
+      inProductionOrders,
       completedOrders,
-      paidOrders,
+      totalItems,
     };
   }, [orders]);
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "LKR",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -260,6 +233,13 @@ const MillOrderPage = () => {
   const openOrderModal = (order) => {
     setSelectedOrder(order);
     setShowModal(true);
+
+    // Fetch furniture details for all items in the order
+    order.furnitureItems.forEach((item) => {
+      if (item.furnitureId) {
+        fetchFurnitureDetails(item.furnitureId);
+      }
+    });
   };
 
   const closeModal = () => {
@@ -314,10 +294,10 @@ const MillOrderPage = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Furniture Orders
+                Mill Orders
               </h1>
               <p className="text-gray-600">
-                Manage and track all furniture orders
+                Manage and track furniture production orders
               </p>
             </div>
             <button
@@ -349,20 +329,6 @@ const MillOrderPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">
-                  Total Revenue
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {formatCurrency(stats.totalRevenue)}
-                </p>
-              </div>
-              <DollarSign className="h-8 w-8 text-green-600" />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
                   Pending Orders
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
@@ -377,25 +343,39 @@ const MillOrderPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">
-                  Completed Orders
+                  In Production
                 </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.completedOrders}
+                  {stats.inProductionOrders}
                 </p>
               </div>
-              <Users className="h-8 w-8 text-purple-600" />
+              <Users className="h-8 w-8 text-blue-600" />
             </div>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Paid Orders</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Completed Orders
+                </p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stats.paidOrders}
+                  {stats.completedOrders}
                 </p>
               </div>
-              <CreditCard className="h-8 w-8 text-indigo-600" />
+              <Package className="h-8 w-8 text-green-600" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Items</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.totalItems}
+                </p>
+              </div>
+              <Tag className="h-8 w-8 text-purple-600" />
             </div>
           </div>
         </div>
@@ -427,13 +407,6 @@ const MillOrderPage = () => {
                 ))}
               </select>
             </div>
-            {/* <button
-              onClick={handleNewOrder}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-5 w-5" />
-              New Order
-            </button> */}
           </div>
         </div>
 
@@ -453,13 +426,7 @@ const MillOrderPage = () => {
                     Items
                   </th>
                   <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
-                    Amount
-                  </th>
-                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
                     Status
-                  </th>
-                  <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
-                    Payment
                   </th>
                   <th className="text-left px-6 py-4 text-sm font-medium text-gray-900">
                     Mill Worker
@@ -513,20 +480,11 @@ const MillOrderPage = () => {
                             .join(", ")}
                           {order.furnitureItems.length > 2 && "..."}
                         </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {formatCurrency(order.totalAmount)}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Advance: {formatCurrency(order.advanceAmount)}
-                        </p>
                         <p className="text-xs text-gray-400">
-                          Balance:{" "}
-                          {formatCurrency(
-                            order.totalAmount - order.advanceAmount
+                          Total Qty:{" "}
+                          {order.furnitureItems.reduce(
+                            (sum, item) => sum + item.quantity,
+                            0
                           )}
                         </p>
                       </div>
@@ -557,37 +515,6 @@ const MillOrderPage = () => {
                           Updating...
                         </div>
                       )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col items-start">
-                        <button
-                          onClick={() =>
-                            togglePaymentComplete(order.orderNumber)
-                          }
-                          disabled={updatingPayment === order.orderNumber}
-                          className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                            order.isPaymentCompleted
-                              ? "bg-green-100 text-green-800 border border-green-200 hover:bg-green-200"
-                              : "bg-red-100 text-red-800 border border-red-200 hover:bg-red-200"
-                          } ${
-                            updatingPayment === order.orderNumber
-                              ? "opacity-50 cursor-not-allowed"
-                              : "cursor-pointer"
-                          }`}
-                        >
-                          {order.isPaymentCompleted ? (
-                            <CheckCircle className="h-3 w-3" />
-                          ) : (
-                            <XCircle className="h-3 w-3" />
-                          )}
-                          {order.isPaymentCompleted ? "Paid" : "Pending"}
-                        </button>
-                        {updatingPayment === order.orderNumber && (
-                          <div className="text-xs text-blue-600 mt-1">
-                            Updating...
-                          </div>
-                        )}
-                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <div>
@@ -637,11 +564,14 @@ const MillOrderPage = () => {
       {/* Order Details Modal */}
       {showModal && selectedOrder && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div
+            className="bg-white rounded-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  Order Details
+                  Order Details - {selectedOrder.orderNumber}
                 </h2>
                 <button
                   onClick={closeModal}
@@ -672,23 +602,6 @@ const MillOrderPage = () => {
                         }`}
                       >
                         {selectedOrder.status}
-                      </span>
-                    </p>
-                    <p>
-                      <span className="font-medium">Payment Status:</span>
-                      <span
-                        className={`ml-2 px-2 py-1 rounded-full text-xs flex items-center gap-1 w-fit ${
-                          selectedOrder.isPaymentCompleted
-                            ? "bg-green-100 text-green-800 border border-green-200"
-                            : "bg-red-100 text-red-800 border border-red-200"
-                        }`}
-                      >
-                        {selectedOrder.isPaymentCompleted ? (
-                          <CheckCircle className="h-3 w-3" />
-                        ) : (
-                          <XCircle className="h-3 w-3" />
-                        )}
-                        {selectedOrder.isPaymentCompleted ? "Paid" : "Pending"}
                       </span>
                     </p>
                     <p>
@@ -735,97 +648,145 @@ const MillOrderPage = () => {
                 </div>
               </div>
 
-              {/* Furniture Items */}
+              {/* Furniture Items with Details */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Furniture Items
+                  Furniture Items & Details
                 </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-200 rounded-lg">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
-                          SKU
-                        </th>
-                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
-                          Quantity
-                        </th>
-                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
-                          Unit Price
-                        </th>
-                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
-                          Total
-                        </th>
-                        <th className="text-left px-4 py-3 text-sm font-medium text-gray-900">
-                          Note
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {selectedOrder.furnitureItems.map((item, index) => (
-                        <tr key={index}>
-                          <td className="px-4 py-3 font-medium">{item.sku}</td>
-                          <td className="px-4 py-3">{item.quantity}</td>
-                          <td className="px-4 py-3">
-                            {formatCurrency(item.unitPrice)}
-                          </td>
-                          <td className="px-4 py-3 font-medium">
-                            {formatCurrency(item.quantity * item.unitPrice)}
-                          </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">
-                            {item.note}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="space-y-4">
+                  {selectedOrder.furnitureItems.map((item, index) => {
+                    const furniture = furnitureDetails[item.furnitureId];
+                    const isLoading = loadingFurniture[item.furnitureId];
+
+                    return (
+                      <div
+                        key={index}
+                        className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                      >
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          <div>
+                            <h4 className="font-medium text-gray-900 mb-2">
+                              Order Item
+                            </h4>
+                            <div className="space-y-1 text-sm">
+                              <p>
+                                <span className="font-medium">SKU:</span>{" "}
+                                {item.sku}
+                              </p>
+                              <p>
+                                <span className="font-medium">Quantity:</span>{" "}
+                                {item.quantity}
+                              </p>
+                              {item.note && (
+                                <p>
+                                  <span className="font-medium">Note:</span>{" "}
+                                  {item.note}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 className="font-medium text-gray-900 mb-2">
+                              Furniture Details
+                            </h4>
+                            {isLoading ? (
+                              <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                                Loading details...
+                              </div>
+                            ) : furniture ? (
+                              <div className="space-y-1 text-sm">
+                                <p className="flex items-center gap-2">
+                                  <Tag className="h-3 w-3 text-gray-400" />
+                                  <span className="font-medium">
+                                    Name:
+                                  </span>{" "}
+                                  {furniture.name}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Package className="h-3 w-3 text-gray-400" />
+                                  <span className="font-medium">
+                                    Category:
+                                  </span>{" "}
+                                  {furniture.category}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Palette className="h-3 w-3 text-gray-400" />
+                                  <span className="font-medium">
+                                    Material:
+                                  </span>{" "}
+                                  {furniture.material || "Not specified"}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Ruler className="h-3 w-3 text-gray-400" />
+                                  <span className="font-medium">
+                                    Dimensions:
+                                  </span>{" "}
+                                  {furniture.dimensions || "Not specified"}
+                                </p>
+                                {furniture.description && (
+                                  <p className="flex items-start gap-2">
+                                    <Info className="h-3 w-3 text-gray-400 mt-1" />
+                                    <span className="font-medium">
+                                      Description:
+                                    </span>{" "}
+                                    {furniture.description}
+                                  </p>
+                                )}
+                                {furniture.specifications && (
+                                  <p className="flex items-start gap-2">
+                                    <FileText className="h-3 w-3 text-gray-400 mt-1" />
+                                    <span className="font-medium">
+                                      Specifications:
+                                    </span>{" "}
+                                    {furniture.specifications}
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <p className="text-sm text-red-500">
+                                Failed to load furniture details
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Payment Summary */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              {/* Order Summary */}
+              <div className="bg-blue-50 rounded-lg p-4">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  Payment Summary
+                  Order Summary
                 </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Total Amount:</span>
-                    <span className="font-semibold">
-                      {formatCurrency(selectedOrder.totalAmount)}
-                    </span>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">Total Items</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {selectedOrder.furnitureItems.length}
+                    </p>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Advance Amount:</span>
-                    <span className="font-semibold text-green-600">
-                      {formatCurrency(selectedOrder.advanceAmount)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between border-t border-gray-200 pt-2">
-                    <span className="font-medium">Balance Amount:</span>
-                    <span className="font-bold text-red-600">
-                      {formatCurrency(
-                        selectedOrder.totalAmount - selectedOrder.advanceAmount
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">Total Quantity</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {selectedOrder.furnitureItems.reduce(
+                        (sum, item) => sum + item.quantity,
+                        0
                       )}
-                    </span>
+                    </p>
                   </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="font-medium">Payment Status:</span>
-                    <span
-                      className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
-                        selectedOrder.isPaymentCompleted
-                          ? "bg-green-100 text-green-800 border border-green-200"
-                          : "bg-red-100 text-red-800 border border-red-200"
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">Status</p>
+                    <p
+                      className={`text-lg font-bold px-3 py-1 rounded-full ${
+                        statusColors[selectedOrder.status]
                       }`}
                     >
-                      {selectedOrder.isPaymentCompleted ? (
-                        <CheckCircle className="h-4 w-4" />
-                      ) : (
-                        <XCircle className="h-4 w-4" />
-                      )}
-                      {selectedOrder.isPaymentCompleted
-                        ? "Fully Paid"
-                        : "Payment Pending"}
-                    </span>
+                      {selectedOrder.status}
+                    </p>
                   </div>
                 </div>
               </div>

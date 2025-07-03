@@ -416,7 +416,7 @@ export default function EditOrder() {
                   Remove
                 </button>
                 <hr
-                  className="my-4 w-[1500px] rounded"
+                  className="my-4 w-[1000px] rounded"
                   style={{ borderTopWidth: "6px", borderColor: "#d1d5db" }}
                 />
               </div>
