@@ -10,6 +10,7 @@ import AddFurniture from "./addFurniture";
 import NotFoundPage from "../../components/notFoundPage";
 import EditFurniture from "./editFurniture";
 import ProductOverview from "./productOverViewPage";
+import EditOrder from "./editOrder";
 
 export default function StoreHome() {
   return (
@@ -29,6 +30,7 @@ export default function StoreHome() {
           />
           <Route path="/orders" element={<StoreOrdersPage />} />
           <Route path="/orders/add-order" element={<PlaceOrder />} />
+          <Route path="/orders/edit-order" element={<EditOrder />} />
           <Route path="/showcase" element={<StoreShowCase />} />
           <Route path="/showcase/:id" element={<ProductOverview />} />
           <Route path="/messages" element={<StoreMessages />} />

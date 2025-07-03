@@ -619,13 +619,16 @@ const StoreOrdersPage = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => openOrderModal(order)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
-                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                          onClick={() => navigate(`/store/orders/edit-order`, {
+                            state: { order },
+                          })}
+                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
                           title="Edit"
                         >
                           <Edit className="h-4 w-4" />
