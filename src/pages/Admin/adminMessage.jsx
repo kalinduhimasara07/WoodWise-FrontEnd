@@ -12,7 +12,7 @@ const API_BASE_URL = "http://localhost:5000/api";
 
 const MessageComponent = ({
   message,
-  currentUserId = "storeStaff",
+  currentUserId = "admin",
   onMarkAsRead = null,
 }) => {
   const [isRead, setIsRead] = useState(
@@ -102,7 +102,7 @@ const MessageComponent = ({
         <div
           className={`relative px-4 py-3 rounded-2xl shadow-sm ${
             isOwnMessage
-              ? "bg-blue-500 text-white"
+              ? "bg-red-500 text-white"
               : "bg-white border border-gray-200"
           }`}
         >
@@ -122,7 +122,7 @@ const MessageComponent = ({
           {/* Message Footer */}
           <div
             className={`flex items-center justify-between mt-2 text-xs ${
-              isOwnMessage ? "text-blue-100" : "text-gray-500"
+              isOwnMessage ? "text-red-100" : "text-gray-500"
             }`}
           >
             <div className="flex items-center space-x-1">
@@ -150,7 +150,7 @@ const MessageComponent = ({
           <button
             onClick={handleMarkAsRead}
             disabled={isMarkingAsRead}
-            className="mt-2 text-xs text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center space-x-1 disabled:opacity-50 cursor-pointer"
+            className="mt-2 text-xs text-red-600 hover:text-red-800 transition-colors duration-200 flex items-center space-x-1 disabled:opacity-50 cursor-pointer"
           >
             {isMarkingAsRead ? (
               <RefreshCw className="w-3 h-3 animate-spin" />
@@ -236,7 +236,7 @@ const MessageInput = ({
             placeholder="Type your message..."
             disabled={disabled || isSending}
             rows={1}
-            className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 pr-12 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 pr-12 text-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             style={{ minHeight: "44px", maxHeight: "120px" }}
           />
 
@@ -251,7 +251,7 @@ const MessageInput = ({
           disabled={!message.trim() || disabled || isSending}
           className={`flex items-center justify-center w-11 h-11 rounded-lg transition-all duration-200 ${
             message.trim() && !disabled && !isSending
-              ? "bg-blue-500 hover:bg-blue-600 text-white shadow-sm hover:shadow-md"
+              ? "bg-red-500 hover:bg-red-600 text-white shadow-sm hover:shadow-md"
               : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }`}
         >
@@ -297,12 +297,12 @@ const MessageInput = ({
 };
 
 // Main component with backend integration
-const StoreMessages = () => {
+const AdminMessages = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSending, setIsSending] = useState(false);
-  const currentUserId = "storeStaff"; // You can make this dynamic based on logged-in user
+  const currentUserId = "admin"; // Admin user ID
 
   // Fetch all messages from backend
   const fetchMessages = async () => {
@@ -424,7 +424,7 @@ const StoreMessages = () => {
           style={{ height: "580px" }}
         >
           <div className="text-center">
-            <RefreshCw className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-2" />
+            <RefreshCw className="w-8 h-8 animate-spin text-red-500 mx-auto mb-2" />
             <p className="text-gray-500">Loading messages...</p>
           </div>
         </div>
@@ -442,7 +442,7 @@ const StoreMessages = () => {
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center">
             <User className="w-5 h-5 mr-2" />
-            Messages
+            Admin Messages
           </h2>
           <button
             onClick={handleRefresh}
@@ -469,10 +469,7 @@ const StoreMessages = () => {
         )}
 
         {/* Messages Container */}
-        <div
-          className="flex-1 overflow-y-auto p-4 space-y-4"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
+        <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           {messages.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <User className="w-12 h-12 mx-auto mb-2 text-gray-300" />
@@ -502,4 +499,4 @@ const StoreMessages = () => {
   );
 };
 
-export default StoreMessages;
+export default AdminMessages;

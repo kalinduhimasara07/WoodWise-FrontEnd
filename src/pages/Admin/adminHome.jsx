@@ -24,6 +24,7 @@ import StoreInventory from "./Store/storeInventory";
 import NotFoundPage from "../../components/notFoundPage";
 import StoreShowCase from "./Store/storeShowcase";
 import ProductOverview from "./Store/productOverViewPage";
+import AdminMessages from "./adminMessage";
 
 export default function AdminHomePage() {
   return (
@@ -38,6 +39,8 @@ export default function AdminHomePage() {
           <Route path="/user" element={<AdminUserPage />} />
           <Route path="/user/add-user" element={<AddUser />} />
           <Route path="/furniture/add-furniture" element={<AddFurniture />} />
+          <Route path="/furniture" element={<AdminFurniture />} />
+          <Route path="/messages" element={<AdminMessages />} />
           <Route path="/furniture" element={<AdminFurniture />} />
           <Route path="/mill/dashboard" element={<MillDashboard />} />
           <Route path="/mill/inventory" element={<MillInventory />} />
