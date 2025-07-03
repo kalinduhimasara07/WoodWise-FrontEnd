@@ -102,6 +102,7 @@ export default function LoginPage() {
       <div className="w-[50%] flex-1 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-12">
         <div className="w-full max-w-md">
           <div className="mb-12">
+            <h1 className="text-white text-8xl font-semibold mb-10">WoodWise</h1>
             <h1 className="text-white text-3xl font-light mb-3">
               Welcome back!
             </h1>
@@ -132,7 +133,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Name"
+                placeholder="Password"
                 className="w-full px-4 py-3 bg-transparent border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
