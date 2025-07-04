@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Loading from "../../components/loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const MillOrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -161,6 +162,24 @@ const MillOrderPage = () => {
             updatedAt: result.data.updatedAt,
           });
         }
+        toast.success(`Order Status Change Successfully, And Email Send Successfully`, {
+        style: {
+          border: "1px solid #059669",
+          padding: "16px",
+          color: "#065f46",
+          backgroundColor: "#ecfdf5",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        },
+        iconTheme: {
+          primary: "#059669",
+          secondary: "#ecfdf5",
+        },
+        duration: 5000,
+      });
       } else {
         throw new Error(result.message || "Failed to update order status");
       }
