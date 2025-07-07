@@ -64,7 +64,7 @@ const MillOrderPage = () => {
 
       // The API endpoint uses the SKU as the identifier
       const response = await fetch(
-        `http://localhost:5000/api/furniture/${sku}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${sku}`
       );
 
       if (!response.ok) {
@@ -97,7 +97,7 @@ const MillOrderPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch("http://localhost:5000/api/orders/");
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/orders/");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,7 +123,7 @@ const MillOrderPage = () => {
     try {
       setUpdatingStatus(orderNumber);
 
-      const response = await fetch("http://localhost:5000/api/orders/status", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -29,7 +29,7 @@ export default function ProductOverview() {
   //fetch the data from the api
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/furniture/" + id)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture/${id}`)
       .then((response) => {
         if (!response.data || !response.data.data) {
           setNotFound(true); // No item data found

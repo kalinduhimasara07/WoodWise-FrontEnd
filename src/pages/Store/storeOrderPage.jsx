@@ -58,7 +58,7 @@ const StoreOrdersPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch("http://localhost:5000/api/orders/");
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -84,7 +84,7 @@ const StoreOrdersPage = () => {
     try {
       setUpdatingStatus(orderNumber);
 
-      const response = await fetch("http://localhost:5000/api/orders/status", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +163,7 @@ const StoreOrdersPage = () => {
       setUpdatingPayment(orderNumber);
 
       const response = await fetch(
-        "http://localhost:5000/api/orders/payment-status",
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/payment-status`,
         {
           method: "PUT",
           headers: {

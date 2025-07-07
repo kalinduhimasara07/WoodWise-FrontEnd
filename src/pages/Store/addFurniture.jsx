@@ -239,7 +239,7 @@ export default function AddFurniture() {
       });
 
       const response = await fetch(
-        "http://localhost:5000/api/furniture/add-furniture",
+        `${import.meta.env.VITE_BACKEND_URL}/api/furniture/add-furniture`,
         {
           method: "POST",
           body: formDataToSend,

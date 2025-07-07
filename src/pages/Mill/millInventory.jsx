@@ -65,7 +65,7 @@ export default function MillInventory() {
   useEffect(() => {
     const fetchTimberData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/timber");
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/timber`);
         const result = await response.json();
         if (result.success) {
           // Sort data in ascending order by category
@@ -175,7 +175,7 @@ export default function MillInventory() {
   const handleDeleteConfirm = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/timber/${furnitureToDelete._id}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/timber/${furnitureToDelete._id}`
       );
       const result = response.data;
 
