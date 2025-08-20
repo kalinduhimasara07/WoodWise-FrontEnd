@@ -22,8 +22,17 @@ export default function AdminUserPage() {
 
   // Fetch users from backend
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
+    }
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/`) // Replace with your actual API endpoint
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }) // Replace with your actual API endpoint
       .then((response) => {
         setUsers(response.data);
         setLoading(false);
@@ -55,7 +64,9 @@ export default function AdminUserPage() {
       setShowDeleteModal(false);
       setUserToDelete(null);
       // You would replace this with actual API call:
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/auth/${userToDelete._id}`);
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/${userToDelete._id}`
+      );
       toast.success(`User deleted successfully`, {
         style: {
           border: "1px solid #059669",

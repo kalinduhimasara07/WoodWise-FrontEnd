@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Store/header";
 import StoreSidebar from "../../components/Store/storeSideBar";
 import StoreOrdersPage from "./storeOrderPage";
@@ -11,8 +11,60 @@ import NotFoundPage from "../../components/notFoundPage";
 import EditFurniture from "./editFurniture";
 import ProductOverview from "./productOverViewPage";
 import EditOrder from "./editOrder";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Loading from "../../components/loader";
 
 export default function StoreHome() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [status, setStatus] = useState("loading");
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setStatus("unauthenticated");
+        toast.error("Please login first");
+        navigate("/login", { replace: true });
+        return;
+      }
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/auth/user/`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (res.data.role !== "storestaff" && res.data.role !== "admin") {
+          setStatus("unauthorized");
+          toast.error("You are not authorized to access this page");
+          navigate("/login", { replace: true });
+        } else {
+          setStatus("authenticated");
+        }
+      } catch (err) {
+        console.log(err);
+        setStatus("unauthenticated");
+        navigate("/login", { replace: true });
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
+
+  if (status === "loading") {
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (status !== "authenticated") {
+    // Don’t render store content if unauthenticated/unauthorized
+    return null;
+  }
+
   return (
     <div>
       <Header />
@@ -53,22 +105,30 @@ export function StoreDashboard() {
           <p className="text-2xl text-blue-600 mt-2">4</p>
         </div>
         <div className="bg-white shadow-md rounded-lg p-5">
-          <h2 className="text-xl font-semibold text-gray-700">📦 Orders in Progress</h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            📦 Orders in Progress
+          </h2>
           <p className="text-2xl text-yellow-500 mt-2">5</p>
         </div>
         <div className="bg-white shadow-md rounded-lg p-5">
-          <h2 className="text-xl font-semibold text-gray-700">✅ Completed Orders</h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            ✅ Completed Orders
+          </h2>
           <p className="text-2xl text-green-600 mt-2">12</p>
         </div>
         <div className="bg-white shadow-md rounded-lg p-5">
-          <h2 className="text-xl font-semibold text-gray-700">🪑 Custom Requests</h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            🪑 Custom Requests
+          </h2>
           <p className="text-2xl text-purple-600 mt-2">3</p>
         </div>
       </div>
 
       {/* Orders Table */}
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Recent Customer Orders</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          Recent Customer Orders
+        </h2>
         <table className="min-w-full text-sm">
           <thead className="bg-gray-200">
             <tr>
@@ -85,10 +145,14 @@ export function StoreDashboard() {
               <td className="py-2 px-4">#ORD-1054</td>
               <td className="py-2 px-4">Nimal Perera</td>
               <td className="py-2 px-4">Bookshelf</td>
-              <td className="py-2 px-4 text-yellow-500 font-medium">In Progress</td>
+              <td className="py-2 px-4 text-yellow-500 font-medium">
+                In Progress
+              </td>
               <td className="py-2 px-4">2025-06-17</td>
               <td className="py-2 px-4 text-center">
-                <button className="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600">View</button>
+                <button className="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600">
+                  View
+                </button>
               </td>
             </tr>
             {/* More rows as needed */}

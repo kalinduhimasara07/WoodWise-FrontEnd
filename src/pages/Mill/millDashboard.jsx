@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Mill/header";
 import Sidebar from "../../components/Mill/millSlideBar";
 import MillInventory from "./millInventory";
@@ -9,8 +9,62 @@ import MillMessages from "./millMessages";
 import AddTimber from "./addTimber";
 import EditTimber from "./editTimber";
 import NotFoundPage from "../../components/notFoundPage";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Loading from "../../components/loader";
 
 export default function MillHomePage() {
+  const [status, setStatus] = useState("loading");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setStatus("unauthenticated");
+        toast.error("Please login first");
+        navigate("/login", { replace: true });
+        return;
+      }
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/auth/user/`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        if (res.data.role !== "millworker" && res.data.role !== "admin") {
+          setStatus("unauthorized");
+          toast.error("You are not authorized to access this page");
+          navigate("/login", { replace: true });
+        } else {
+          setStatus("authenticated");
+        }
+      } catch (err) {
+        console.log(err);
+        setStatus("unauthenticated");
+        toast.error("You are not authenticated, please login");
+        navigate("/login", { replace: true });
+      }
+    };
+
+    checkAuth();
+  }, [navigate]); // ✅ no [status] loop
+
+  // While checking, show loader
+  if (status === "loading") {
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  // Prevent rendering when unauthorized/unauthenticated
+  if (status !== "authenticated") {
+    return null;
+  }
+
   return (
     <div>
       <Header />
