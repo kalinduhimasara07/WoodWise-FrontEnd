@@ -11,6 +11,7 @@ import NotFoundPage from "../../components/notFoundPage";
 import EditFurniture from "./editFurniture";
 import ProductOverview from "./productOverViewPage";
 import EditOrder from "./editOrder";
+import ImageGenerator from "../imageGenerator";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -86,6 +87,7 @@ export default function StoreHome() {
           <Route path="/showcase" element={<StoreShowCase />} />
           <Route path="/showcase/:id" element={<ProductOverview />} />
           <Route path="/messages" element={<StoreMessages />} />
+          <Route path="/image-generator" element={<ImageGenerator />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </div>
