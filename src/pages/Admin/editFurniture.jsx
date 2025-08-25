@@ -56,7 +56,7 @@ export default function EditFurniture() {
       // Optional: Fetch furniture data if not passed in state
       const fetchFurniture = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/furniture/sku/${sku}`);
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture/sku/${sku}`);
           const fetchedFurniture = response.data.data;
           setFormData({
             ...fetchedFurniture,
@@ -231,7 +231,7 @@ export default function EditFurniture() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/furniture/${furniture.sku}`, // Use the SKU for the update
+        `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${furniture.sku}`, // Use the SKU for the update
         formData
       );
 

@@ -41,7 +41,7 @@ export default function StoreInventory() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get("http://localhost:5000/api/furniture");
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
 
         if (response.data.success) {
           setFurniture(response.data.data);
@@ -101,7 +101,7 @@ export default function StoreInventory() {
     if (furnitureToDelete) {
       try {
         await axios.delete(
-          `http://localhost:5000/api/furniture/${furnitureToDelete._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${furnitureToDelete._id}`
         );
         toast.success(`Furniture deleted successfully`, {
           style: {

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Loading from "../../components/loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const MillOrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -51,18 +52,19 @@ const MillOrderPage = () => {
     Cancelled: "bg-red-100 text-red-800 border-red-200",
   };
 
-  // Fetch furniture details by ID
-  const fetchFurnitureDetails = async (furnitureId) => {
-    console.log("Fetching furniture details for ID:", furnitureId);
-    if (furnitureDetails[furnitureId] || loadingFurniture[furnitureId]) {
+  // Fetch furniture details by SKU
+  const fetchFurnitureDetails = async (sku) => {
+    console.log("Fetching furniture details for SKU:", sku);
+    if (furnitureDetails[sku] || loadingFurniture[sku]) {
       return;
     }
 
     try {
-      setLoadingFurniture((prev) => ({ ...prev, [furnitureId]: true }));
+      setLoadingFurniture((prev) => ({ ...prev, [sku]: true }));
 
+      // The API endpoint uses the SKU as the identifier
       const response = await fetch(
-        `http://localhost:5000/api/furniture/${furnitureId}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${sku}`
       );
 
       if (!response.ok) {
@@ -74,7 +76,7 @@ const MillOrderPage = () => {
       if (result.success) {
         setFurnitureDetails((prev) => ({
           ...prev,
-          [furnitureId]: result.data,
+          [sku]: result.data,
         }));
       } else {
         throw new Error(result.message || "Failed to fetch furniture details");
@@ -83,10 +85,10 @@ const MillOrderPage = () => {
       console.error("Error fetching furniture details:", err);
       setFurnitureDetails((prev) => ({
         ...prev,
-        [furnitureId]: null,
+        [sku]: null,
       }));
     } finally {
-      setLoadingFurniture((prev) => ({ ...prev, [furnitureId]: false }));
+      setLoadingFurniture((prev) => ({ ...prev, [sku]: false }));
     }
   };
 
@@ -95,7 +97,7 @@ const MillOrderPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch("http://localhost:5000/api/orders/");
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/orders/");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -121,7 +123,7 @@ const MillOrderPage = () => {
     try {
       setUpdatingStatus(orderNumber);
 
-      const response = await fetch("http://localhost:5000/api/orders/status", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -160,6 +162,24 @@ const MillOrderPage = () => {
             updatedAt: result.data.updatedAt,
           });
         }
+        toast.success(`Order Status Change Successfully, And Email Send Successfully`, {
+        style: {
+          border: "1px solid #059669",
+          padding: "16px",
+          color: "#065f46",
+          backgroundColor: "#ecfdf5",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: "500",
+          boxShadow:
+            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        },
+        iconTheme: {
+          primary: "#059669",
+          secondary: "#ecfdf5",
+        },
+        duration: 5000,
+      });
       } else {
         throw new Error(result.message || "Failed to update order status");
       }
@@ -234,10 +254,10 @@ const MillOrderPage = () => {
     setSelectedOrder(order);
     setShowModal(true);
 
-    // Fetch furniture details for all items in the order
+    // Fetch furniture details for all items in the order using the SKU
     order.furnitureItems.forEach((item) => {
-      if (item.furnitureId) {
-        fetchFurnitureDetails(item.furnitureId);
+      if (item.sku) {
+        fetchFurnitureDetails(item.sku);
       }
     });
   };
@@ -535,12 +555,7 @@ const MillOrderPage = () => {
                         >
                           <Eye className="h-4 w-4" />
                         </button>
-                        <button
-                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
+                        
                       </div>
                     </td>
                   </tr>
@@ -655,8 +670,8 @@ const MillOrderPage = () => {
                 </h3>
                 <div className="space-y-4">
                   {selectedOrder.furnitureItems.map((item, index) => {
-                    const furniture = furnitureDetails[item.furnitureId];
-                    const isLoading = loadingFurniture[item.furnitureId];
+                    const furniture = furnitureDetails[item.sku];
+                    const isLoading = loadingFurniture[item.sku];
 
                     return (
                       <div
@@ -697,6 +712,9 @@ const MillOrderPage = () => {
                               </div>
                             ) : furniture ? (
                               <div className="space-y-1 text-sm">
+                                <div className="w-40 h-40 mb-2 object-cover rounded-lg overflow-hidden">
+                                  <img src={furniture.images[0].url} alt={furniture.name} />
+                                </div>
                                 <p className="flex items-center gap-2">
                                   <Tag className="h-3 w-3 text-gray-400" />
                                   <span className="font-medium">
@@ -716,14 +734,16 @@ const MillOrderPage = () => {
                                   <span className="font-medium">
                                     Material:
                                   </span>{" "}
-                                  {furniture.material || "Not specified"}
+                                  {furniture.woodType || "Not specified"}
                                 </p>
                                 <p className="flex items-center gap-2">
                                   <Ruler className="h-3 w-3 text-gray-400" />
                                   <span className="font-medium">
                                     Dimensions:
                                   </span>{" "}
-                                  {furniture.dimensions || "Not specified"}
+                                  {furniture.dimensions
+                                    ? `${furniture.dimensions.length} x ${furniture.dimensions.width} x ${furniture.dimensions.height}`
+                                    : "Not specified"}
                                 </p>
                                 {furniture.description && (
                                   <p className="flex items-start gap-2">

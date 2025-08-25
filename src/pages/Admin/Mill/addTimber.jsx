@@ -111,7 +111,7 @@ export default function AddTimber() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/timber", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/timber`, {
         method: "POST",
         body: JSON.stringify(formData),
         headers: { "Content-Type": "application/json" },

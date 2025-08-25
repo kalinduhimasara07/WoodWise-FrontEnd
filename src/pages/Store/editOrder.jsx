@@ -30,7 +30,7 @@ export default function EditOrder() {
     const fetchFurniture = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:5000/api/furniture");
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -100,7 +100,7 @@ export default function EditOrder() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/orders/update", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

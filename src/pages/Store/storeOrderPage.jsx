@@ -58,7 +58,7 @@ const StoreOrdersPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch("http://localhost:5000/api/orders/");
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -84,7 +84,7 @@ const StoreOrdersPage = () => {
     try {
       setUpdatingStatus(orderNumber);
 
-      const response = await fetch("http://localhost:5000/api/orders/status", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -123,6 +123,27 @@ const StoreOrdersPage = () => {
             updatedAt: result.data.updatedAt,
           });
         }
+        toast.success(
+          `Order Status Change Successfully, And Email Send Successfully`,
+          {
+            style: {
+              border: "1px solid #059669",
+              padding: "16px",
+              color: "#065f46",
+              backgroundColor: "#ecfdf5",
+              borderRadius: "12px",
+              fontSize: "14px",
+              fontWeight: "500",
+              boxShadow:
+                "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+            },
+            iconTheme: {
+              primary: "#059669",
+              secondary: "#ecfdf5",
+            },
+            duration: 5000,
+          }
+        );
       } else {
         throw new Error(result.message || "Failed to update order status");
       }
@@ -142,7 +163,7 @@ const StoreOrdersPage = () => {
       setUpdatingPayment(orderNumber);
 
       const response = await fetch(
-        "http://localhost:5000/api/orders/payment-status",
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/payment-status`,
         {
           method: "PUT",
           headers: {
@@ -325,7 +346,10 @@ const StoreOrdersPage = () => {
   }
 
   return (
-    <div className="bg-gray-50 w-full h-full rounded-3xl p-6 overflow-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div
+      className="bg-gray-50 w-full h-full rounded-3xl p-6 overflow-auto"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -625,9 +649,11 @@ const StoreOrdersPage = () => {
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => navigate(`/store/orders/edit-order`, {
-                            state: { order },
-                          })}
+                          onClick={() =>
+                            navigate(`/store/orders/edit-order`, {
+                              state: { order },
+                            })
+                          }
                           className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
                           title="Edit"
                         >

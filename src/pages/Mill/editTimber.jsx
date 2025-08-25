@@ -117,7 +117,7 @@ export default function EditTimber() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/timber/${timber._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/timber/${timber._id}`,
         {
           method: "PUT",
           body: JSON.stringify(formData),

@@ -13,7 +13,7 @@ const CategoryPage = () => {
     useEffect(() => {
         const fetchFurniture = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/furniture');
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
                 if (response.data && response.data.success) {
                     setFurniture(response.data.data);
                 } else {
