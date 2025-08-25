@@ -6,21 +6,22 @@ import toast from "react-hot-toast";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ track login state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return; // prevent double submit
+    setLoading(true);
+
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
-        email: email,
-        password: password,
-      });
-      console.log(res.data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        { email, password }
+      );
       const { token, user } = res.data;
       localStorage.setItem("token", token);
 
-      // alert(`Login successful! Welcome ${user.username}`);
-      // Replace the alert with this toast notification
       toast.success(`Login successful! Welcome ${user.username}`, {
         style: {
           border: "1px solid #059669",
@@ -33,25 +34,15 @@ export default function LoginPage() {
           boxShadow:
             "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
         },
-        iconTheme: {
-          primary: "#059669",
-          secondary: "#ecfdf5",
-        },
+        iconTheme: { primary: "#059669", secondary: "#ecfdf5" },
         duration: 5000,
       });
-      console.log("Login successful:", token);
-      console.log("User data:", user);
-      if (user.role === "admin") {
-        navigate("/admin/dashboard");
-      } else if (user.role === "millworker") {
-        navigate("/mill/dashboard");
-      } else if (user.role === "storestaff") {
-        navigate("/store/dashboard");
-      }
+
+      if (user.role === "admin") navigate("/admin/dashboard");
+      else if (user.role === "millworker") navigate("/mill/dashboard");
+      else if (user.role === "storestaff") navigate("/store/dashboard");
     } catch (err) {
-      if (err.response && err.response.data.message) {
-        // alert(err.response.data.message);
-        // Replace the alert with this toast notification
+      if (err.response?.data.message) {
         toast.error(err.response.data.message, {
           style: {
             border: "1px solid #dc2626",
@@ -65,15 +56,10 @@ export default function LoginPage() {
               "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
             maxWidth: "400px",
           },
-          iconTheme: {
-            primary: "#dc2626",
-            secondary: "#fef2f2",
-          },
+          iconTheme: { primary: "#dc2626", secondary: "#fef2f2" },
           duration: 6000,
         });
       } else {
-        // alert("Login failed. Please try again.");
-        // Replace the alert with this toast notification
         toast.error("Login failed. Please try again.", {
           style: {
             border: "1px solid #dc2626",
@@ -86,13 +72,12 @@ export default function LoginPage() {
             boxShadow:
               "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
           },
-          iconTheme: {
-            primary: "#dc2626",
-            secondary: "#fef2f2",
-          },
+          iconTheme: { primary: "#dc2626", secondary: "#fef2f2" },
           duration: 5000,
         });
       }
+    } finally {
+      setLoading(false); // ✅ reset button state
     }
   };
 
@@ -111,7 +96,8 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="space-y-6">
+          {/* ✅ Wrap inputs in a <form> */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-white text-sm mb-2">
                 Email address
@@ -138,14 +124,19 @@ export default function LoginPage() {
               />
             </div>
 
+            {/* ✅ Button reacts to "loading" state */}
             <button
-              type="button"
-              onClick={handleSubmit}
-              className="w-full bg-[#f39c12] hover:bg-[#f39d12d5] text-white font-medium py-3 rounded-xl transition-colors"
+              type="submit"
+              disabled={loading}
+              className={`w-full font-medium py-3 rounded-xl transition-colors
+                ${loading
+                  ? "bg-gray-500 text-gray-200 cursor-not-allowed"
+                  : "bg-[#f39c12] hover:bg-[#f39d12d5] text-white"
+                }`}
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
-          </div>
+          </form>
         </div>
       </div>
 
