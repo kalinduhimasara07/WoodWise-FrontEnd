@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import {
   Heart,
+  Plus,
   Facebook,
   Twitter,
   Linkedin,
@@ -9,22 +10,71 @@ import {
 } from "lucide-react";
 
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import NotFoundPage from "../../components/notFoundPage";
 import Loading from "../../components/loader";
 import ThreeDScene from "../../components/3D models/ThreeDScene";
 import BackButton from "../../components/backButton";
+import ImageGenerator from "../imageGenerator";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function ProductOverview() {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [furniture, setFurniture] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [furnitureImages, setFurnitureImages] = useState([]);
   const [furnitureModels, setFurnitureModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState(0);
+  const [generatedImage, setGeneratedImage] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // <-- final Supabase url
   const { id } = useParams();
   const [notFound, setNotFound] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNewOrder = async () => {
+    let finalImageUrl = uploadedImageUrl;
+
+    if (generatedImage && !uploadedImageUrl) {
+      try {
+        finalImageUrl = await mediaUpload(generatedImage.file);
+        setUploadedImageUrl(finalImageUrl);
+        console.log("Uploaded to Supabase:", finalImageUrl);
+      } catch (err) {
+        console.error("Image upload failed:", err);
+      }
+    }
+
+    // Create the order data object
+    const orderData = {
+      sku: furniture?.data?.sku || '',
+      productName: furniture?.data?.name || '',
+      originalPrice: furniture?.data?.price || 0,
+      salePrice: furniture?.data?.salePrice || 0,
+      category: furniture?.data?.category || '',
+      subcategory: furniture?.data?.subcategory || '',
+      dimensions: furniture?.data?.dimensions || {},
+      material: furniture?.data?.woodType || '',
+      description: furniture?.data?.description || '',
+      uploadedImageUrl: finalImageUrl, // Include the generated image URL
+      originalImages: furnitureImages,
+      productId: id
+    };
+
+    // Navigate to the next page with the order data
+    navigate("/store/orders/add-order", {
+      state: {
+        productData: orderData,
+        fromProductOverview: true
+      }
+    });
+  };
+
+  // Handler for when ImageGenerator produces a new image
+  const handleImageGenerated = ({ previewUrl, file }) => {
+    setGeneratedImage({ previewUrl, file }); // keep both
+    setUploadedImageUrl(null);
+  };
 
   //fetch the data from the api
   useEffect(() => {
@@ -64,7 +114,7 @@ export default function ProductOverview() {
 
   return (
     <div className="w-full h-full bg-white rounded-3xl p-6 overflow-auto">
-      <BackButton/>
+      <BackButton />
       {isLoading ? (
         <div className=" h-full flex items-center justify-center bg-white">
           {loading()}
@@ -81,11 +131,10 @@ export default function ProductOverview() {
                 {furnitureImages.map((image, index) => (
                   <div
                     key={index}
-                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
-                      selectedImage === index
-                        ? "border-amber-500"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
+                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${selectedImage === index
+                      ? "border-amber-500"
+                      : "border-gray-200 hover:border-gray-300"
+                      }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <img
@@ -95,13 +144,37 @@ export default function ProductOverview() {
                     />
                   </div>
                 ))}
+
+                {/* Generated Image Thumbnail */}
+                {generatedImage && (
+                  <div
+                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all relative ${selectedImage === furnitureImages.length
+                      ? "border-amber-500"
+                      : "border-green-400 hover:border-green-500"
+                      }`}
+                    onClick={() => setSelectedImage(furnitureImages.length)}
+                  >
+                    <img
+                      src={uploadedImageUrl || generatedImage.previewUrl}
+                      alt="Generated design"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-0 right-0 bg-green-500 text-white text-xs px-1 rounded-bl">
+                      AI
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Main Image */}
               <div className="flex-1">
                 <div className="rounded-2xl overflow-hidden bg-gray-100 relative border-1 border-amber-700">
                   <img
-                    src={furnitureImages[selectedImage].url}
+                    src={
+                      selectedImage === furnitureImages.length
+                        ? uploadedImageUrl || generatedImage.previewUrl
+                        : furnitureImages[selectedImage]?.url
+                    }
                     alt={`Modern Living Room - View ${selectedImage + 1}`}
                     className="w-full h-full object-cover transition-opacity duration-300"
                   />
@@ -111,6 +184,13 @@ export default function ProductOverview() {
                   >
                     <Maximize2 className="w-5 h-5 text-gray-600" />
                   </button>
+
+                  {/* Generated Image Indicator */}
+                  {selectedImage === furnitureImages.length && generatedImage && (
+                    <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      AI Generated Design
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -143,11 +223,9 @@ export default function ProductOverview() {
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-600">Availability:</span>
                   <span
-                    className={
-                      furniture.data.stock > 0
-                        ? "text-green-500 font-medium"
-                        : "text-red-500 font-medium"
-                    }
+                    className={furniture.data.stock > 0
+                      ? "text-green-500 font-medium"
+                      : "text-red-500 font-medium"}
                   >
                     {furniture.data.stock > 0 ? "In stock" : "Out of stock"}
                   </span>
@@ -256,11 +334,8 @@ export default function ProductOverview() {
             {/* Main 3D Model Display */}
             <div className="w-[600px] h-[600px] flex items-center justify-center border-1 border-amber-700 rounded-2xl overflow-hidden bg-gray-100">
               <ThreeDScene
-                modelPath={
-                  furnitureModels[selectedModel]?.url ||
-                  "/path/to/defaultModel.glb"
-                }
-              />
+                modelPath={furnitureModels[selectedModel]?.url ||
+                  "/path/to/defaultModel.glb"} />
             </div>
 
             {/* Gallery Model Thumbnails */}
@@ -268,17 +343,37 @@ export default function ProductOverview() {
               {furnitureModels.map((model, index) => (
                 <div
                   key={index}
-                  className={`w-20 h-20 m-2 cursor-pointer border-2 ${
-                    selectedModel === index
-                      ? "border-amber-500"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
+                  className={`w-20 h-20 m-2 cursor-pointer border-2 ${selectedModel === index
+                    ? "border-amber-500"
+                    : "border-gray-200 hover:border-gray-300"}`}
                   onClick={() => setSelectedModel(index)}
                 >
                   {/* <ThreeDScene modelPath={model.url} /> */}
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Image Generator Component */}
+          <div className="mt-8 p-6 bg-gray-50 rounded-xl">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Generate Custom Design
+            </h3>
+            <ImageGenerator onImageGenerated={handleImageGenerated} />
+
+            {generatedImage && (
+              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center gap-2 text-green-700">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Custom design generated successfully!</span>
+                </div>
+                <p className="text-green-600 text-sm mt-1">
+                  Your generated design will be uploaded and included with your order once you click "Create New Order".
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Modal for Fullscreen Image */}
@@ -288,11 +383,15 @@ export default function ProductOverview() {
               onClick={closeModal}
             >
               <div
-                className=" p-4 rounded-lg"
-                onClick={(e) => e.stopPropagation()} // Prevent click from closing the modal
+                className="p-4 rounded-lg"
+                onClick={(e) => e.stopPropagation()}
               >
                 <img
-                  src={furnitureImages[selectedImage].url}
+                  src={
+                    selectedImage === furnitureImages.length
+                      ? uploadedImageUrl || generatedImage // show uploaded URL if available, else local generated
+                      : furnitureImages[selectedImage]?.url
+                  }
                   alt={`Full size image`}
                   className="max-w-full h-screen object-contain"
                 />
@@ -305,6 +404,21 @@ export default function ProductOverview() {
               </div>
             </div>
           )}
+
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={handleNewOrder}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium text-lg shadow-lg hover:shadow-xl"
+            >
+              <Plus className="h-5 w-5" />
+              Create New Order
+              {generatedImage && (
+                <span className="ml-2 px-2 py-1 bg-green-500 text-xs rounded-full">
+                  With Custom Design
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       )}
     </div>

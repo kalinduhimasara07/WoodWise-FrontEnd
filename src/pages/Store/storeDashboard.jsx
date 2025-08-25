@@ -11,6 +11,7 @@ import NotFoundPage from "../../components/notFoundPage";
 import EditFurniture from "./editFurniture";
 import ProductOverview from "./productOverViewPage";
 import EditOrder from "./editOrder";
+import ImageGenerator from "../imageGenerator";
 
 export default function StoreHome() {
   return (
@@ -34,6 +35,7 @@ export default function StoreHome() {
           <Route path="/showcase" element={<StoreShowCase />} />
           <Route path="/showcase/:id" element={<ProductOverview />} />
           <Route path="/messages" element={<StoreMessages />} />
+          <Route path="/image-generator" element={<ImageGenerator />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </div>

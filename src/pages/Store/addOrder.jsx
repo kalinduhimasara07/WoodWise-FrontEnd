@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import BackButton from "../../components/backButton";
 import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 export default function PlaceOrder() {
   const [furnitureData, setFurnitureData] = useState([]);
@@ -9,25 +9,32 @@ export default function PlaceOrder() {
   const [error, setError] = useState(null);
 
   const [furnitureItems, setFurnitureItems] = useState([
-    { sku: "", quantity: 1, unitPrice: "", note: "" },
+    { sku: "", quantity: 1, unitPrice: 0, note: "" },
   ]);
+
+  const location = useLocation();
+  const productData = location.state?.productData;
+  const uploadedImage = productData?.uploadedImageUrl;
+
+  console.log("Product Data:", productData);
+  console.log("Generated Image URL:", uploadedImage);
 
   useEffect(() => {
     const fetchFurniture = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/furniture');
+        const response = await fetch("http://localhost:5000/api/furniture");
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Fetched furniture data:', data);
+        console.log("Fetched furniture data:", data);
         setFurnitureData(data.data || []);
         setError(null);
       } catch (err) {
-        console.error('Error fetching furniture data:', err);
-        setError('Failed to load furniture data');
+        console.error("Error fetching furniture data:", err);
+        setError("Failed to load furniture data");
       } finally {
         setLoading(false);
       }
@@ -38,7 +45,7 @@ export default function PlaceOrder() {
 
   const [order, setOrder] = useState({
     totalAmount: 0,
-    advanceAmount: "",
+    advanceAmount: 0,
     customerInfo: {
       name: "",
       contactNumber: "",
@@ -50,6 +57,29 @@ export default function PlaceOrder() {
     millWorker: "Not Assigned",
     notes: "",
   });
+
+  // preload productData if available
+  useEffect(() => {
+    if (productData) {
+      setFurnitureItems([
+        {
+          sku: productData.sku,
+          quantity: 1,
+          unitPrice: productData.salePrice || 0,
+          note: "",
+        },
+      ]);
+    }
+  }, [productData]);
+
+  // auto-update totalAmount whenever furnitureItems change
+  useEffect(() => {
+    const total = furnitureItems.reduce(
+      (sum, item) => sum + (parseFloat(item.unitPrice) || 0) * (item.quantity || 1),
+      0
+    );
+    setOrder((prev) => ({ ...prev, totalAmount: total }));
+  }, [furnitureItems]);
 
   const updateItem = (index, field, value) => {
     const updated = [...furnitureItems];
@@ -65,23 +95,29 @@ export default function PlaceOrder() {
   };
 
   const removeItem = (index) => {
+    if (furnitureItems.length === 1) {
+      toast.error("At least one furniture item is required.");
+      return;
+    }
     setFurnitureItems(furnitureItems.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Calculate total amount from furniture items
-    const totalAmount = furnitureItems.reduce(
-      (sum, item) => sum + item.unitPrice * item.quantity,
-      0
-    );
+    // validations
+    if (furnitureItems.length === 0) {
+      toast.error("You must add at least one furniture item.");
+      return;
+    }
+    if (order.advanceAmount > order.totalAmount) {
+      toast.error("Advance amount cannot exceed total amount.");
+      return;
+    }
 
-    // Construct the final order payload
     const orderPayload = {
       ...order,
       furnitureItems,
-      totalAmount,
     };
 
     try {
@@ -98,7 +134,7 @@ export default function PlaceOrder() {
         console.error("Server error:", errorData);
 
         toast.error(
-          "Failed to submit order: " + errorData.message || "Unknown error",
+          "Failed to submit order: " + (errorData.message || "Unknown error"),
           {
             style: {
               border: "1px solid #dc2626",
@@ -143,7 +179,7 @@ export default function PlaceOrder() {
         duration: 5000,
       });
 
-      // Optional: reset form after successful submission
+      // reset form
       setFurnitureItems([{ sku: "", quantity: 1, unitPrice: 0, note: "" }]);
       setOrder({
         totalAmount: 0,
@@ -277,26 +313,40 @@ export default function PlaceOrder() {
                 className="grid grid-cols-6 gap-4 mb-2 items-end"
               >
                 <div>
-                  <select
-                    required
-                    className="w-[750px] px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mt-2"
-                    value={item.sku}
-                    onChange={(e) => {
-                      const selectedSku = e.target.value;
-                      const selectedFurniture = furnitureData.find((f) => f.sku === selectedSku);
-                      updateItem(index, "sku", selectedSku);
-                      if (selectedFurniture) {
-                        updateItem(index, "unitPrice", selectedFurniture.salePrice);
-                      }
-                    }}
-                  >
-                    <option value="">Select Furniture</option>
-                    {furnitureData.map((furniture) => (
-                      <option key={furniture.sku} value={furniture.sku}>
-                        {furniture.name + ' - ' + furniture.sku}
+                  {productData ? (
+                    <select
+                      className="w-[750px] px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mt-2"
+                      value={productData.sku}
+                      readOnly
+                    >
+                      <option value={productData.sku} selected>
+                        {productData.productName + ' - ' + productData.sku}
                       </option>
-                    ))}
-                  </select>
+                    </select>
+                  ) : (
+                    <select
+                      required
+                      className="w-[750px] px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 mt-2"
+                      value={item.sku}
+                      onChange={(e) => {
+                        const selectedSku = e.target.value;
+                        const selectedFurniture = furnitureData.find((f) => f.sku === selectedSku);
+                        updateItem(index, "sku", selectedSku);
+                        if (selectedFurniture) {
+                          updateItem(index, "unitPrice", selectedFurniture.salePrice);
+                        }
+                      }}
+                    >
+                      <option value="">Select Furniture</option>
+                      {furnitureData.map((furniture) => (
+                        <option key={furniture.sku} value={furniture.sku}>
+                          {furniture.name + ' - ' + furniture.sku}
+                        </option>
+                      ))}
+                    </select>
+                  )
+                  }
+
 
                   <label className="block text-sm text-gray-600 mb-1">
                     SKU *
@@ -305,7 +355,7 @@ export default function PlaceOrder() {
                     type="text"
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={item.sku}
+                    value={ productData ? (productData.sku):(item.sku) }
                     onChange={(e) => updateItem(index, "sku", e.target.value)}
                     readOnly
                   />
