@@ -39,7 +39,6 @@ export default function ProductOverview() {
       try {
         finalImageUrl = await mediaUpload(generatedImage.file);
         setUploadedImageUrl(finalImageUrl);
-        console.log("Uploaded to Supabase:", finalImageUrl);
       } catch (err) {
         console.error("Image upload failed:", err);
       }
