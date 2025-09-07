@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Loading from "../../components/loader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function AdminFurniture() {
@@ -33,6 +33,19 @@ export default function AdminFurniture() {
   const handleNavigation = (path) => {
     console.log("Navigate to:", path);
     navigate(path);
+  };
+
+  const handleGeneratePost = () => {
+    if (!selectedFurniture) return;
+    // Use the first image if available
+    const imageUrl =
+      selectedFurniture.images && selectedFurniture.images.length > 0
+        ? selectedFurniture.images[0].url
+        : null;
+
+    navigate("/admin/poster-generator", {
+      state: { furnitureImage: imageUrl }
+    });
   };
 
   // Fetch furniture data from backend
@@ -341,11 +354,10 @@ export default function AdminFurniture() {
                     <td className="p-4">
                       <div className="flex flex-col gap-1">
                         <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            item.inStock
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.inStock
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                            }`}
                         >
                           {item.inStock ? "In Stock" : "Out of Stock"}
                         </span>
@@ -430,7 +442,7 @@ export default function AdminFurniture() {
                   <h4 className="text-lg font-semibold mb-4">Images</h4>
                   <div className="grid grid-cols-2 gap-4">
                     {selectedFurniture.images &&
-                    selectedFurniture.images.length > 0 ? (
+                      selectedFurniture.images.length > 0 ? (
                       selectedFurniture.images.map((image, index) => (
                         <div
                           key={index}
@@ -586,11 +598,10 @@ export default function AdminFurniture() {
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-3 py-1 text-sm font-medium rounded-full ${
-                          selectedFurniture.inStock
+                        className={`px-3 py-1 text-sm font-medium rounded-full ${selectedFurniture.inStock
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
-                        }`}
+                          }`}
                       >
                         {selectedFurniture.inStock
                           ? "In Stock"
@@ -615,6 +626,12 @@ export default function AdminFurniture() {
                       Updated: {formatDate(selectedFurniture.updatedAt)}
                     </div>
                   </div>
+                  <button
+                    onClick={handleGeneratePost}
+                    className="px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-2 font-medium text-lg shadow-lg hover:shadow-xl"
+                  >
+                    Generate Post
+                  </button>
                 </div>
               </div>
             </div>

@@ -6,6 +6,7 @@ import AddFurniture from "./addFurniture";
 import AdminUserPage from "./adminUser";
 import AdminFurniture from "./adminFurniture";
 import AdminDashboard from "./adminDashboard";
+import PosterGenerator from "./posterGenerator";
 import MillOrderPage from "../Mill/millOrderPage";
 import MillSupplies from "../Mill/millSupplies";
 import MillSuppliers from "../Mill/millSupliers";
@@ -92,6 +93,7 @@ export default function AdminHomePage() {
           <Route path="/furniture" element={<AdminFurniture />} />
           <Route path="/furniture/edit/:sku" element={<EditFurniture />} />
           <Route path="/messages" element={<AdminMessages />} />
+          <Route path="/poster-generator" element={<PosterGenerator />} />
 
           {/* Mill */}
           <Route path="/mill/dashboard" element={<MillDashboard />} />
