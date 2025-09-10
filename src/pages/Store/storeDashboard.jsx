@@ -185,7 +185,7 @@ import {
   Truck
 } from 'lucide-react';
 
-const StoreDashboard = () => {
+export function StoreDashboard(){
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
@@ -696,3 +696,4 @@ const StoreDashboard = () => {
     </div>
   );
 };
+
