@@ -462,7 +462,7 @@ export default function AddFurniture() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price ($) *
+                  Price (Rs.) *
                 </label>
                 <input
                   type="number"
@@ -482,7 +482,7 @@ export default function AddFurniture() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Sale Price ($)
+                  Sale Price ()
                 </label>
                 <input
                   type="number"
