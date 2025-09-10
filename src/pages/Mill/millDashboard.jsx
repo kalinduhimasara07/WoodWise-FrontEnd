@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Loading from "../../components/loader";
+import AddSupplier from "./addsupplier";
 
 export default function MillHomePage() {
   const [status, setStatus] = useState("loading");
@@ -80,6 +81,7 @@ export default function MillHomePage() {
           <Route path="/orders" element={<MillOrderPage />} />
           <Route path="/supplies" element={<MillSupplies />} />
           <Route path="/suppliers" element={<MillSuppliers />} />
+          <Route path="/suppliers/add-supplier" element={<AddSupplier />} />
           <Route path="/messages" element={<MillMessages />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
