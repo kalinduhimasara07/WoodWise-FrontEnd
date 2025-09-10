@@ -47,26 +47,26 @@ export default function ProductOverview() {
 
     // Create the order data object
     const orderData = {
-      sku: furniture?.data?.sku || '',
-      productName: furniture?.data?.name || '',
+      sku: furniture?.data?.sku || "",
+      productName: furniture?.data?.name || "",
       originalPrice: furniture?.data?.price || 0,
       salePrice: furniture?.data?.salePrice || 0,
-      category: furniture?.data?.category || '',
-      subcategory: furniture?.data?.subcategory || '',
+      category: furniture?.data?.category || "",
+      subcategory: furniture?.data?.subcategory || "",
       dimensions: furniture?.data?.dimensions || {},
-      material: furniture?.data?.woodType || '',
-      description: furniture?.data?.description || '',
+      material: furniture?.data?.woodType || "",
+      description: furniture?.data?.description || "",
       uploadedImageUrl: finalImageUrl, // Include the generated image URL
       originalImages: furnitureImages,
-      productId: id
+      productId: id,
     };
 
     // Navigate to the next page with the order data
     navigate("/store/orders/add-order", {
       state: {
         productData: orderData,
-        fromProductOverview: true
-      }
+        fromProductOverview: true,
+      },
     });
   };
 
@@ -113,7 +113,7 @@ export default function ProductOverview() {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 overflow-auto">
+    <div className="w-full h-full bg-white rounded-3xl p-6 overflow-hidden">
       <BackButton />
       {isLoading ? (
         <div className=" h-full flex items-center justify-center bg-white">
@@ -131,10 +131,11 @@ export default function ProductOverview() {
                 {furnitureImages.map((image, index) => (
                   <div
                     key={index}
-                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${selectedImage === index
-                      ? "border-amber-500"
-                      : "border-gray-200 hover:border-gray-300"
-                      }`}
+                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
+                      selectedImage === index
+                        ? "border-amber-500"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <img
@@ -148,10 +149,11 @@ export default function ProductOverview() {
                 {/* Generated Image Thumbnail */}
                 {generatedImage && (
                   <div
-                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all relative ${selectedImage === furnitureImages.length
-                      ? "border-amber-500"
-                      : "border-green-400 hover:border-green-500"
-                      }`}
+                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 transition-all relative ${
+                      selectedImage === furnitureImages.length
+                        ? "border-amber-500"
+                        : "border-green-400 hover:border-green-500"
+                    }`}
                     onClick={() => setSelectedImage(furnitureImages.length)}
                   >
                     <img
@@ -186,11 +188,12 @@ export default function ProductOverview() {
                   </button>
 
                   {/* Generated Image Indicator */}
-                  {selectedImage === furnitureImages.length && generatedImage && (
-                    <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      AI Generated Design
-                    </div>
-                  )}
+                  {selectedImage === furnitureImages.length &&
+                    generatedImage && (
+                      <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        AI Generated Design
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
@@ -223,9 +226,11 @@ export default function ProductOverview() {
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-600">Availability:</span>
                   <span
-                    className={furniture.data.stock > 0
-                      ? "text-green-500 font-medium"
-                      : "text-red-500 font-medium"}
+                    className={
+                      furniture.data.stock > 0
+                        ? "text-green-500 font-medium"
+                        : "text-red-500 font-medium"
+                    }
                   >
                     {furniture.data.stock > 0 ? "In stock" : "Out of stock"}
                   </span>
@@ -334,8 +339,11 @@ export default function ProductOverview() {
             {/* Main 3D Model Display */}
             <div className="w-[600px] h-[600px] flex items-center justify-center border-1 border-amber-700 rounded-2xl overflow-hidden bg-gray-100">
               <ThreeDScene
-                modelPath={furnitureModels[selectedModel]?.url ||
-                  "/path/to/defaultModel.glb"} />
+                modelPath={
+                  furnitureModels[selectedModel]?.url ||
+                  "/path/to/defaultModel.glb"
+                }
+              />
             </div>
 
             {/* Gallery Model Thumbnails */}
@@ -343,9 +351,11 @@ export default function ProductOverview() {
               {furnitureModels.map((model, index) => (
                 <div
                   key={index}
-                  className={`w-20 h-20 m-2 cursor-pointer border-2 ${selectedModel === index
-                    ? "border-amber-500"
-                    : "border-gray-200 hover:border-gray-300"}`}
+                  className={`w-20 h-20 m-2 cursor-pointer border-2 ${
+                    selectedModel === index
+                      ? "border-amber-500"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
                   onClick={() => setSelectedModel(index)}
                 >
                   {/* <ThreeDScene modelPath={model.url} /> */}
@@ -364,13 +374,24 @@ export default function ProductOverview() {
             {generatedImage && (
               <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
                 <div className="flex items-center gap-2 text-green-700">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
-                  <span className="font-medium">Custom design generated successfully!</span>
+                  <span className="font-medium">
+                    Custom design generated successfully!
+                  </span>
                 </div>
                 <p className="text-green-600 text-sm mt-1">
-                  Your generated design will be uploaded and included with your order once you click "Create New Order".
+                  Your generated design will be uploaded and included with your
+                  order once you click "Create New Order".
                 </p>
               </div>
             )}
