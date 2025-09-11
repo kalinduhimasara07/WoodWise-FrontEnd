@@ -219,7 +219,7 @@ export default function AdminFurniture() {
         <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
           <div className="text-green-800 text-sm font-medium">In Stock</div>
           <div className="text-2xl font-bold text-green-900">
-            {furniture.filter((item) => item.inStock).length}
+            {furniture.filter((item) => item.inStock && item.stock !== 0).length}
           </div>
         </div>
         <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">

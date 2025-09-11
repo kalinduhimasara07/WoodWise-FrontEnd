@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Users,
   Package,
@@ -39,135 +41,154 @@ export default function AdminDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState("7d");
+  const [error, setError] = useState(null);
 
-  // Mock dashboard data
+  const [users, setUsers] = useState([]);
+  const [furniture, setFurniture] = useState([]);
+  const [orders, setOrders] = useState([]);
+
   useEffect(() => {
-    setTimeout(() => {
-      setDashboardData({
-        overview: {
-          totalRevenue: 125400,
-          revenueChange: 12.5,
-          totalOrders: 1847,
-          ordersChange: 8.3,
-          totalUsers: 2456,
-          usersChange: 15.2,
-          totalProducts: 342,
-          productsChange: 4.1,
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
+    }
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        recentOrders: [
-          {
-            id: "ORD-001",
-            customer: "John Smith",
-            amount: 899.99,
-            status: "completed",
-            date: "2024-06-27",
-          },
-          {
-            id: "ORD-002",
-            customer: "Sarah Wilson",
-            amount: 1299.99,
-            status: "pending",
-            date: "2024-06-27",
-          },
-          {
-            id: "ORD-003",
-            customer: "Mike Johnson",
-            amount: 249.99,
-            status: "processing",
-            date: "2024-06-26",
-          },
-          {
-            id: "ORD-004",
-            customer: "Emma Davis",
-            amount: 599.99,
-            status: "completed",
-            date: "2024-06-26",
-          },
-          {
-            id: "ORD-005",
-            customer: "Alex Brown",
-            amount: 1899.99,
-            status: "shipped",
-            date: "2024-06-25",
-          },
-        ],
-        topProducts: [
-          {
-            name: "Modern Oak Dining Table",
-            sales: 45,
-            revenue: 40455,
-            category: "Dining Room",
-          },
-          {
-            name: "Luxury Teak Bedroom Set",
-            sales: 23,
-            revenue: 29899,
-            category: "Bedroom",
-          },
-          {
-            name: "Ergonomic Office Chair",
-            sales: 67,
-            revenue: 20099,
-            category: "Office",
-          },
-          {
-            name: "Bamboo Coffee Table",
-            sales: 89,
-            revenue: 17799,
-            category: "Living Room",
-          },
-        ],
-        salesData: [
-          { date: "Jun 21", revenue: 12400, orders: 45 },
-          { date: "Jun 22", revenue: 15600, orders: 52 },
-          { date: "Jun 23", revenue: 18200, orders: 61 },
-          { date: "Jun 24", revenue: 16800, orders: 58 },
-          { date: "Jun 25", revenue: 21400, orders: 72 },
-          { date: "Jun 26", revenue: 19600, orders: 65 },
-          { date: "Jun 27", revenue: 23800, orders: 78 },
-        ],
-        categoryData: [
-          { name: "Living Room", value: 35, color: "#3B82F6" },
-          { name: "Bedroom", value: 25, color: "#8B5CF6" },
-          { name: "Dining Room", value: 20, color: "#10B981" },
-          { name: "Office", value: 15, color: "#F59E0B" },
-          { name: "Others", value: 5, color: "#EF4444" },
-        ],
-        userActivity: [
-          { time: "00:00", active: 12 },
-          { time: "04:00", active: 8 },
-          { time: "08:00", active: 45 },
-          { time: "12:00", active: 89 },
-          { time: "16:00", active: 124 },
-          { time: "20:00", active: 76 },
-          { time: "23:59", active: 34 },
-        ],
-        alerts: [
-          {
-            type: "warning",
-            message: "5 products are running low on stock",
-            icon: AlertTriangle,
-          },
-          {
-            type: "info",
-            message: "12 new orders placed today",
-            icon: Users,
-          },
-          {
-            type: "success",
-            message: "Monthly sales target achieved",
-            icon: Target,
-          },
-        ],
+      }) // Replace with your actual API endpoint
+      .then((response) => {
+        setUsers(response.data);
+        setLoading(false);
+        console.log("Users fetched:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoading(false);
       });
-      setLoading(false);
-    }, 1000);
-  }, [timeRange]);
+  }, []);
+
+  useEffect(() => {
+    const fetchFurniture = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
+
+        if (response.data.success) {
+          setFurniture(response.data.data);
+          console.log("Furniture fetched:", response.data.data);
+        } else {
+          setError("Failed to fetch furniture data");
+        }
+      } catch (error) {
+        console.error("Error fetching furniture:", error);
+        setError("Failed to connect to server");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFurniture();
+  }, []);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          setOrders(result.data);
+          console.log("Orders fetched:", result.data);
+        } else {
+          throw new Error(result.message || "Failed to fetch orders");
+        }
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  useEffect(() => {
+    if (!users || !furniture || !orders) return;
+
+    // Compute metrics
+    const totalUsers = users.length;
+    const totalProducts = furniture.length;
+    const totalOrders = orders.length;
+    const totalRevenue = orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+
+    const dashboard = {
+      overview: {
+        totalRevenue,
+        revenueChange: 0, // compute change if you have historical data
+        totalOrders,
+        ordersChange: 0,
+        totalUsers,
+        usersChange: 0,
+        totalProducts,
+        productsChange: 0,
+      },
+      // Use the most recent 5 orders
+      recentOrders: orders
+        .slice(0,5)
+        .map(o => ({
+          id: o.orderNumber,
+          customer: o.customerInfo.name, // adapt to your API field
+          amount: o.totalAmount,
+          status: o.status,
+          date: o.updatedAt,
+        })),
+      // Top products by sales (using furniture id and related orders)
+      topProducts: furniture
+        .map(f => {
+          // Count how many orders include this furniture item's ID
+          const salesCount = orders.reduce((count, order) => {
+            if (order.furnitureItems && Array.isArray(order.furnitureItems)) {
+              return count + order.furnitureItems.filter(item => item.sku === f.sku).length;
+            }
+            return count;
+          }, 0);
+          return {
+            name: f.name,
+            sales: salesCount,
+            revenue: f.salePrice || 0,
+            category: f.category,
+          };
+        })
+        .sort((a, b) => b.sales - a.sales)
+        .slice(0, 4),
+      // You can fill in salesData, categoryData, userActivity, alerts if your API supplies it
+      salesData: [], // or transform from your orders
+      categoryData: [], // or derive from furniture categories
+      userActivity: [], // optional
+      alerts: [],
+    };
+
+    setDashboardData(dashboard);
+    setLoading(false);
+  }, [users, furniture, orders]);
+
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "LKR",
     }).format(amount);
   };
 
@@ -180,14 +201,16 @@ export default function AdminDashboard() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "completed":
+      case "Completed":
         return "bg-green-100 text-green-800";
-      case "processing":
+      case "In Production":
         return "bg-blue-100 text-blue-800";
-      case "pending":
+      case "Pending":
         return "bg-yellow-100 text-yellow-800";
-      case "shipped":
+      case "Ready for Delivery":
         return "bg-purple-100 text-purple-800";
+      case "Cancelled":
+        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -221,17 +244,6 @@ export default function AdminDashboard() {
             Welcome back! Here's what's happening with your business today.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <select
-            value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value)}
-            className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="90d">Last 90 days</option>
-          </select>
-        </div>
       </div>
 
       {/* Alert Bar */}
@@ -241,22 +253,20 @@ export default function AdminDashboard() {
           return (
             <div
               key={index}
-              className={`flex items-center gap-3 p-3 rounded-lg ${
-                alert.type === "warning"
-                  ? "bg-yellow-50 border border-yellow-200"
-                  : alert.type === "success"
+              className={`flex items-center gap-3 p-3 rounded-lg ${alert.type === "warning"
+                ? "bg-yellow-50 border border-yellow-200"
+                : alert.type === "success"
                   ? "bg-green-50 border border-green-200"
                   : "bg-blue-50 border border-blue-200"
-              }`}
+                }`}
             >
               <IconComponent
-                className={`h-5 w-5 ${
-                  alert.type === "warning"
-                    ? "text-yellow-600"
-                    : alert.type === "success"
+                className={`h-5 w-5 ${alert.type === "warning"
+                  ? "text-yellow-600"
+                  : alert.type === "success"
                     ? "text-green-600"
                     : "text-blue-600"
-                }`}
+                  }`}
               />
               <span className="text-sm font-medium text-gray-800">
                 {alert.message}
@@ -280,13 +290,13 @@ export default function AdminDashboard() {
               <DollarSign className="h-6 w-6 text-green-600" />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          {/* <div className="flex items-center mt-4 text-sm">
             <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
             <span className="text-green-600 font-medium">
               +{dashboardData.overview.revenueChange}%
             </span>
             <span className="text-gray-600 ml-1">from last period</span>
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -301,13 +311,13 @@ export default function AdminDashboard() {
               <ShoppingCart className="h-6 w-6 text-blue-600" />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          {/* <div className="flex items-center mt-4 text-sm">
             <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
             <span className="text-green-600 font-medium">
               +{dashboardData.overview.ordersChange}%
             </span>
             <span className="text-gray-600 ml-1">from last period</span>
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -322,13 +332,13 @@ export default function AdminDashboard() {
               <Users className="h-6 w-6 text-purple-600" />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          {/* <div className="flex items-center mt-4 text-sm">
             <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
             <span className="text-green-600 font-medium">
               +{dashboardData.overview.usersChange}%
             </span>
             <span className="text-gray-600 ml-1">from last period</span>
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -345,20 +355,20 @@ export default function AdminDashboard() {
               <Package className="h-6 w-6 text-orange-600" />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          {/* <div className="flex items-center mt-4 text-sm">
             <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
             <span className="text-green-600 font-medium">
               +{dashboardData.overview.productsChange}%
             </span>
             <span className="text-gray-600 ml-1">from last period</span>
-          </div>
+          </div> */}
         </div>
       </div>
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Sales Trend */}
-        <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        {/* <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">Sales Trend</h3>
             <BarChart3 className="h-5 w-5 text-gray-400" />
@@ -393,10 +403,10 @@ export default function AdminDashboard() {
               />
             </AreaChart>
           </ResponsiveContainer>
-        </div>
+        </div> */}
 
         {/* Category Distribution */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        {/* <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">
               Sales by Category
@@ -438,7 +448,7 @@ export default function AdminDashboard() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Tables Section */}
@@ -533,7 +543,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* User Activity Chart */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      {/* <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900">
             User Activity (24h)
@@ -557,7 +567,7 @@ export default function AdminDashboard() {
             <Bar dataKey="active" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
-      </div>
+      </div> */}
     </div>
   );
 }
