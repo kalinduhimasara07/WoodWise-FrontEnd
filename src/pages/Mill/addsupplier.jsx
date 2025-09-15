@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-// 1. Import useNavigate from react-router-dom for navigation
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Trash2, Save, AlertCircle, CheckCircle, User, Building, Phone, Mail, MapPin, Package } from 'lucide-react';
 
 const AddSupplier = () => {
-  // 2. Initialize the navigate function
   const navigate = useNavigate();
 
-  // Form state
   const [formData, setFormData] = useState({
     name: '',
     companyName: '',
@@ -21,37 +18,20 @@ const AddSupplier = () => {
       country: 'Sri Lanka',
       postalCode: ''
     },
-    supplies: [{
-      timberCategory: '',
-      grade: 'Standard',
-      pricePerUnit: '',
-      stockAvailable: '',
-      description: ''
-    }],
     rating: 3,
     active: true
   });
 
-  // UI state
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
 
-  // Timber categories from your schema
-  const timberCategories = [
-    'Teak', 'Oak', 'Mahogany', 'Pine', 'Walnut', 'Bamboo', 'Ash', 'Rosewood', 'Rubberwood', 'Bodhi',
-    'Mango', 'Yaka', 'Halmilla', 'Vatica', 'Rambutan', 'Kumbuk', 'Balan', 'Dumbara', 'Hedar', 
-    'Sassafras', 'Kachchan', 'Millettia', 'Koss', 'Lunumidella', 'Kandula', 'Berrya', 'Cinnamon', 'Ruhuna'
-  ];
-
-  const grades = ['Premium', 'Standard', 'Economy'];
   const provinces = [
     'Western', 'Central', 'Southern', 'Northern', 'Eastern', 'North Western', 
     'North Central', 'Uva', 'Sabaragamuwa'
   ];
 
-  // Handle input changes
   const handleInputChange = (field, value) => {
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
@@ -70,41 +50,6 @@ const AddSupplier = () => {
     }
   };
 
-  // Handle supply changes
-  const handleSupplyChange = (index, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      supplies: prev.supplies.map((supply, i) => 
-        i === index ? { ...supply, [field]: value } : supply
-      )
-    }));
-  };
-
-  // Add new supply
-  const addSupply = () => {
-    setFormData(prev => ({
-      ...prev,
-      supplies: [...prev.supplies, {
-        timberCategory: '',
-        grade: 'Standard',
-        pricePerUnit: '',
-        stockAvailable: '',
-        description: ''
-      }]
-    }));
-  };
-
-  // Remove supply
-  const removeSupply = (index) => {
-    if (formData.supplies.length > 1) {
-      setFormData(prev => ({
-        ...prev,
-        supplies: prev.supplies.filter((_, i) => i !== index)
-      }));
-    }
-  };
-
-  // Form validation
   const validateStep = (step) => {
     switch (step) {
       case 1:
@@ -113,46 +58,40 @@ const AddSupplier = () => {
         return formData.contactNumber && formData.email;
       case 3:
         return formData.address.street && formData.address.city && formData.address.province;
-      case 4:
-        return formData.supplies.every(supply => 
-          supply.timberCategory && supply.pricePerUnit && supply.stockAvailable
-        );
       default:
         return true;
     }
   };
 
-  // Submit form
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // Convert string numbers to actual numbers
+      const { name, companyName, contactPerson, contactNumber, email, address, rating, active } = formData;
       const processedData = {
-        ...formData,
-        supplies: formData.supplies.map(supply => ({
-          ...supply,
-          pricePerUnit: parseFloat(supply.pricePerUnit),
-          stockAvailable: parseInt(supply.stockAvailable)
-        }))
+        name,
+        companyName,
+        contactPerson,
+        contactNumber,
+        email,
+        address,
+        rating,
+        active
       };
 
-      // 3. Replace the environment variable with your actual backend URL
-      // Make sure this URL is correct and your backend server is running.
-      const response = await fetch('http://your-backend-api-url.com/api/suppliers/add', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/suppliers/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(processedData),
       });
-      
+
       const data = await response.json();
-      
-      if (data && data.success) {
+
+      if (response.ok && data && data.success) {
         setSuccess(true);
-        // Reset form after 2 seconds
         setTimeout(() => {
           setFormData({
             name: '',
@@ -167,37 +106,19 @@ const AddSupplier = () => {
               country: 'Sri Lanka',
               postalCode: ''
             },
-            supplies: [{
-              timberCategory: '',
-              grade: 'Standard',
-              pricePerUnit: '',
-              stockAvailable: '',
-              description: ''
-            }],
             rating: 3,
             active: true
           });
           setCurrentStep(1);
           setSuccess(false);
-          // Optional: Navigate back to the suppliers list after successful addition
-          // navigate('/suppliers');
         }, 2000);
       } else {
-        throw new Error(data.message || 'Failed to add supplier');
+        setError(data.message || 'Failed to add supplier');
       }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getGradeColor = (grade) => {
-    switch (grade) {
-      case 'Premium': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'Standard': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'Economy': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -391,128 +312,6 @@ const AddSupplier = () => {
           </div>
         );
 
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <Package className="h-8 w-8 text-blue-600 mr-3" />
-                <h2 className="text-2xl font-bold text-gray-900">Timber Supplies</h2>
-              </div>
-              <button
-                type="button"
-                onClick={addSupply}
-                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Supply
-              </button>
-            </div>
-            
-            <div className="space-y-6">
-              {formData.supplies.map((supply, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-6 relative">
-                  {formData.supplies.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeSupply(index)}
-                      className="absolute top-4 right-4 text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  )}
-                  
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Supply #{index + 1}</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Timber Category *
-                      </label>
-                      <select
-                        value={supply.timberCategory}
-                        onChange={(e) => handleSupplyChange(index, 'timberCategory', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        <option value="">Select Timber Category</option>
-                        {timberCategories.map(category => (
-                          <option key={category} value={category}>{category}</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Grade
-                      </label>
-                      <select
-                        value={supply.grade}
-                        onChange={(e) => handleSupplyChange(index, 'grade', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        {grades.map(grade => (
-                          <option key={grade} value={grade}>{grade}</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Price per Unit (LKR) *
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value={supply.pricePerUnit}
-                        onChange={(e) => handleSupplyChange(index, 'pricePerUnit', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="0.00"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Stock Available *
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        value={supply.stockAvailable}
-                        onChange={(e) => handleSupplyChange(index, 'stockAvailable', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description
-                    </label>
-                    <textarea
-                      value={supply.description}
-                      onChange={(e) => handleSupplyChange(index, 'description', e.target.value)}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter description (optional)"
-                    />
-                  </div>
-                  
-                  {supply.timberCategory && (
-                    <div className="mt-4 flex items-center">
-                      <span className="text-sm text-gray-600 mr-2">Preview:</span>
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getGradeColor(supply.grade)}`}>
-                        {supply.timberCategory} - {supply.grade}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
       default:
         return null;
     }
@@ -533,10 +332,8 @@ const AddSupplier = () => {
   return (
     <div className="w-full h-full bg-white rounded-4xl p-6 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
-            {/* 4. Add onClick handler to navigate back */}
             <button 
               onClick={() => navigate(-1)} 
               className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -561,10 +358,9 @@ const AddSupplier = () => {
           </div>
         </div>
 
-        {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center">
-            {[1, 2, 3, 4].map((step) => (
+            {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
                 <div
                   className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
@@ -575,7 +371,7 @@ const AddSupplier = () => {
                 >
                   {step}
                 </div>
-                {step < 4 && (
+                {step < 3 && (
                   <div
                     className={`w-24 h-0.5 ${
                       currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
@@ -589,11 +385,9 @@ const AddSupplier = () => {
             <span className="text-xs text-gray-600">Basic Info</span>
             <span className="text-xs text-gray-600">Contact</span>
             <span className="text-xs text-gray-600">Address</span>
-            <span className="text-xs text-gray-600">Supplies</span>
           </div>
         </div>
 
-        {/* Error Alert */}
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
             <div className="flex items-center">
@@ -603,11 +397,9 @@ const AddSupplier = () => {
           </div>
         )}
 
-        {/* Form */}
         <div className="bg-white rounded-lg shadow p-8">
           {renderStep()}
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between pt-8 mt-8 border-t border-gray-200">
             <button
               type="button"

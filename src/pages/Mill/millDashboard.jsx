@@ -3,7 +3,6 @@ import Header from "../../components/Mill/header";
 import Sidebar from "../../components/Mill/millSlideBar";
 import MillInventory from "./millInventory";
 import MillOrderPage from "./millOrderPage";
-import MillSupplies from "./millSupplies";
 import MillSuppliers from "./millSupliers";
 import MillMessages from "./millMessages";
 import AddTimber from "./addTimber";
@@ -79,7 +78,6 @@ export default function MillHomePage() {
           <Route path="/inventory/edit-timber/:id" element={<EditTimber />} />
           <Route path="/inventory" element={<MillInventory />} />
           <Route path="/orders" element={<MillOrderPage />} />
-          <Route path="/supplies" element={<MillSupplies />} />
           <Route path="/suppliers" element={<MillSuppliers />} />
           <Route path="/suppliers/add-supplier" element={<AddSupplier />} />
           <Route path="/messages" element={<MillMessages />} />

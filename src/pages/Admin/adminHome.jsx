@@ -8,7 +8,6 @@ import AdminFurniture from "./adminFurniture";
 import AdminDashboard from "./adminDashboard";
 import PosterGenerator from "./posterGenerator";
 import MillOrderPage from "../Mill/millOrderPage";
-import MillSupplies from "../Mill/millSupplies";
 import MillSuppliers from "../Mill/millSupliers";
 import { MillDashboard } from "../Mill/millDashboard";
 import { StoreDashboard } from "../Store/storeDashboard";
@@ -100,7 +99,7 @@ export default function AdminHomePage() {
           <Route path="/mill/inventory" element={<MillInventory />} />
           <Route path="/mill/inventory/add-timber" element={<AddTimber />} />
           <Route path="/mill/orders" element={<MillOrderPage />} />
-          <Route path="/mill/supplies" element={<MillSupplies />} />
+
           <Route path="/mill/suppliers" element={<MillSuppliers />} />
 
           {/* Store */}

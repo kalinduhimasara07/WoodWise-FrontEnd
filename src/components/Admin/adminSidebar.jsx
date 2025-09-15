@@ -50,7 +50,6 @@ export default function AdminSidebar() {
             "/admin/mill/orders/edit",
           ],
         },
-        { name: "Supplies", path: "/admin/mill/supplies" },
         { name: "Suppliers", path: "/admin/mill/suppliers" },
       ],
     },

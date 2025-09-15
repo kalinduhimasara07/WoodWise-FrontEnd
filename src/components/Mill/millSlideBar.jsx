@@ -40,7 +40,6 @@ export default function MillSidebar() {
       path: ["/mill/orders", "/mill/orders/add-order"],
       defaultPath: "/mill/orders",
     },
-    { name: "Supplies", icon: GiWoodBeam, path: "/mill/supplies" },
     { name: "Suppliers", icon: PiBuildingsDuotone, path: "/mill/suppliers" },
   ];
 
