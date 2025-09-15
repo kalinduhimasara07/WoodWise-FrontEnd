@@ -1,5 +1,4 @@
-import React, { useState, useEffect, use } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Users,
@@ -19,29 +18,11 @@ import {
   Award,
   Target,
 } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart as RechartsPieChart,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Pie,
-} from "recharts";
 import Loading from "../../components/loader";
 
 export default function AdminDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState("7d");
-  const [error, setError] = useState(null);
 
   const [users, setUsers] = useState([]);
   const [furniture, setFurniture] = useState([]);
