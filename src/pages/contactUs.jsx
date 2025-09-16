@@ -56,9 +56,10 @@ const ContactUs = () => {
       icon: MapPin,
       title: "Showroom Location",
       details: [
-        "123 Woodcraft Avenue",
-        "Furniture District",
-        "Colombo 07, Sri Lanka",
+        "No 322, School Road,",
+        "Batuwatta, Ragama,",
+        "Sri Lanka.",
+        "11011",
       ],
       color: "text-amber-700",
       bgColor: "bg-amber-50",
@@ -66,21 +67,21 @@ const ContactUs = () => {
     {
       icon: Phone,
       title: "Call Us",
-      details: ["+94 11 234 5678", "+94 77 123 4567", "Mon-Sat: 9AM-6PM"],
+      details: ["011 711 0084", "0778 838 939", "Mon-Sat: 9AM-6PM"],
       color: "text-green-700",
       bgColor: "bg-green-50",
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["info@woodwise.lk", "sales@woodwise.lk"],
+      details: ["woodwise.services@gmail.com",],
       color: "text-orange-700",
       bgColor: "bg-orange-50",
     },
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Mon-Fri: 9AM-6PM", "Sat: 9AM-4PM", "Sun: Closed"],
+      details: ["Mon-Fri: 9AM-7PM", "Sat: 9AM-5PM", "Sun: Closed"],
       color: "text-gray-700",
       bgColor: "bg-gray-50",
     },
@@ -100,7 +101,7 @@ const ContactUs = () => {
       <div
         className="relative py-24 md:py-32 bg-cover bg-center shadow-xl"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80')`,
+          backgroundImage: `url('/contact.jpeg')`,
         }}
       >
         <div className="absolute inset-0 bg-black opacity-60"></div>
@@ -131,29 +132,31 @@ const ContactUs = () => {
 
       {/* Contact Information Cards */}
       <section className="py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {contactInfo.map((info, index) => {
               const Icon = info.icon;
               return (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 p-8 text-center"
+                  className="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5"
                 >
                   <div
-                    className={`w-16 h-16 ${info.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-6`}
+                    className={`flex-shrink-0 w-14 h-14 ${info.bgColor} rounded-xl flex items-center justify-center mr-5`}
                   >
-                    <Icon className={`w-8 h-8 ${info.color}`} />
+                    <Icon className={`w-7 h-7 ${info.color}`} />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-4">
-                    {info.title}
-                  </h3>
-                  <div className="space-y-2">
-                    {info.details.map((detail, idx) => (
-                      <p key={idx} className="text-gray-600">
-                        {detail}
-                      </p>
-                    ))}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      {info.title}
+                    </h3>
+                    <div className="space-y-1">
+                      {info.details.map((detail, idx) => (
+                        <p key={idx} className="text-gray-600 text-sm">
+                          {detail}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               );
@@ -327,7 +330,7 @@ const ContactUs = () => {
                   src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3959.582353119101!2d79.931106!3d7.05826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zN8KwMDMnMjkuNyJOIDc5wrA1NSc1Mi4wIkU!5e0!3m2!1sen!2slk!4v1758041194875!5m2!1sen!2slk"
                   width="600"
                   height="450"
-                  style={{border:0}}
+                  style={{ border: 0 }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
