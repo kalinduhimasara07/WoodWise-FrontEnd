@@ -109,13 +109,13 @@ function ImageGenerator({ onImageGenerated }) {
             )}
 
             <div className="flex gap-3">
-                <button
+                {/* <button
                     onClick={generateDummyImage}
                     disabled={isLoading}
                     className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition ${isLoading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
                 >
                     {isLoading ? "Generating..." : "Generate Dummy Image"}
-                </button>
+                </button> */}
 
                 <button
                     onClick={generateImage}
