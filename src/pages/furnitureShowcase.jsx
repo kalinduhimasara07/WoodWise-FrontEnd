@@ -207,7 +207,7 @@ const FurnitureCard = ({ furniture }) => {
               </>
             ) : (
               <span className="text-xl font-bold text-gray-900">
-                {formatPrice(furniture.price)}
+                Rs {formatPrice(furniture.price)}
               </span>
             )}
           </div>

@@ -22,6 +22,7 @@ import Loading from "../../components/loader";
 
 export default function AdminDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [users, setUsers] = useState([]);

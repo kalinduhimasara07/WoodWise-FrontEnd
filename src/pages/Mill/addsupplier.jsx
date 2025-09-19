@@ -28,7 +28,7 @@ const AddSupplier = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
   const provinces = [
-    'Western', 'Central', 'Southern', 'Northern', 'Eastern', 'North Western', 
+    'Western', 'Central', 'Southern', 'Northern', 'Eastern', 'North Western',
     'North Central', 'Uva', 'Sabaragamuwa'
   ];
 
@@ -131,7 +131,7 @@ const AddSupplier = () => {
               <User className="h-8 w-8 text-blue-600 mr-3" />
               <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -145,7 +145,7 @@ const AddSupplier = () => {
                   placeholder="Enter supplier name"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Company Name *
@@ -158,7 +158,7 @@ const AddSupplier = () => {
                   placeholder="Enter company name"
                 />
               </div>
-              
+
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Contact Person *
@@ -182,7 +182,7 @@ const AddSupplier = () => {
               <Phone className="h-8 w-8 text-blue-600 mr-3" />
               <h2 className="text-2xl font-bold text-gray-900">Contact Details</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -196,7 +196,7 @@ const AddSupplier = () => {
                   placeholder="+94 XX XXX XXXX"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address *
@@ -209,7 +209,7 @@ const AddSupplier = () => {
                   placeholder="supplier@example.com"
                 />
               </div>
-              
+
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Rating (1-5)
@@ -235,7 +235,7 @@ const AddSupplier = () => {
               <MapPin className="h-8 w-8 text-blue-600 mr-3" />
               <h2 className="text-2xl font-bold text-gray-900">Address Information</h2>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -249,7 +249,7 @@ const AddSupplier = () => {
                   placeholder="Enter street address"
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -263,7 +263,7 @@ const AddSupplier = () => {
                     placeholder="Enter city"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Province *
@@ -280,7 +280,7 @@ const AddSupplier = () => {
                   </select>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -294,7 +294,7 @@ const AddSupplier = () => {
                     readOnly
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Postal Code
@@ -334,8 +334,8 @@ const AddSupplier = () => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
-            <button 
-              onClick={() => navigate(-1)} 
+            <button
+              onClick={() => navigate(-1)}
               className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <ArrowLeft className="h-6 w-6 text-gray-600" />
@@ -358,35 +358,32 @@ const AddSupplier = () => {
           </div>
         </div>
 
-        <div className="mb-8">
-          <div className="flex items-center">
-            {[1, 2, 3].map((step) => (
-              <div key={step} className="flex items-center">
-                <div
-                  className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                    currentStep >= step
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : 'border-gray-300 text-gray-500'
+        <div className="grid grid-cols-3">
+          {["Basic Info", "Contact", "Address"].map((label, index) => (
+            <div key={index} className="flex flex-col items-center relative">
+              {/* Left connector */}
+              {index !== 0 && (
+                <div className={`absolute top-4 left-0 w-1/2 h-0.5 ${currentStep > index ? 'bg-blue-600 transition-all' : 'bg-gray-300'
+                  }`} />
+              )}
+              {/* Right connector */}
+              {index !== 2 && (
+                <div className={`absolute top-4 right-0 w-1/2 h-0.5 ${currentStep > index + 1 ? 'bg-blue-600' : 'bg-gray-300'
+                  }`} />
+              )}
+              <div
+                className={`flex items-center justify-center w-8 h-8 rounded-full border-2 z-10 ${currentStep >= index + 1
+                    ? 'bg-blue-600 border-blue-600 text-white'
+                    : 'border-gray-300 text-gray-500 bg-white'
                   }`}
-                >
-                  {step}
-                </div>
-                {step < 3 && (
-                  <div
-                    className={`w-24 h-0.5 ${
-                      currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  />
-                )}
+              >
+                {index + 1}
               </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-2">
-            <span className="text-xs text-gray-600">Basic Info</span>
-            <span className="text-xs text-gray-600">Contact</span>
-            <span className="text-xs text-gray-600">Address</span>
-          </div>
+              <span className="mt-2 text-xs text-gray-600">{label}</span>
+            </div>
+          ))}
         </div>
+
 
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
@@ -409,7 +406,7 @@ const AddSupplier = () => {
             >
               Previous
             </button>
-            
+
             <div className="flex space-x-4">
               {currentStep < 4 ? (
                 <button
