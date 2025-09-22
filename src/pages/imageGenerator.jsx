@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import OpenAI from 'openai';
-import mediaUpload from '../utils/mediaUpload';
 
 function ImageGenerator({ onImageGenerated }) {
     const [prompt, setPrompt] = useState('');
@@ -13,12 +12,11 @@ function ImageGenerator({ onImageGenerated }) {
         dangerouslyAllowBrowser: true,
     });
 
-    // ✅ Generate AI image and upload immediately to Supabase
     const generateImage = async () => {
         if (!prompt.trim()) return;
-
         setIsLoading(true);
-        setError("");
+        setError(null);
+        setPreviewUrl('');
 
         try {
             const openai = new OpenAI({
@@ -27,55 +25,35 @@ function ImageGenerator({ onImageGenerated }) {
             });
 
             const response = await openai.images.generate({
-                model: "gpt-image-1",
+                model: "dall-e-3",
                 prompt,
-                size: "512x512",
+                size: "1024x1024",
+                response_format: "b64_json",
             });
 
-            const url = response.data[0].url;
+            const base64Image = response.data[0].b64_json;
 
-            // Convert the generated image to a blob for local preview
-            const blob = await fetch(url).then((res) => res.blob());
-            const localUrl = URL.createObjectURL(blob);
+            const binaryString = atob(base64Image);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            const blob = new Blob([bytes], { type: 'image/png' });
 
-            setImageUrl(localUrl);
-            onImageGenerated({ previewUrl: localUrl, file: blob }); // pass both preview + blob
-        } catch (err) {
-            setError("Failed to generate image.");
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // ✅ Dummy generator (optional)
-    const generateDummyImage = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
-            setPreviewUrl('');
-
-            // Get a fresh random image
-            const dummyUrl = `https://picsum.photos/seed/${Date.now()}/512`;
-            const res = await fetch(dummyUrl, { cache: 'no-store' });
-            const blob = await res.blob();
-
-            // Create a File so the parent can upload it later
-            const file = new File([blob], `dummy_${Date.now()}.jpg`, {
-                type: blob.type || 'image/jpeg',
+            const file = new File([blob], `ai_${Date.now()}.png`, {
+                type: 'image/png',
             });
 
-            // Local preview for this component
             const localPreview = URL.createObjectURL(blob);
             setPreviewUrl(localPreview);
 
-            // Send preview + file to parent (parent uploads on order)
             if (onImageGenerated) {
                 onImageGenerated({ previewUrl: localPreview, file });
             }
+
         } catch (err) {
-            console.error('Error in dummy generator:', err);
-            setError('Failed to generate dummy image. Please try again.');
+            console.error('Error in AI generator:', err);
+            setError(`Failed to generate image: ${err.message}`);
         } finally {
             setIsLoading(false);
         }
