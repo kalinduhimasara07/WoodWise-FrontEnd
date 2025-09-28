@@ -8,7 +8,7 @@ import AdminFurniture from "./adminFurniture";
 import AdminDashboard from "./adminDashboard";
 import PosterGenerator from "./posterGenerator";
 import MillOrderPage from "../Mill/millOrderPage";
-import MillSuppliers from "../Mill/millSupliers";
+// import MillSuppliers from "../Mill/millSupliers";
 import { MillDashboard } from "../Mill/millDashboard";
 import { StoreDashboard } from "../Store/storeDashboard";
 
@@ -27,6 +27,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Loading from "../../components/loader";
+import MillSuppliers from "./Mill/millSupliers";
+import AddSupplier from "./Mill/addsupplier";
 
 export default function AdminHomePage() {
   const [status, setStatus] = useState("loading");
@@ -99,8 +101,8 @@ export default function AdminHomePage() {
           <Route path="/mill/inventory" element={<MillInventory />} />
           <Route path="/mill/inventory/add-timber" element={<AddTimber />} />
           <Route path="/mill/orders" element={<MillOrderPage />} />
-
           <Route path="/mill/suppliers" element={<MillSuppliers />} />
+          <Route path="/mill/suppliers/add-supplier" element={<AddSupplier />} />
 
           {/* Store */}
           <Route path="/store/dashboard" element={<StoreDashboard />} />

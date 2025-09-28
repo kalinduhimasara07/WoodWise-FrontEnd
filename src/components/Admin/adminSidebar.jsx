@@ -28,7 +28,7 @@ export default function AdminSidebar() {
     {
       name: "Furniture",
       icon: FaCouch,
-      paths: ["/admin/furniture", "/admin/add-furniture"],
+      paths: ["/admin/furniture", "/admin/add-furniture", "/admin/poster-generator"],
     },
     {
       name: "Mill",
@@ -50,7 +50,7 @@ export default function AdminSidebar() {
             "/admin/mill/orders/edit",
           ],
         },
-        { name: "Suppliers", path: "/admin/mill/suppliers" },
+        { name: "Suppliers", path: "/admin/mill/suppliers", paths:["/admin/mill/suppliers","/admin/mill/suppliers/supplier"] },
       ],
     },
     {

@@ -308,7 +308,7 @@ const Footer = () => {
         </div>
 
         {/* Scroll to Top Button */}
-        <div className="fixed bottom-6 right-6">
+        {/* <div className="fixed bottom-6 right-6">
           <button className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-lg">
             <svg
               className="w-6 h-6 text-white"
@@ -324,10 +324,10 @@ const Footer = () => {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
 
         {/* Chat Widget */}
-        <div className="fixed bottom-6 right-24">
+        {/* <div className="fixed bottom-6 right-24">
           <button className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors shadow-lg">
             <svg
               className="w-6 h-6 text-white"
@@ -343,7 +343,7 @@ const Footer = () => {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
     </footer>
   );
