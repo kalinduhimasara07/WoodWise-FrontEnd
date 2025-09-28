@@ -3,35 +3,35 @@ import OpenAI from "openai";
 
 // Objects and related attributes (Sri Lankan context)
 const OBJECTS = [
-  "chair",
-  "armchair",
-  "sofa",
-  "dining table",
-  "coffee table",
-  "bed",
-  "wardrobe",
-  "cabinet",
-  "shelf",
-  "bench",
-  "stool",
-  "lamp",
-  "outdoor swing",
-  "writing desk",
-  "sideboard",
-  "altar table",
-  "mirror frame",
-  "kitchen cupboard",
+  "Chair",
+  "Armchair",
+  "Sofa",
+  "Dining Table",
+  "Coffee Table",
+  "Bed",
+  "Wardrobe",
+  "Cabinet",
+  "Shelf",
+  "Bench",
+  "Stool",
+  "Lamp",
+  "Outdoor Swing",
+  "Writing Desk",
+  "Sideboard",
+  "Altar Table",
+  "Mirror Frame",
+  "Kitchen Cupboard",
 ];
 
 const MATERIALS = [
-  "teak",
-  "jackfruit wood",
-  "coconut wood",
-  "rubberwood",
-  "bamboo",
-  "rattan",
-  "metal frame",
-  "glass top",
+  "Teak",
+  "Jackfruit Wood",
+  "Coconut Wood",
+  "Rubber Wood",
+  "Bamboo",
+  "Rattan",
+  "Metal Frame",
+  "Glass Top",
 ];
 
 const STYLES = [
@@ -46,13 +46,13 @@ const STYLES = [
 ];
 
 const COLORS = [
-  "natural teak finish",
-  "dark brown",
-  "honey gold",
-  "light beige",
-  "whitewashed",
-  "matte black",
-  "raw wood",
+  "Natural Teak Finish",
+  "Dark Brown",
+  "Honey Gold",
+  "Light Beige",
+  "Whitewashed",
+  "Matte Black",
+  "Raw Wood",
 ];
 
 const CONTEXT_PRESETS = [
@@ -64,14 +64,14 @@ const CONTEXT_PRESETS = [
 ];
 
 const EXTRAS = [
-  "carved motifs",
-  "handwoven cane panels",
-  "brass handles",
-  "lacquer finish",
-  "polished wood",
-  "visible joinery",
-  "cushioned seat",
-  "traditional patterns",
+  "Carved Motifs",
+  "Handwoven Cane Panels",
+  "Brass Handles",
+  "Lacquer Finish",
+  "Polished Wood",
+  "Visible Joinery",
+  "Cushioned Seat",
+  "Traditional Patterns",
 ];
 
 function joinEnglish(arr) {
@@ -87,10 +87,10 @@ export default function ImageGenerator({ onImageGenerated }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const [objectType, setObjectType] = useState(OBJECTS[0]);
-  const [material, setMaterial] = useState(MATERIALS[0]);
-  const [style, setStyle] = useState(STYLES[0]);
-  const [color, setColor] = useState(COLORS[0]);
+  const [objectType, setObjectType] = useState(OBJECTS[0].toLowerCase());
+  const [material, setMaterial] = useState(MATERIALS[0].toLowerCase());
+  const [style, setStyle] = useState(STYLES[0].toLowerCase());
+  const [color, setColor] = useState(COLORS[0].toLowerCase());
   const [contextPreset, setContextPreset] = useState(CONTEXT_PRESETS[0]);
   const [extras, setExtras] = useState(new Set());
   const [additionalRemarks, setAdditionalRemarks] = useState("");
@@ -168,40 +168,43 @@ export default function ImageGenerator({ onImageGenerated }) {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-gray-50 rounded-xl shadow-lg space-y-6">
-      <h2 className="text-3xl font-semibold text-gray-800">Furniture AI Generator</h2>
-      <p className="text-gray-600">Select your preferences and we’ll generate a realistic preview for you.</p>
+    <div className="max-w-5xl mx-auto p-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 rounded-2xl shadow-2xl space-y-8">
+      <h2 className="text-4xl font-extrabold text-gray-800 text-center mb-2">Furniture AI Generator</h2>
+      <p className="text-gray-600 text-center mb-6">Select your preferences and we’ll generate a realistic preview for you.</p>
 
       {/* Dropdowns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[ 
-          {label: "Object", value: objectType, setter: setObjectType, options: OBJECTS},
-          {label: "Material", value: material, setter: setMaterial, options: MATERIALS},
-          {label: "Style", value: style, setter: setStyle, options: STYLES},
-          {label: "Color", value: color, setter: setColor, options: COLORS},
-          {label: "Context", value: contextPreset, setter: setContextPreset, options: CONTEXT_PRESETS},
-        ].map(({label, value, setter, options}) => (
-          <div key={label}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <select
-              value={value}
-              onChange={(e) => setter(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-            >
-              {options.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
+        <h3 className="text-xl font-bold text-gray-700 mb-4">Main Attributes</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[ 
+            {label: "Object", value: objectType, setter: setObjectType, options: OBJECTS},
+            {label: "Material", value: material, setter: setMaterial, options: MATERIALS},
+            {label: "Style", value: style, setter: setStyle, options: STYLES},
+            {label: "Color", value: color, setter: setColor, options: COLORS},
+            {label: "Context", value: contextPreset, setter: setContextPreset, options: CONTEXT_PRESETS},
+          ].map(({label, value, setter, options}) => (
+            <div key={label}>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
+              <select
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition font-medium"
+              >
+                {options.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Extras */}
-      <div>
-        <p className="text-sm font-medium mb-2">Extras (optional)</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
+        <h3 className="text-xl font-bold text-gray-700 mb-4">Extras <span className="text-gray-500 font-normal">(optional)</span></h3>
+        <div className="flex flex-wrap gap-3">
           {EXTRAS.map((opt) => {
             const selected = extras.has(opt);
             return (
@@ -209,10 +212,10 @@ export default function ImageGenerator({ onImageGenerated }) {
                 key={opt}
                 type="button"
                 onClick={() => toggleExtra(opt)}
-                className={`px-3 py-1 rounded-full border text-sm transition ${
+                className={`px-4 py-2 rounded-full border text-sm font-semibold transition shadow-sm ${
                   selected
-                    ? "bg-green-600 text-white border-green-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                    ? "bg-gray-700 text-white border-gray-700"
+                    : "bg-gray-50 text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
               >
                 {opt}
@@ -223,45 +226,48 @@ export default function ImageGenerator({ onImageGenerated }) {
       </div>
 
       {/* Additional remarks */}
-      <input
-        type="text"
-        value={additionalRemarks}
-        onChange={(e) => setAdditionalRemarks(e.target.value)}
-        placeholder="Additional remarks (e.g., slim legs, avoid glossy finish)"
-        className="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 bg-gray-50"
-      />
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
+        <h3 className="text-xl font-bold text-gray-700 mb-4">Additional Remarks</h3>
+        <input
+          type="text"
+          value={additionalRemarks}
+          onChange={(e) => setAdditionalRemarks(e.target.value)}
+          placeholder="e.g., slim legs, avoid glossy finish"
+          className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-400 bg-gray-50 font-medium"
+        />
+      </div>
 
       {/* Prompt */}
-      <div>
-        <p className="text-sm font-medium mb-2">Generated Prompt (editable)</p>
+      <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
+        <h3 className="text-xl font-bold text-gray-700 mb-4">Generated Prompt</h3>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           rows={4}
-          className="w-full p-3 rounded-lg border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-green-500 font-mono text-sm"
+          className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-gray-400 font-mono text-base font-medium"
         />
       </div>
 
       {/* Generate */}
-      <button
-        onClick={generateImage}
-        disabled={isLoading}
-        className={`w-full py-3 px-4 rounded-lg font-medium text-white transition ${
-          isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-        }`}
-      >
-        {isLoading ? "Generating..." : "Generate AI Image"}
-      </button>
-
-      {/* Error */}
-      {error && <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">{error}</div>}
+      <div className="flex flex-col items-center gap-2">
+        <button
+          onClick={generateImage}
+          disabled={isLoading}
+          className={`w-full md:w-1/2 py-3 px-4 rounded-lg font-bold text-white text-lg shadow-lg transition ${
+            isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-gray-700 hover:bg-gray-800"
+          }`}
+        >
+          {isLoading ? "Generating..." : "Generate AI Image"}
+        </button>
+        {error && <div className="w-full md:w-1/2 p-3 bg-red-50 text-red-700 rounded-lg text-sm mt-2 shadow">{error}</div>}
+      </div>
 
       {/* Preview */}
       {previewUrl && (
-        <div className="mt-6">
-          <h3 className="text-lg font-medium text-gray-800 mb-3">Generated Preview</h3>
-          <div className="rounded-lg overflow-hidden border border-gray-200">
-            <img src={previewUrl} alt="Generated furniture" className="w-full h-auto object-contain" />
+        <div className="bg-white rounded-xl shadow-lg p-6 mt-6 flex flex-col items-center">
+          <h3 className="text-xl font-bold text-gray-700 mb-3">Generated Preview</h3>
+          <div className="rounded-lg overflow-hidden border-2 border-gray-300 shadow">
+            <img src={previewUrl} alt="Generated furniture" className="w-full h-auto object-contain max-h-[400px]" />
           </div>
         </div>
       )}
