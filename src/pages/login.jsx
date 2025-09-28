@@ -38,9 +38,18 @@ export default function LoginPage() {
         duration: 5000,
       });
       // console.log("user", user.email);
-      if (user.role === "admin") navigate("/admin/dashboard", { state: { userEmail: user.email , userName: user.username } });
-      else if (user.role === "millworker") navigate("/mill/dashboard", { state: { userEmail: user.email , userName: user.username } });
-      else if (user.role === "storestaff") navigate("/store/dashboard", { state: { userEmail: user.email , userName: user.username } });
+      if (user.role === "admin")
+        navigate("/admin/dashboard", {
+          state: { userEmail: user.email, userName: user.username },
+        });
+      else if (user.role === "millworker")
+        navigate("/mill/dashboard", {
+          state: { userEmail: user.email, userName: user.username },
+        });
+      else if (user.role === "storestaff")
+        navigate("/store/dashboard", {
+          state: { userEmail: user.email, userName: user.username },
+        });
     } catch (err) {
       if (err.response?.data.message) {
         toast.error(err.response.data.message, {
@@ -140,6 +149,14 @@ export default function LoginPage() {
               {loading ? "Logging in..." : "Login"}
             </button>
           </form>
+          <div className="flex items-center justify-center mt-6 space-x-4 text-white">
+            <p>or</p>
+          </div>
+          <div className="text-center">
+            <button className="px-6 py-1 bg-green-600 text-white font-semibold rounded-2xl shadow-md hover:bg-green-700 transition-all duration-300 ease-in-out justify-center item-center mt-5" onClick={() => navigate('/')}>
+            Go to Showcase
+          </button>
+          </div>
         </div>
       </div>
 
