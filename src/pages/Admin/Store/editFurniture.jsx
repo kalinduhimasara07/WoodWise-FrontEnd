@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { Plus, Upload, X, Save } from "lucide-react";
 import axios from "axios";
+// import BackButton from "../../components/backButton";
 import toast from "react-hot-toast";
-import mediaUpload from "../../utils/mediaUpload";
-import BackButton from "../../components/backButton";
-// Assuming you have this utility for uploads
+import BackButton from "../../../components/backButton";
+import mediaUpload from "../../../utils/mediaUpload";
+// import mediaUpload from "../../utils/mediaUpload"; // Assuming you have this utility for uploads
 
-export default function EditFurniture() {
+export default function EditStoreFurniture() {
   const location = useLocation();
   const navigate = useNavigate();
   const { id: sku } = useParams(); // Get the SKU from the URL
@@ -242,7 +243,7 @@ export default function EditFurniture() {
           iconTheme: { primary: "#059669", secondary: "#ecfdf5" },
           duration: 5000,
         });
-        navigate("/store/inventory"); // Redirect after successful update
+        navigate("/admin/store/inventory"); // Redirect after successful update
       } else {
         toast.error("Error: " + response.data.message, {
           className: "border border-red-600 p-4 text-red-800 bg-red-50 rounded-xl text-sm font-medium shadow-xl",
