@@ -9,6 +9,11 @@ const PosterGenerator = () => {
   const captureRef = useRef(null);
   const downloadLinkRef = useRef(null);
 
+  const [title, setTitle] = useState('Classic Furniture Style');
+  const [address, setAddress] = useState('123 Main Street, Colombo, Sri Lanka');
+  const [contact, setContact] = useState('Call us: +94 77 123 4567');
+  const [imageSize, setImageSize] = useState(230);
+
   // Create the background template as SVG since we can't import external images
   const BackgroundTemplate = () => (
     <svg width="600" height="800" viewBox="0 0 600 800" className="w-full h-auto">
@@ -148,98 +153,153 @@ const PosterGenerator = () => {
 
   return (
     <div className='w-full h-full bg-white rounded-4xl p-6 overflow-y-scroll'>
-    <section className="flex flex-col items-center gap-6 p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
-        Furniture Poster Generator
-      </h1>
+      <section className="flex flex-col items-center gap-6 p-6 bg-gray-50 min-h-screen">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          Furniture Poster Generator
+        </h1>
 
-      <div className="w-full max-w-7xl flex flex-col md:flex-row gap-10">
-        {/* Left column */}
-        <div className="w-full md:w-2/3 flex flex-col items-center gap-6">
-          {/* Capture Area */}
-          <div
-            id="capture"
-            ref={captureRef}
-            className="relative w-[350px] md:w-[500px] bg-white shadow-xl rounded-lg overflow-hidden"
-            style={{ aspectRatio: '3/4' }}
-          >
+        <div className="w-full max-w-7xl flex flex-col md:flex-row gap-10">
+          {/* Left column */}
+          <div className="w-full md:w-2/3 flex flex-col items-center gap-6">
+            {/* Capture Area */}
+            <div
+              id="capture"
+              ref={captureRef}
+              className="relative w-[350px] md:w-[500px] bg-white shadow-xl rounded-lg overflow-hidden"
+              style={{ aspectRatio: '3/4' }}
+            >
 
 
-            <BackgroundTemplate />
+              <BackgroundTemplate />
 
-            <div className="absolute top-16 left-10 right-4">
-              <h1 className="text-white text-5xl font-bold leading-tight">
-                Classic<br />
-                Furniture<br />
-                Style
-              </h1>
-            </div>
-
-            <div className="absolute top-72 left-10 right-4 max-w-sm">
-              <p className="text-white text-lg font-light leading-relaxed">
-                {quote}
-              </p>
-            </div>
-
-            <div className="absolute top-96 left-10">
-              <div className="border-2 border-white text-white px-6 py-3 text-lg font-semibold tracking-wide">
-                BUY NOW
+              {/* Title */}
+              <div className="absolute top-16 left-10 right-4">
+                <h1 className="text-white text-5xl font-bold leading-tight whitespace-pre-line">
+                  {title}
+                </h1>
               </div>
+
+              {/* Quote */}
+              <div className="absolute top-72 left-10 right-4 max-w-sm">
+                <p className="text-white text-lg font-light leading-relaxed">
+                  {quote}
+                </p>
+              </div>
+
+              {/* Address */}
+              <div className="absolute bottom-20 left-10 right-4">
+                <p className="text-white text-sm font-light leading-snug">
+                  {address}
+                </p>
+              </div>
+
+              {/* Contact */}
+              <div className="absolute bottom-10 left-10 right-4">
+                <p className="text-white text-sm font-light leading-snug">
+                  {contact}
+                </p>
+              </div>
+
+              <div className="absolute top-96 left-10">
+                <div className="border-2 border-white text-white px-6 py-3 text-lg font-semibold tracking-wide">
+                  BUY NOW
+                </div>
+              </div>
+
+              {furnitureImage && (
+                <div
+                  className="absolute bottom-20 right-16 rounded-full overflow-hidden border-4 border-white shadow-2xl"
+                  style={{ width: `${imageSize}px`, height: `${imageSize}px` }}
+                >
+                  <img src={furnitureImage} alt="Furniture" className="w-full h-full object-cover" />
+                </div>
+
+              )}
             </div>
 
-            {furnitureImage && (
-              <div className="absolute bottom-20 right-16 w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                <img
-                  src={furnitureImage}
-                  alt="Furniture"
-                  className="w-full h-full object-cover"
+            {/* Controls */}
+            <div className="w-[600px] max-w-full space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Image Size (px)
+                </label>
+                <input
+                  type="number"
+                  value={imageSize}
+                  onChange={(e) => setImageSize(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+
+              </div>
+              {/* Title input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title Text
+                </label>
+                <textarea
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Enter your title text..."
+                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  rows="2"
                 />
               </div>
-            )}
+
+              {/* Existing Subtitle Text (quote) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Subtitle Text
+                </label>
+                <textarea
+                  value={quote}
+                  onChange={(e) => setQuote(e.target.value)}
+                  placeholder="Enter your subtitle text..."
+                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  rows="3"
+                />
+              </div>
+
+              {/* Address input */}
+              {/* <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter address..."
+                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div> */}
+
+              <div className="flex gap-4 justify-center">
+                <button
+                  type="button"
+                  onClick={generate}
+                  className="px-8 py-3 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-colors font-semibold"
+                >
+                  Generate Poster
+                </button>
+                <a
+                  id="download"
+                  download="classic-furniture-poster.png"
+                  ref={downloadLinkRef}
+                  className="px-8 py-3 bg-green-600 text-white rounded-md shadow-lg hover:bg-green-700 transition-colors font-semibold text-center"
+                >
+                  Download
+                </a>
+              </div>
+            </div>
           </div>
 
-          {/* Controls */}
-          <div className="w-[600px] max-w-full space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Subtitle Text
-              </label>
-              <textarea
-                value={quote}
-                onChange={(e) => setQuote(e.target.value)}
-                placeholder="Enter your subtitle text..."
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                rows="3"
-              />
-            </div>
-
-            <div className="flex gap-4 justify-center">
-              <button
-                type="button"
-                onClick={generate}
-                className="px-8 py-3 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-colors font-semibold"
-              >
-                Generate Poster
-              </button>
-              <a
-                id="download"
-                download="classic-furniture-poster.png"
-                ref={downloadLinkRef}
-                className="px-8 py-3 bg-green-600 text-white rounded-md shadow-lg hover:bg-green-700 transition-colors font-semibold text-center"
-              >
-                Download
-              </a>
-            </div>
+          {/* Right column: Preview */}
+          <div id="render" className="w-full md:w-1/3 text-center">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Generated Preview</h2>
+            <p className="text-gray-600">Click "Generate Poster" to create your preview</p>
           </div>
         </div>
-
-        {/* Right column: Preview */}
-        <div id="render" className="w-full md:w-1/3 text-center">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Generated Preview</h2>
-          <p className="text-gray-600">Click "Generate Poster" to create your preview</p>
-        </div>
-      </div>
-    </section>
+      </section>
     </div>
   );
 
