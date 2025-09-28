@@ -41,7 +41,9 @@ export default function StoreInventory() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture`
+        );
 
         if (response.data.success) {
           setFurniture(response.data.data);
@@ -101,7 +103,9 @@ export default function StoreInventory() {
     if (furnitureToDelete) {
       try {
         await axios.delete(
-          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${furnitureToDelete._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${
+            furnitureToDelete._id
+          }`
         );
         toast.success(`Furniture deleted successfully`, {
           style: {
@@ -177,86 +181,87 @@ export default function StoreInventory() {
   }
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <Package className="h-8 w-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-900">
+    <div className="w-full h-full bg-gray-50 rounded-4xl p-6 overflow-auto">
+      {/* Header, Add Button & Stats grouped */}
+      <div className="bg-white rounded-2xl shadow-md p-6 mb-6 flex flex-col gap-6 w-full">
+        {/* Header & Add Button */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">
             Furniture Inventory
           </h1>
-        </div>
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition-colors shadow-lg hover:shadow-xl"
-          onClick={() => handleNavigation("/store/inventory/add-furniture")}
-        >
-          <Plus className="h-5 w-5" />
-          Add Furniture
-        </button>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
-          <div className="text-blue-800 text-sm font-medium">Total Items</div>
-          <div className="text-2xl font-bold text-blue-900">
-            {furniture.length}
-          </div>
-        </div>
-        <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
-          <div className="text-green-800 text-sm font-medium">In Stock</div>
-          <div className="text-2xl font-bold text-green-900">
-            {furniture.filter((item) => item.inStock).length}
-          </div>
-        </div>
-        <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
-          <div className="text-purple-800 text-sm font-medium">Featured</div>
-          <div className="text-2xl font-bold text-purple-900">
-            {furniture.filter((item) => item.featured).length}
-          </div>
-        </div>
-        <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
-          <div className="text-orange-800 text-sm font-medium">On Sale</div>
-          <div className="text-2xl font-bold text-orange-900">
-            {furniture.filter((item) => item.salePrice).length}
-          </div>
-        </div>
-      </div>
-
-      {/* Search and Filter */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-          <input
-            type="text"
-            placeholder="Search furniture by name, brand, or SKU..."
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="relative">
-          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-          <select
-            className="pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-48"
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
+          <button
+            className="bg-gray-800 hover:bg-gray-900 text-white px-6 py-2 rounded-xl flex items-center gap-2 font-medium transition-colors shadow"
+            onClick={() => handleNavigation("/store/inventory/add-furniture")}
           >
-            <option value="all">All Categories</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+            <Plus className="h-5 w-5" />
+            Add Furniture
+          </button>
+        </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-4 rounded-xl shadow">
+            <div className="text-gray-600 text-sm font-medium">Total Items</div>
+            <div className="text-2xl font-bold text-gray-900">
+              {furniture.length}
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-green-50 via-green-100 to-green-200 p-4 rounded-xl shadow">
+            <div className="text-green-700 text-sm font-medium">In Stock</div>
+            <div className="text-2xl font-bold text-green-900">
+              {furniture.filter((item) => item.inStock).length}
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200 p-4 rounded-xl shadow">
+            <div className="text-purple-700 text-sm font-medium">Featured</div>
+            <div className="text-2xl font-bold text-purple-900">
+              {furniture.filter((item) => item.featured).length}
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 p-4 rounded-xl shadow">
+            <div className="text-orange-700 text-sm font-medium">On Sale</div>
+            <div className="text-2xl font-bold text-orange-900">
+              {furniture.filter((item) => item.salePrice).length}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Furniture Table */}
-      <div className="flex-1 overflow-hidden bg-gray-50 rounded-xl border border-gray-200">
+      {/* Search & Filter grouped */}
+      <div className="bg-white rounded-2xl shadow-md p-6 mb-6 flex flex-col gap-4 w-full">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Search furniture by name, brand, or SKU..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="relative min-w-[180px]">
+            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <select
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-400 focus:border-transparent w-full"
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+            >
+              <option value="all">All Categories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Furniture Table grouped */}
+      <div className="bg-white rounded-2xl shadow-md flex-1 overflow-hidden w-full">
         <div className="overflow-y-auto h-full">
           <table className="w-full">
-            <thead className="bg-gray-100 sticky top-0">
+            <thead className="bg-gray-200 sticky top-0">
               <tr>
                 <th className="text-left p-4 font-semibold text-gray-700">
                   Product
@@ -283,7 +288,7 @@ export default function StoreInventory() {
                 filteredFurniture.map((item) => (
                   <tr
                     key={item._id}
-                    className="hover:bg-white transition-colors border-b border-gray-200 last:border-b-0 cursor-pointer"
+                    className="hover:bg-gray-50 transition-colors border-b border-gray-200 last:border-b-0 cursor-pointer"
                     onClick={() => handleViewClick(item)}
                   >
                     <td className="p-4">
@@ -364,14 +369,14 @@ export default function StoreInventory() {
                       >
                         <button
                           onClick={() => handleViewClick(item)}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors cursor-pointer"
+                          className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-lg transition-colors cursor-pointer"
                           title="View details"
                         >
                           <Eye className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleEditClick(item)}
-                          className="text-green-600 hover:text-green-800 hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
+                          className="text-green-700 hover:text-green-900 hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
                           title="Edit furniture"
                         >
                           <Edit className="h-4 w-4" />
@@ -408,10 +413,7 @@ export default function StoreInventory() {
       {/* View Modal */}
       {showViewModal && selectedFurniture && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50 p-4">
-          <div
-            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-2xl font-bold text-gray-900">
