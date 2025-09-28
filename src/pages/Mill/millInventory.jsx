@@ -25,35 +25,35 @@ export default function MillInventory() {
 
   // Available filter options based on your timber model
   const categoryOptions = [
-  "Teak",
-  "Oak",
-  "Mahogany",
-  "Pine",
-  "Walnut",
-  "Bamboo",
-  "Ash",
-  "Rosewood",
-  "Rubberwood",
-  "Bodhi",
-  "Mango",
-  "Yaka",
-  "Halmilla",
-  "Vatica",
-  "Rambutan",
-  "Kumbuk",
-  "Balan",
-  "Dumbara",
-  "Hedar",
-  "Sassafras",
-  "Kachchan",
-  "Millettia",
-  "Koss",
-  "Lunumidella",
-  "Kandula",
-  "Berrya",
-  "Cinnamon",
-  "Ruhuna",
-];
+    "Teak",
+    "Oak",
+    "Mahogany",
+    "Pine",
+    "Walnut",
+    "Bamboo",
+    "Ash",
+    "Rosewood",
+    "Rubberwood",
+    "Bodhi",
+    "Mango",
+    "Yaka",
+    "Halmilla",
+    "Vatica",
+    "Rambutan",
+    "Kumbuk",
+    "Balan",
+    "Dumbara",
+    "Hedar",
+    "Sassafras",
+    "Kachchan",
+    "Millettia",
+    "Koss",
+    "Lunumidella",
+    "Kandula",
+    "Berrya",
+    "Cinnamon",
+    "Ruhuna",
+  ];
 
   const gradeOptions = ["Premium", "Standard", "Economy"];
   const stockOptions = [
@@ -65,7 +65,9 @@ export default function MillInventory() {
   useEffect(() => {
     const fetchTimberData = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/timber`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/timber`
+        );
         const result = await response.json();
         if (result.success) {
           // Sort data in ascending order by category
@@ -175,7 +177,9 @@ export default function MillInventory() {
   const handleDeleteConfirm = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/timber/${furnitureToDelete._id}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/timber/${
+          furnitureToDelete._id
+        }`
       );
       const result = response.data;
 
@@ -196,199 +200,184 @@ export default function MillInventory() {
   };
 
   return (
-    <div className="w-full h-full bg-white rounded-4xl p-6 overflow-y-auto">
-      {/* Title Section */}
-      <div className="mb-4">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 mb-2">
-          Timber Inventory
-        </h1>
-        <p className="text-sm text-gray-600">
-          Manage timber stock levels, monitor thresholds, and update inventory
-          status.
-        </p>
-      </div>
-
-      {/* Search and Filter Section */}
-      <div className="mb-6">
-        {/* Search Bar and Filter Toggle */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <input
-              type="text"
-              placeholder="Search by category, grade, SKU, or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-                showFilters
-                  ? "bg-green-100 text-green-700 border border-green-300"
-                  : "bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200"
-              }`}
-            >
-              <Filter className="h-4 w-4" />
-              Filters
-              {hasActiveFilters && (
-                <span className="bg-green-500 text-white text-xs rounded-full px-2 py-0.5">
-                  Active
-                </span>
-              )}
-            </button>
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors"
-              >
-                <X className="h-4 w-4" />
-                Clear
-              </button>
-            )}
-          </div>
+    <div className="w-full h-full bg-gray-50 rounded-4xl p-6 overflow-y-auto">
+      {/* Title + Search & Filter Section */}
+      <div className="bg-white rounded-2xl shadow-md p-6 mb-6 flex flex-col gap-4">
+        {/* Title */}
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 mb-1">
+            Timber Inventory
+          </h1>
+          <p className="text-sm text-gray-600">
+            Manage timber stock levels, monitor thresholds, and update inventory
+            status.
+          </p>
         </div>
-
-        {/* Filter Panel */}
-        {showFilters && (
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Category Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category
-                </label>
-                <select
-                  value={filters.category}
-                  onChange={(e) =>
-                    handleFilterChange("category", e.target.value)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        {/* Search & Filter Controls */}
+        <div>
+          <div className="flex flex-col sm:flex-row gap-4 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search by category, grade, SKU, or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                  showFilters
+                    ? "bg-green-100 text-green-700 border border-green-300"
+                    : "bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200"
+                }`}
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+                {hasActiveFilters && (
+                  <span className="bg-green-500 text-white text-xs rounded-full px-2 py-0.5">
+                    Active
+                  </span>
+                )}
+              </button>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors"
                 >
-                  <option value="">All Categories</option>
-                  {categoryOptions.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Grade Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Grade
-                </label>
-                <select
-                  value={filters.grade}
-                  onChange={(e) => handleFilterChange("grade", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value="">All Grades</option>
-                  {gradeOptions.map((grade) => (
-                    <option key={grade} value={grade}>
-                      {grade}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Stock Status Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock Status
-                </label>
-                <select
-                  value={filters.inStock}
-                  onChange={(e) =>
-                    handleFilterChange("inStock", e.target.value)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value="">All Status</option>
-                  {stockOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Price Range */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price Range (Rs)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={filters.minPrice}
+                  <X className="h-4 w-4" />
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+          {/* Filter Panel */}
+          {showFilters && (
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Category Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={filters.category}
                     onChange={(e) =>
-                      handleFilterChange("minPrice", e.target.value)
+                      handleFilterChange("category", e.target.value)
                     }
-                    className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={filters.maxPrice}
-                    onChange={(e) =>
-                      handleFilterChange("maxPrice", e.target.value)
-                    }
-                    className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="">All Categories</option>
+                    {categoryOptions.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              </div>
-
-              {/* Stock Quantity Range */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock Quantity
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={filters.minStock}
-                    onChange={(e) =>
-                      handleFilterChange("minStock", e.target.value)
-                    }
-                    className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={filters.maxStock}
-                    onChange={(e) =>
-                      handleFilterChange("maxStock", e.target.value)
-                    }
-                    className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
+                {/* Grade Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Grade
+                  </label>
+                  <select
+                    value={filters.grade}
+                    onChange={(e) => handleFilterChange("grade", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="">All Grades</option>
+                    {gradeOptions.map((grade) => (
+                      <option key={grade} value={grade}>
+                        {grade}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Stock Status Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Stock Status
+                  </label>
+                  <select
+                    value={filters.inStock}
+                    onChange={(e) => handleFilterChange("inStock", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="">All Status</option>
+                    {stockOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Price Range */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Price Range (Rs)
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={filters.minPrice}
+                      onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+                      className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={filters.maxPrice}
+                      onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                      className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+                {/* Stock Quantity Range */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Stock Quantity
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={filters.minStock}
+                      onChange={(e) => handleFilterChange("minStock", e.target.value)}
+                      className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={filters.maxStock}
+                      onChange={(e) => handleFilterChange("maxStock", e.target.value)}
+                      className="w-1/2 px-2 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+          )}
+          {/* Results Info & Add Button */}
+          <div className="flex justify-between items-center mt-4">
+            <p className="text-sm text-gray-600">
+              Showing {filteredData.length} of {timberData.length} timber items
+            </p>
+            <button
+              onClick={() => navigate("/mill/inventory/add-timber")}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow font-medium transition"
+            >
+              + Add New Timber Entry
+            </button>
           </div>
-        )}
-
-        {/* Results Info */}
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-sm text-gray-600">
-            Showing {filteredData.length} of {timberData.length} timber items
-          </p>
-          <button
-            onClick={() => navigate("/mill/inventory/add-timber")}
-            className="bg-gradient-to-r cursor-pointer from-green-500 to-green-700 text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg hover:from-green-600 hover:to-green-800 transition duration-200 font-medium"
-          >
-            + Add New Timber Entry
-          </button>
         </div>
       </div>
 
-      {/* Inventory Table with Scrolling */}
-      <div className="bg-gray-50 rounded-2xl shadow-xl overflow-hidden">
+      {/* Inventory Table Section */}
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="overflow-x-auto overflow-y-auto max-h-[400px]">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-200 text-gray-800 sticky top-0 z-10">
@@ -521,7 +510,7 @@ export default function MillInventory() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-red-100 rounded-full">
