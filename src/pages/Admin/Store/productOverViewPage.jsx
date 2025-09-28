@@ -72,7 +72,7 @@ export default function ProductOverview() {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="w-full h-full bg-white rounded-3xl p-6 overflow-auto">
+    <div className="w-full h-full bg-white rounded-3xl p-6 pr-0 overflow-y-scroll scrollbar-hide">
       <BackButton/>
       {isLoading ? (
         <div className=" h-full flex items-center justify-center bg-white">
@@ -81,7 +81,7 @@ export default function ProductOverview() {
       ) : notFound ? (
         <NotFoundPage />
       ) : (
-        <div className="mx-auto px-4 py-8 w-full h-full bg-white rounded-4xl p-6 overflow-auto">
+        <div className="mx-auto px-4 py-8 w-full h-full bg-white rounded-4xl p-6 overflow-y-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Left Side - Images */}
             <div className="flex gap-4">

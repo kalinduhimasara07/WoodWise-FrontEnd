@@ -29,6 +29,8 @@ import toast from "react-hot-toast";
 import Loading from "../../components/loader";
 import MillSuppliers from "./Mill/millSupliers";
 import AddSupplier from "./Mill/addsupplier";
+import EditStoreFurniture from "./Store/editFurniture";
+
 
 export default function AdminHomePage() {
   const [status, setStatus] = useState("loading");
@@ -107,6 +109,7 @@ export default function AdminHomePage() {
           {/* Store */}
           <Route path="/store/dashboard" element={<StoreDashboard />} />
           <Route path="/store/inventory" element={<StoreInventory />} />
+          <Route path="/store/inventory/edit/:sku" element={<EditStoreFurniture />} />
           <Route
             path="/store/inventory/add-furniture"
             element={<AddFurniture />}

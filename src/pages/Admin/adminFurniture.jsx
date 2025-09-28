@@ -354,12 +354,12 @@ export default function AdminFurniture() {
                     <td className="p-4">
                       <div className="flex flex-col gap-1">
                         <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.inStock
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.stock > 5
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                             }`}
                         >
-                          {item.inStock ? "In Stock" : "Out of Stock"}
+                          {item.stock > 0 ? "In Stock" : "Out of Stock"}
                         </span>
                         {item.featured && (
                           <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 flex items-center gap-1">
