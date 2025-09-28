@@ -40,7 +40,7 @@ export default function MillSidebar() {
       path: ["/mill/orders", "/mill/orders/add-order"],
       defaultPath: "/mill/orders",
     },
-    { name: "Suppliers", icon: PiBuildingsDuotone, path: "/mill/suppliers" },
+    { name: "Suppliers", icon: PiBuildingsDuotone, path: ["/mill/suppliers","/mill/suppliers/add-supplier"],defaultPath:"/mill/suppliers" },
   ];
 
   const bottomItems = [

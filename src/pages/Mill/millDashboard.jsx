@@ -197,7 +197,7 @@ export function MillDashboard(){
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white border-b">
+      <div className="bg-gray-50 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {['overview', 'timber', 'orders'].map((tab) => (
@@ -217,13 +217,13 @@ export function MillDashboard(){
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gray-100">
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
+              <div className="bg-white p-6 rounded-lg shadow-xl">
                 <div className="flex items-center">
                   <Package className="h-8 w-8 text-blue-600" />
                   <div className="ml-4">
@@ -233,7 +233,7 @@ export function MillDashboard(){
                 </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-lg shadow-xl">
                 <div className="flex items-center">
                   <AlertTriangle className="h-8 w-8 text-red-600" />
                   <div className="ml-4">
@@ -243,7 +243,7 @@ export function MillDashboard(){
                 </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-lg shadow-xl">
                 <div className="flex items-center">
                   <Clock className="h-8 w-8 text-yellow-600" />
                   <div className="ml-4">
@@ -253,7 +253,7 @@ export function MillDashboard(){
                 </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-lg shadow-xl">
                 <div className="flex items-center">
                   <TrendingUp className="h-8 w-8 text-green-600" />
                   <div className="ml-4">
@@ -266,7 +266,7 @@ export function MillDashboard(){
 
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-2xl shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Low Stock Alert</h3>
                 <div className="space-y-3">
                   {timberData
@@ -287,7 +287,7 @@ export function MillDashboard(){
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
+              <div className="bg-white p-6 rounded-2xl shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Orders</h3>
                 <div className="space-y-3">
                   {orderData.slice(0, 5).map(order => (
