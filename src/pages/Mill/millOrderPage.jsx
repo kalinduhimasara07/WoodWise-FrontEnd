@@ -35,6 +35,10 @@ const MillOrderPage = () => {
   const [loadingFurniture, setLoadingFurniture] = useState({});
   const navigate = useNavigate();
 
+  // New state for the full-size image modal
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+
   const statusOptions = [
     "All",
     "Pending",
@@ -97,7 +101,9 @@ const MillOrderPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/orders/");
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/orders/"
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,16 +129,19 @@ const MillOrderPage = () => {
     try {
       setUpdatingStatus(orderNumber);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderNumber: orderNumber,
-          newStatus: newStatus,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderNumber: orderNumber,
+            newStatus: newStatus,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -146,10 +155,10 @@ const MillOrderPage = () => {
           prevOrders.map((order) =>
             order.orderNumber === orderNumber
               ? {
-                ...order,
-                status: newStatus,
-                updatedAt: result.data.updatedAt,
-              }
+                  ...order,
+                  status: newStatus,
+                  updatedAt: result.data.updatedAt,
+                }
               : order
           )
         );
@@ -162,24 +171,27 @@ const MillOrderPage = () => {
             updatedAt: result.data.updatedAt,
           });
         }
-        toast.success(`Order Status Change Successfully, And Email Send Successfully`, {
-          style: {
-            border: "1px solid #059669",
-            padding: "16px",
-            color: "#065f46",
-            backgroundColor: "#ecfdf5",
-            borderRadius: "12px",
-            fontSize: "14px",
-            fontWeight: "500",
-            boxShadow:
-              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-          },
-          iconTheme: {
-            primary: "#059669",
-            secondary: "#ecfdf5",
-          },
-          duration: 5000,
-        });
+        toast.success(
+          `Order Status Change Successfully, And Email Send Successfully`,
+          {
+            style: {
+              border: "1px solid #059669",
+              padding: "16px",
+              color: "#065f46",
+              backgroundColor: "#ecfdf5",
+              borderRadius: "12px",
+              fontSize: "14px",
+              fontWeight: "500",
+              boxShadow:
+                "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+            },
+            iconTheme: {
+              primary: "#059669",
+              secondary: "#ecfdf5",
+            },
+            duration: 5000,
+          }
+        );
       } else {
         throw new Error(result.message || "Failed to update order status");
       }
@@ -265,6 +277,19 @@ const MillOrderPage = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedOrder(null);
+  };
+
+  // Handlers for the new image modal
+  const openImageModal = (imageUrl) => {
+    if (imageUrl) {
+      setSelectedImageUrl(imageUrl);
+      setShowImageModal(true);
+    }
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
+    setSelectedImageUrl(null);
   };
 
   // Handle refresh
@@ -516,11 +541,13 @@ const MillOrderPage = () => {
                           updateOrderStatus(order.orderNumber, e.target.value)
                         }
                         disabled={updatingStatus === order.orderNumber}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${statusColors[order.status]
-                          } focus:outline-none focus:ring-2 focus:ring-blue-500 ${updatingStatus === order.orderNumber
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                          statusColors[order.status]
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                          updatingStatus === order.orderNumber
                             ? "opacity-50 cursor-not-allowed"
                             : ""
-                          }`}
+                        }`}
                       >
                         {statusOptions.slice(1).map((status) => (
                           <option key={status} value={status}>
@@ -553,7 +580,6 @@ const MillOrderPage = () => {
                         >
                           <Eye className="h-4 w-4" />
                         </button>
-
                       </div>
                     </td>
                   </tr>
@@ -590,7 +616,7 @@ const MillOrderPage = () => {
                   onClick={closeModal}
                   className="text-4xl p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                  ×
+                  &times;
                 </button>
               </div>
             </div>
@@ -610,8 +636,9 @@ const MillOrderPage = () => {
                     <p>
                       <span className="font-medium">Status:</span>
                       <span
-                        className={`ml-2 px-2 py-1 rounded-full text-xs ${statusColors[selectedOrder.status]
-                          }`}
+                        className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                          statusColors[selectedOrder.status]
+                        }`}
                       >
                         {selectedOrder.status}
                       </span>
@@ -670,6 +697,12 @@ const MillOrderPage = () => {
                     const furniture = furnitureDetails[item.sku];
                     const isLoading = loadingFurniture[item.sku];
 
+                    // MODIFIED PART: Determine image URL and add onClick
+                    const imageUrl =
+                      selectedOrder.isCustom && selectedOrder.customImage
+                        ? selectedOrder.customImage
+                        : furniture?.images?.[0]?.url;
+
                     return (
                       <div
                         key={index}
@@ -709,19 +742,23 @@ const MillOrderPage = () => {
                               </div>
                             ) : furniture ? (
                               <div className="space-y-1 text-sm">
+                                {/* MODIFIED PART: Wrapped image to make it clickable */}
                                 <div className="w-40 h-40 mb-2 object-cover rounded-lg overflow-hidden">
-                                  {selectedOrder.isCustom && selectedOrder.customImage ? (
+                                  {imageUrl ? (
                                     <img
-                                      src={selectedOrder.customImage}
-                                      alt="Custom Order"
-                                      className="w-full h-full object-cover"
+                                      src={imageUrl}
+                                      alt={
+                                        selectedOrder.isCustom
+                                          ? "Custom Order"
+                                          : furniture.name
+                                      }
+                                      className="w-full h-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                                      onClick={() => openImageModal(imageUrl)}
                                     />
                                   ) : (
-                                    <img
-                                      src={furniture.images?.[0]?.url}
-                                      alt={furniture.name}
-                                      className="w-full h-full object-cover"
-                                    />
+                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
+                                      No Image
+                                    </div>
                                   )}
                                 </div>
                                 <p className="flex items-center gap-2">
@@ -800,38 +837,34 @@ const MillOrderPage = () => {
                   </div>
                   <div className="text-center">
                     <p className="text-sm text-gray-600">Total Quantity</p>
-                    <p className="text-2xl font-bold text-blue-600">
-                      {selectedOrder.furnitureItems.reduce(
-                        (sum, item) => sum + item.quantity,
-                        0
-                      )}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Status</p>
-                    <p
-                      className={`text-lg font-bold px-3 py-1 rounded-full ${statusColors[selectedOrder.status]
-                        }`}
-                    >
-                      {selectedOrder.status}
-                    </p>
                   </div>
                 </div>
               </div>
-
-              {/* Notes */}
-              {selectedOrder.notes && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    Notes
-                  </h3>
-                  <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">
-                    {selectedOrder.notes}
-                  </p>
-                </div>
-              )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* NEW: Full-size Image Modal */}
+      {showImageModal && selectedImageUrl && (
+        <div
+          className="fixed inset-0 bg-[rgba(0,0,0,0.7)] flex items-center justify-center p-4 z-[60]"
+          onClick={closeImageModal} // Close on backdrop click
+        >
+          <div className="relative">
+            <button
+              onClick={closeImageModal}
+              className="absolute -top-8 -right-4 text-white text-5xl font-bold hover:text-gray-300 transition-colors"
+              aria-label="Close image view"
+            >
+              &times;
+            </button>
+            <img
+              src={selectedImageUrl}
+              alt="Full-size view"
+              className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image itself
+            />
           </div>
         </div>
       )}

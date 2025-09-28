@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import Loading from "../../components/loader";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const StoreOrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -58,7 +60,9 @@ const StoreOrdersPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/`);
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -80,20 +84,32 @@ const StoreOrdersPage = () => {
   };
 
   // Update order status
-  const updateOrderStatus = async (orderNumber, newStatus) => {
+  // order.orderNumber,order.customerInfo.contactNumber,order.customerInfo.email, order.customerInfo.name,order.totalAmount,order.advanceAmount, e.target.value
+  const updateOrderStatus = async (
+    orderNumber,
+    contactNumber,
+    email,
+    name,
+    totalAmount,
+    advanceAmount,
+    newStatus
+  ) => {
     try {
       setUpdatingStatus(orderNumber);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderNumber: orderNumber,
-          newStatus: newStatus,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderNumber: orderNumber,
+            newStatus: newStatus,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -144,6 +160,21 @@ const StoreOrdersPage = () => {
             duration: 5000,
           }
         );
+        // if(newStatus=="Completed"){
+        //   const smsResponse = await axios.post(
+        //   `${import.meta.env.VITE_BACKEND_URL}/api/orders/send-sms`,
+        //   {
+        //     toPhoneNumber: contactNumber,
+        //     orderId: orderNumber,
+        //     orderStatus: "Completed",
+        //     customerName: name,
+        //     totalAmount: totalAmount,
+        //     advanceAmount: advanceAmount,
+        //     balanceAmount: totalAmount - advanceAmount,
+        //   }
+        // );
+        // console.log("SMS sent successfully:", smsResponse.data);
+        // }
       } else {
         throw new Error(result.message || "Failed to update order status");
       }
@@ -577,7 +608,15 @@ const StoreOrdersPage = () => {
                       <select
                         value={order.status}
                         onChange={(e) =>
-                          updateOrderStatus(order.orderNumber, e.target.value)
+                          updateOrderStatus(
+                            order.orderNumber,
+                            order.customerInfo.contactNumber,
+                            order.customerInfo.email,
+                            order.customerInfo.name,
+                            order.totalAmount,
+                            order.advanceAmount,
+                            e.target.value
+                          )
                         }
                         disabled={updatingStatus === order.orderNumber}
                         className={`px-3 py-1 rounded-full text-xs font-medium border ${
