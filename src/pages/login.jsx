@@ -37,10 +37,10 @@ export default function LoginPage() {
         iconTheme: { primary: "#059669", secondary: "#ecfdf5" },
         duration: 5000,
       });
-
-      if (user.role === "admin") navigate("/admin/dashboard");
-      else if (user.role === "millworker") navigate("/mill/dashboard");
-      else if (user.role === "storestaff") navigate("/store/dashboard");
+      // console.log("user", user.email);
+      if (user.role === "admin") navigate("/admin/dashboard", { state: { userEmail: user.email , userName: user.username } });
+      else if (user.role === "millworker") navigate("/mill/dashboard", { state: { userEmail: user.email , userName: user.username } });
+      else if (user.role === "storestaff") navigate("/store/dashboard", { state: { userEmail: user.email , userName: user.username } });
     } catch (err) {
       if (err.response?.data.message) {
         toast.error(err.response.data.message, {
@@ -87,7 +87,9 @@ export default function LoginPage() {
       <div className="w-[50%] flex-1 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-12">
         <div className="w-full max-w-md">
           <div className="mb-12">
-            <h1 className="text-white text-8xl font-semibold mb-10">WoodWise</h1>
+            <h1 className="text-white text-8xl font-semibold mb-10">
+              WoodWise
+            </h1>
             <h1 className="text-white text-3xl font-light mb-3">
               Welcome back!
             </h1>
@@ -129,9 +131,10 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className={`w-full font-medium py-3 rounded-xl transition-colors
-                ${loading
-                  ? "bg-gray-500 text-gray-200 cursor-not-allowed"
-                  : "bg-[#f39c12] hover:bg-[#f39d12d5] text-white"
+                ${
+                  loading
+                    ? "bg-gray-500 text-gray-200 cursor-not-allowed"
+                    : "bg-[#f39c12] hover:bg-[#f39d12d5] text-white"
                 }`}
             >
               {loading ? "Logging in..." : "Login"}

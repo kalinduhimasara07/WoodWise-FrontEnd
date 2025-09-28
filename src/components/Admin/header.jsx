@@ -1,6 +1,8 @@
 // import SearchBar from "../Store/searchBar";
 // import HeaderButtons from "./headerButtons";
 
+import HeaderButtons from "./headerButtons";
+
 export default function Header() {
   return (
     <header className="bg-[#d9d9d9] shadow h-[70px]">
@@ -16,7 +18,7 @@ export default function Header() {
         </div>
         {/* <SearchBar/> */}
         <div className="ml-auto">
-          {/* <HeaderButtons /> */}
+          <HeaderButtons/>
         </div>
       </div>
     </header>

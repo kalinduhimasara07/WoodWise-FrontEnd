@@ -113,10 +113,7 @@ export default function Header() {
                 </span>
               </button>
             ) : null}
-            <Link to="/cart" className="text-gray-500 hover:text-amber-700">
-              {/* <FiShoppingCart size={24} /> */}
-              <span className="text-2xl">🛒</span> {/* Placeholder icon */}
-            </Link>
+            
           </div>
 
           {/* Mobile Menu Button (for smaller screens) */}

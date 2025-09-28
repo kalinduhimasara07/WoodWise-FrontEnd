@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bell,
   User,
@@ -7,8 +7,8 @@ import {
   LogOut,
   UserCircle,
 } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function HeaderButtons() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
