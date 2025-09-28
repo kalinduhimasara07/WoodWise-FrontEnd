@@ -365,9 +365,6 @@ export default function ProductOverview() {
 
           {/* Image Generator Component */}
           <div className="mt-8 p-6 bg-gray-50 rounded-xl">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Generate Custom Design
-            </h3>
             <ImageGenerator onImageGenerated={handleImageGenerated} />
 
             {generatedImage && (
@@ -385,7 +382,7 @@ export default function ProductOverview() {
                     />
                   </svg>
                   <span className="font-medium">
-                    Custom design generated successfully!
+                    Custom Design Generated Successfully!
                   </span>
                 </div>
                 <p className="text-green-600 text-sm mt-1">
