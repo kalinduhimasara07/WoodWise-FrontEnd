@@ -145,206 +145,56 @@ const ContactUs = () => {
         </div>
       </section>
 
-      {/* Contact Information Cards */}
-      <section className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {contactInfo.map((info, index) => {
-              const Icon = info.icon;
-              return (
-                <div
-                  key={index}
-                  className={`relative group bg-gradient-to-br from-amber-50 via-white to-orange-100 border border-gray-200 rounded-2xl shadow-lg p-6 flex items-center gap-5 transition-all duration-300 hover:shadow-2xl`}
-                >
-                  {/* Icon */}
-                  <div
-                    className={`flex-shrink-0 w-16 h-16 ${info.bgColor} rounded-2xl flex items-center justify-center shadow-md z-10 transition-all duration-300 group-hover:scale-105`}
-                  >
-                    <Icon
-                      className={`w-8 h-8 ${info.color} transition-all duration-300 group-hover:scale-110`}
-                    />
-                  </div>
-                  {/* Content */}
-                  <div className="z-10">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 tracking-tight group-hover:text-amber-700 transition-colors">
-                      {info.title}
-                    </h3>
-                    <div className="space-y-1">
-                      {info.details.map((detail, idx) => (
-                        <p key={idx} className="text-gray-600 text-base">
-                          {detail}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Contact Form & Map */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
-            {/* Form */}
-            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-xl p-8">
-              <div className="mb-8">
+            {/* Replace Contact Form with Info & Actions */}
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-xl p-8 flex flex-col justify-center items-center">
+              <div className="mb-8 text-center">
                 <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                  Send Us a Message
+                  How to Reach Us
                 </h2>
-                <p className="text-gray-600">
-                  Fill out the form below and our team will respond within 24
-                  hours.
+                <p className="text-gray-600 text-lg">
+                  For all inquiries, please use the contact details or visit our showroom. Our team is ready to assist you during business hours.
                 </p>
               </div>
-
-              {submitStatus === "success" && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  <p className="text-green-800">
-                    Thank you! Your message has been sent successfully.
-                  </p>
+              <div className="flex flex-col gap-6 w-full">
+                <div className="flex items-center gap-3 bg-white rounded-xl shadow p-4 w-full">
+                  <Phone className="w-6 h-6 text-amber-600" />
+                  <span className="font-semibold text-gray-800">011 224 9108 / 077 418 7068</span>
                 </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="flex items-center gap-3 bg-white rounded-xl shadow p-4 w-full">
+                  <Mail className="w-6 h-6 text-orange-600" />
+                  <span className="font-semibold text-gray-800">woodwise.services@gmail.com</span>
+                </div>
+                <div className="flex items-center gap-3 bg-white rounded-xl shadow p-4 w-full">
+                  <MapPin className="w-6 h-6 text-green-600" />
+                  <span className="font-semibold text-gray-800">No 322, School Road, Batuwatta, Ragama</span>
+                </div>
+                <div className="flex items-center gap-3 bg-white rounded-xl shadow p-4 w-full">
+                  <Clock className="w-6 h-6 text-gray-700" />
+                  <span className="font-semibold text-gray-800">Mon-Fri: 9AM-7PM | Sat: 9AM-5PM</span>
+                </div>
+              </div>
+              {/* Replaced repetitive buttons with a helpful info box */}
+              <div className="mt-8 w-full">
+                <div className="bg-amber-100 border-l-4 border-amber-500 rounded-xl p-6 flex items-center gap-4 shadow text-amber-900">
+                  <MessageCircle className="w-7 h-7 text-amber-600" />
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your email"
-                      />
+                    <div className="font-semibold text-lg mb-1">Visit Us or Call for Personalized Service</div>
+                    <div className="text-base">
+                      Our staff is available for walk-in consultations at our showroom. For custom requests, business solutions, or urgent matters, please call during open hours. We look forward to helping you!
                     </div>
                   </div>
                 </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your phone number"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Inquiry Type
-                    </label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <select
-                        name="inquiryType"
-                        value={formData.inquiryType}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 appearance-none bg-white"
-                      >
-                        {inquiryTypes.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
-                    placeholder="What's this about?"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <div className="relative">
-                    <MessageCircle className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      rows={6}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 resize-none"
-                      placeholder="Tell us about your furniture needs, project details, or any questions you have..."
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </form>
+              </div>
             </div>
 
             {/* Map and Quick Contact */}
             <div className="space-y-8">
               {/* Map Placeholder */}
-              <div className="bg-gray-200 rounded-2xl shadow-lg overflow-hidden h-80">
+              <div className="bg-gray-200 rounded-2xl shadow-lg overflow-hidden h-110">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3959.582353119101!2d79.931106!3d7.05826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zN8KwMDMnMjkuNyJOIDc5wrA1NSc1Mi4wIkU!5e0!3m2!1sen!2slk!4v1758041194875!5m2!1sen!2slk"
                   width="600"
