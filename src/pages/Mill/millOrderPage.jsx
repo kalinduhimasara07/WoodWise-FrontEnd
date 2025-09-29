@@ -722,12 +722,12 @@ const MillOrderPage = () => {
                                 <span className="font-medium">Quantity:</span>{" "}
                                 {item.quantity}
                               </p>
-                              {item.note && (
+                              
                                 <p>
                                   <span className="font-medium">Note:</span>{" "}
-                                  {item.note}
+                                  {item.note || "No special instructions"} 
                                 </p>
-                              )}
+                              
                             </div>
                           </div>
 
@@ -836,7 +836,10 @@ const MillOrderPage = () => {
                     </p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-600">Total Quantity</p>
+                    <p className="text-sm text-gray-600">Additional Note :</p>
+                    <p className="text-sm">
+                      {selectedOrder.notes}
+                    </p>
                   </div>
                 </div>
               </div>
