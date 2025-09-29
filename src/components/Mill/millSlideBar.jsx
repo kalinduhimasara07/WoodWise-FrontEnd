@@ -40,7 +40,12 @@ export default function MillSidebar() {
       path: ["/mill/orders", "/mill/orders/add-order"],
       defaultPath: "/mill/orders",
     },
-    { name: "Suppliers", icon: PiBuildingsDuotone, path: ["/mill/suppliers","/mill/suppliers/add-supplier"],defaultPath:"/mill/suppliers" },
+    {
+      name: "Suppliers",
+      icon: PiBuildingsDuotone,
+      path: ["/mill/suppliers", "/mill/suppliers/add-supplier"],
+      defaultPath: "/mill/suppliers",
+    },
   ];
 
   const bottomItems = [
@@ -59,18 +64,7 @@ export default function MillSidebar() {
   };
 
   return (
-    <div className="w-64 h-[calc(100vh-70px)] pt-2 bg-[#d9d9d9] flex flex-col">
-      {/* Header */}
-      {/* <div className="p-6">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-orange-600 rounded-md"></div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">WoodWise</h1>
-            <p className="text-sm text-gray-600">Mill</p>
-          </div>
-        </div>
-      </div> */}
-
+    <div className="w-64 h-[calc(100vh-70px)] pt-4 bg-gradient-to-b from-[#f5e9da] via-[#f7f3ee] to-[#e7d3bc] flex flex-col overflow-auto shadow-xl rounded-r-3xl">
       {/* Navigation */}
       <nav className="flex-1 px-4">
         <ul className="space-y-2">
@@ -80,8 +74,8 @@ export default function MillSidebar() {
                 onClick={() => handleNavigation(item)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
                   isPathActive(item.path)
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#a86523] text-white shadow"
+                    : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
                 }`}
               >
                 <item.icon
@@ -96,7 +90,7 @@ export default function MillSidebar() {
       </nav>
 
       {/* Bottom Items */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-[#e2c9a6] mt-2">
         <ul className="space-y-2">
           {bottomItems.map((item) => (
             <li key={item.name}>
@@ -104,8 +98,8 @@ export default function MillSidebar() {
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
                   pathname === item.path
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#a86523] text-white shadow"
+                    : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
                 }`}
               >
                 <item.icon

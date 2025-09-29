@@ -4,19 +4,9 @@ import {
   Users,
   Package,
   DollarSign,
-  TrendingUp,
-  TrendingDown,
   Eye,
   ShoppingCart,
   Star,
-  AlertTriangle,
-  Calendar,
-  BarChart3,
-  PieChart,
-  Activity,
-  Clock,
-  Award,
-  Target,
 } from "lucide-react";
 import Loading from "../../components/loader";
 
@@ -272,13 +262,6 @@ export default function AdminDashboard() {
               <DollarSign className="h-6 w-6 text-green-600" />
             </div>
           </div>
-          {/* <div className="flex items-center mt-4 text-sm">
-            <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-            <span className="text-green-600 font-medium">
-              +{dashboardData.overview.revenueChange}%
-            </span>
-            <span className="text-gray-600 ml-1">from last period</span>
-          </div> */}
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -293,13 +276,6 @@ export default function AdminDashboard() {
               <ShoppingCart className="h-6 w-6 text-blue-600" />
             </div>
           </div>
-          {/* <div className="flex items-center mt-4 text-sm">
-            <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-            <span className="text-green-600 font-medium">
-              +{dashboardData.overview.ordersChange}%
-            </span>
-            <span className="text-gray-600 ml-1">from last period</span>
-          </div> */}
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -314,13 +290,6 @@ export default function AdminDashboard() {
               <Users className="h-6 w-6 text-purple-600" />
             </div>
           </div>
-          {/* <div className="flex items-center mt-4 text-sm">
-            <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-            <span className="text-green-600 font-medium">
-              +{dashboardData.overview.usersChange}%
-            </span>
-            <span className="text-gray-600 ml-1">from last period</span>
-          </div> */}
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -337,100 +306,7 @@ export default function AdminDashboard() {
               <Package className="h-6 w-6 text-orange-600" />
             </div>
           </div>
-          {/* <div className="flex items-center mt-4 text-sm">
-            <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-            <span className="text-green-600 font-medium">
-              +{dashboardData.overview.productsChange}%
-            </span>
-            <span className="text-gray-600 ml-1">from last period</span>
-          </div> */}
         </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Sales Trend */}
-        {/* <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Sales Trend</h3>
-            <BarChart3 className="h-5 w-5 text-gray-400" />
-          </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={dashboardData.salesData}>
-              <defs>
-                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} />
-              <YAxis stroke="#9CA3AF" fontSize={12} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                }}
-                formatter={(value) => [formatCurrency(value), "Revenue"]}
-              />
-              <Area
-                type="monotone"
-                dataKey="revenue"
-                stroke="#3B82F6"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorRevenue)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div> */}
-
-        {/* Category Distribution */}
-        {/* <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Sales by Category
-            </h3>
-            <PieChart className="h-5 w-5 text-gray-400" />
-          </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <RechartsPieChart>
-              <Pie
-                data={dashboardData.categoryData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={120}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {dashboardData.categoryData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => [`${value}%`, "Percentage"]} />
-            </RechartsPieChart>
-          </ResponsiveContainer>
-          <div className="mt-4 space-y-2">
-            {dashboardData.categoryData.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between text-sm"
-              >
-                <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: item.color }}
-                  ></div>
-                  <span className="text-gray-600">{item.name}</span>
-                </div>
-                <span className="font-medium text-gray-900">{item.value}%</span>
-              </div>
-            ))}
-          </div>
-        </div> */}
       </div>
 
       {/* Tables Section */}
@@ -523,33 +399,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-
-      {/* User Activity Chart */}
-      {/* <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">
-            User Activity (24h)
-          </h3>
-          <Activity className="h-5 w-5 text-gray-400" />
-        </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={dashboardData.userActivity}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="time" stroke="#9CA3AF" fontSize={12} />
-            <YAxis stroke="#9CA3AF" fontSize={12} />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-              }}
-              formatter={(value) => [`${value} users`, "Active Users"]}
-            />
-            <Bar dataKey="active" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div> */}
     </div>
   );
 }

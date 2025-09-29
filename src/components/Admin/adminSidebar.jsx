@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AiOutlineDashboard, AiOutlineUser } from "react-icons/ai";
-import { MdShoppingCart, MdMessage, MdLogout } from "react-icons/md";
+import { MdMessage, MdLogout } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaCouch,
@@ -28,7 +28,11 @@ export default function AdminSidebar() {
     {
       name: "Furniture",
       icon: FaCouch,
-      paths: ["/admin/furniture", "/admin/add-furniture", "/admin/poster-generator"],
+      paths: [
+        "/admin/furniture",
+        "/admin/add-furniture",
+        "/admin/poster-generator",
+      ],
     },
     {
       name: "Mill",
@@ -50,7 +54,11 @@ export default function AdminSidebar() {
             "/admin/mill/orders/edit",
           ],
         },
-        { name: "Suppliers", path: "/admin/mill/suppliers", paths:["/admin/mill/suppliers","/admin/mill/suppliers/supplier"] },
+        {
+          name: "Suppliers",
+          path: "/admin/mill/suppliers",
+          paths: ["/admin/mill/suppliers", "/admin/mill/suppliers/supplier"],
+        },
       ],
     },
     {
@@ -72,7 +80,11 @@ export default function AdminSidebar() {
           path: "/admin/store/orders",
           paths: ["/admin/store/orders", "/admin/store/orders/add-order"],
         },
-        { name: "Showcase", path: "/admin/store/showcase", paths: ["/admin/store/showcase","/admin/store/showcase/:id"], },
+        {
+          name: "Showcase",
+          path: "/admin/store/showcase",
+          paths: ["/admin/store/showcase", "/admin/store/showcase/:id"],
+        },
       ],
     },
   ];
@@ -146,10 +158,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div
-      className="w-64 h-[calc(100vh-70px)] pt-2 bg-[#d9d9d9] flex flex-col overflow-auto"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-    >
+    <aside className="w-64 h-[calc(100vh-70px)] pt-4 bg-gradient-to-b from-[#f5e9da] via-[#f7f3ee] to-[#e7d3bc] flex flex-col overflow-auto shadow-xl rounded-r-3xl">
       {/* Navigation */}
       <nav className="flex-1 px-4">
         <ul className="space-y-2">
@@ -159,17 +168,20 @@ export default function AdminSidebar() {
                 <div>
                   <button
                     onClick={() => handleDropdownToggle(item.name)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
-                      isItemActive(item)
-                        ? "bg-[#a86523] text-white"
-                        : "text-gray-700 hover:bg-gray-200"
-                    }`}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all duration-200 font-semibold
+                      ${
+                        isItemActive(item)
+                          ? "bg-[#a86523] text-white shadow"
+                          : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
+                      }
+                    `}
                   >
                     <item.icon
-                      size={30}
+                      size={26}
                       color={isItemActive(item) ? "white" : "#a86523"}
+                      className="transition-colors"
                     />
-                    <span className="font-medium flex-1">{item.name}</span>
+                    <span className="flex-1">{item.name}</span>
                     {item.name === "Mill" ? (
                       millExpanded ? (
                         <FaChevronDown size={16} />
@@ -184,20 +196,26 @@ export default function AdminSidebar() {
                   </button>
                   {((item.name === "Mill" && millExpanded) ||
                     (item.name === "Store" && storeExpanded)) && (
-                    <ul className="ml-4 mt-2 space-y-1">
+                    <ul className="ml-2 mt-2 space-y-1 border-l border-[#e2c9a6] pl-2">
                       {item.subItems.map((subItem) => (
                         <li key={subItem.name}>
                           <button
                             onClick={() => navigate(subItem.path)}
-                            className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left transition-colors duration-200 ${
-                              isSubItemActive(subItem)
-                                ? "bg-[#a86523] text-white"
-                                : "text-gray-600 hover:bg-gray-200"
-                            }`}
+                            className={`w-full flex items-center gap-2 px-4 py-2 rounded-lg text-left transition-all duration-200 text-sm font-medium
+                              ${
+                                isSubItemActive(subItem)
+                                  ? "bg-[#a86523] text-white shadow"
+                                  : "text-gray-600 hover:bg-[#f3e3c7] hover:text-[#a86523]"
+                              }
+                            `}
                           >
-                            <span className="font-medium text-sm">
-                              {subItem.name}
-                            </span>
+                            {subItem.icon && (
+                              <subItem.icon
+                                size={18}
+                                color={isSubItemActive(subItem) ? "white" : "#a86523"}
+                              />
+                            )}
+                            {subItem.name}
                           </button>
                         </li>
                       ))}
@@ -208,56 +226,55 @@ export default function AdminSidebar() {
                 <button
                   onClick={() =>
                     navigate(item.paths ? item.paths[0] : item.path)
-                  } // Use the first path if multiple exist
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
-                    (item.paths &&
-                      item.paths.some((path) => pathname.startsWith(path))) ||
-                    pathname === item.path
-                      ? "bg-[#a86523] text-white"
-                      : "text-gray-700 hover:bg-gray-200"
-                  }`}
+                  }
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all duration-200 font-semibold
+                    ${
+                      isItemActive(item)
+                        ? "bg-[#a86523] text-white shadow"
+                        : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
+                    }
+                  `}
                 >
                   <item.icon
-                    size={30}
+                    size={26}
                     color={
-                      pathname === item.path ||
-                      (item.paths &&
-                        item.paths.some((path) => pathname.startsWith(path)))
-                        ? "white"
-                        : "#a86523"
+                      isItemActive(item) ? "white" : "#a86523"
                     }
+                    className="transition-colors"
                   />
-                  <span className="font-medium">{item.name}</span>
+                  <span>{item.name}</span>
                 </button>
               )}
             </li>
           ))}
         </ul>
       </nav>
-
       {/* Bottom Items */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-[#e2c9a6] mt-2">
         <ul className="space-y-2">
           {bottomItems.map((item) => (
             <li key={item.name}>
               <button
                 onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
-                  pathname === item.path
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 font-semibold
+                  ${
+                    pathname === item.path
+                      ? "bg-[#a86523] text-white shadow"
+                      : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
+                  }
+                `}
               >
                 <item.icon
-                  size={30}
+                  size={26}
                   color={pathname === item.path ? "white" : "#a86523"}
+                  className="transition-colors"
                 />
-                <span className="font-medium">{item.name}</span>
+                <span>{item.name}</span>
               </button>
             </li>
           ))}
         </ul>
       </div>
-    </div>
+    </aside>
   );
 }
