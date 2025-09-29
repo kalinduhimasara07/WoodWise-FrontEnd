@@ -28,7 +28,7 @@ export default function HeaderButtons() {
       }
     };
     checkAuth();
-  }, []); // ✅ no [status] loop
+  }, []);
 
   return (
     <div className="flex items-center gap-3">

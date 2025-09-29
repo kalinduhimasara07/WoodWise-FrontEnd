@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Facebook,
   Instagram,
@@ -6,11 +6,37 @@ import {
   Phone,
   Mail,
   MapPin,
+  ArrowUp,
 } from "lucide-react";
 
 const Footer = () => {
+  // Show button only after scrolling down
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScroll(window.scrollY > 200);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="bg-slate-800 text-white py-12 px-6">
+    <footer className="bg-slate-800 text-white py-12 px-6 relative">
+      {/* Scroll to Top Button */}
+      {showScroll && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-[#a86523] hover:bg-[#c88a4a] text-white rounded-full shadow-lg p-3 transition-all flex items-center justify-center"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+      )}
       <div className="max-w-7xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-8 mb-8">
@@ -306,44 +332,6 @@ const Footer = () => {
             KH
           </p>
         </div>
-
-        {/* Scroll to Top Button */}
-        {/* <div className="fixed bottom-6 right-6">
-          <button className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-lg">
-            <svg
-              className="w-6 h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 10l7-7m0 0l7 7m-7-7v18"
-              />
-            </svg>
-          </button>
-        </div> */}
-
-        {/* Chat Widget */}
-        {/* <div className="fixed bottom-6 right-24">
-          <button className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors shadow-lg">
-            <svg
-              className="w-6 h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-              />
-            </svg>
-          </button>
-        </div> */}
       </div>
     </footer>
   );
