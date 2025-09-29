@@ -14,7 +14,14 @@ export default function Header() {
   // For debugging purposes, you can see the current path in the console
 
   // A helper function to determine if a link is active
-  const isActive = (path) => pathname === path;
+  // A helper function to determine if a link is active
+  const isActive = (path) => {
+    if (path === "/furniture") {
+      // Match /furniture and any dynamic sub-route like /furniture/:id
+      return pathname === "/furniture" || /^\/furniture\/[^/]+$/.test(pathname);
+    }
+    return pathname === path;
+  };
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -100,20 +107,21 @@ export default function Header() {
           {/* Right-side Icons (Optional but recommended) */}
           <div className="hidden md:flex items-center space-x-5">
             {location.state && location.state.from === "storeShowcase" ? (
-              <button onClick={() => navigate("/store/showcase")} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 transition-colors duration-300 rounded-4xl">
-                <span className=" cursor-pointer">
-                  Back to Store
-                </span>
+              <button
+                onClick={() => navigate("/store/showcase")}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 transition-colors duration-300 rounded-4xl"
+              >
+                <span className=" cursor-pointer">Back to Store</span>
               </button>
             ) : null}
             {location.state && location.state.from === "adminstoreShowcase" ? (
-              <button onClick={() => navigate("/admin/store/showcase")} className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 transition-colors duration-300 rounded-4xl">
-                <span className=" cursor-pointer">
-                  Back to Admin Store
-                </span>
+              <button
+                onClick={() => navigate("/admin/store/showcase")}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 transition-colors duration-300 rounded-4xl"
+              >
+                <span className=" cursor-pointer">Back to Admin Store</span>
               </button>
             ) : null}
-            
           </div>
 
           {/* Mobile Menu Button (for smaller screens) */}

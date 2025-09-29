@@ -41,7 +41,9 @@ export default function StoreInventory() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture`
+        );
 
         if (response.data.success) {
           setFurniture(response.data.data);
@@ -101,7 +103,9 @@ export default function StoreInventory() {
     if (furnitureToDelete) {
       try {
         await axios.delete(
-          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${furnitureToDelete._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${
+            furnitureToDelete._id
+          }`
         );
         toast.success(`Furniture deleted successfully`, {
           style: {
@@ -342,13 +346,20 @@ export default function StoreInventory() {
                       <div className="flex flex-col gap-1">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            item.stock > 5
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                            item.stock === 0
+                              ? "bg-red-100 text-red-800" // Out of stock
+                              : item.stock < 2
+                              ? "bg-yellow-100 text-yellow-800" // Low stock
+                              : "bg-green-100 text-green-800" // In stock
                           }`}
                         >
-                          {item.stock > 0 ? "In Stock" : "Out of Stock"}
+                          {item.stock === 0
+                            ? "Out of Stock"
+                            : item.stock < 2
+                            ? "Low Stock"
+                            : "In Stock"}
                         </span>
+
                         {item.featured && (
                           <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 flex items-center gap-1">
                             <Star className="h-3 w-3" />
@@ -590,14 +601,18 @@ export default function StoreInventory() {
                     <div className="flex items-center gap-2">
                       <span
                         className={`px-3 py-1 text-sm font-medium rounded-full ${
-                          selectedFurniture.inStock
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                          selectedFurniture.stock === 0
+                            ? "bg-red-100 text-red-800"
+                            : selectedFurniture.stock < 2
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-green-100 text-green-800"
                         }`}
                       >
-                        {selectedFurniture.inStock
-                          ? "In Stock"
-                          : "Out of Stock"}
+                        {selectedFurniture.stock === 0
+                          ? "Out of Stock"
+                          : selectedFurniture.stock < 2
+                          ? "Low Stock"
+                          : "In Stock"}
                       </span>
                     </div>
                     {selectedFurniture.featured && (

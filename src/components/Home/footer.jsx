@@ -70,19 +70,19 @@ const Footer = () => {
             {/* Social Media Icons */}
             <div className="flex gap-3 mt-6">
               <a
-                href="#"
+                href="https://www.facebook.com/"
                 className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/"
                 className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://twitter.com/"
                 className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
               >
                 <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
@@ -90,13 +90,13 @@ const Footer = () => {
                 </div>
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/"
                 className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://www.youtube.com/"
                 className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
               >
                 <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
@@ -111,12 +111,12 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">PANTRY</h3>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Mahogany
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Teak
                 </a>
               </li>
@@ -127,22 +127,22 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">LIVING</h3>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Sofas
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Accent Chairs
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Coffee Tables
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   TV Console
                 </a>
               </li>
@@ -153,22 +153,22 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">BEDROOM</h3>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Beds
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Wardrobe
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Mirrors
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Writing Tables
                 </a>
               </li>
@@ -179,17 +179,17 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">DINING</h3>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Tables
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Dining Chairs
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Credenzas
                 </a>
               </li>
@@ -197,54 +197,54 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">PILLOWS</h3>
+            {/* <h3 className="text-lg font-semibold mb-4">PILLOWS</h3>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Throw Pillows
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Pillow Inserts
                 </a>
               </li>
-            </ul>
+            </ul> */}
 
-            <h3 className="text-lg font-semibold mb-4 mt-6">DECOR</h3>
+            <h3 className="text-lg font-semibold mb-4">DECOR</h3>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Natural Plants
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Artificial Plants
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Decorative Items
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Scented Candles
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Lamps
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Ceramic Pot
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/category" className="hover:text-white transition-colors">
                   Wall Frames
                 </a>
               </li>
@@ -254,19 +254,19 @@ const Footer = () => {
 
         {/* Links Section */}
         <div className="flex flex-wrap gap-6 mb-8 text-gray-300 text-sm">
-          <a href="#" className="hover:text-white transition-colors">
+          <a  className="hover:text-white transition-colors">
             FAQs
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a  className="hover:text-white transition-colors">
             Warranty Policy
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a  className="hover:text-white transition-colors">
             Terms of Use
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a className="hover:text-white transition-colors">
             Privacy Policy
           </a>
-          <a href="#" className="hover:text-white transition-colors">
+          <a  className="hover:text-white transition-colors">
             Refund & Delivery Policy
           </a>
         </div>
