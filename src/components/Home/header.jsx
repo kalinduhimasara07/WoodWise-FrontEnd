@@ -1,10 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useLocation to get the current path
 
-// You can install react-icons by running: npm install react-icons
-// Then, you can uncomment the following lines to use them.
-// import { FiUser, FiShoppingCart } from 'react-icons/fi';
-
 export default function Header() {
   // Get the current location object, which contains the pathname
   const location = useLocation();

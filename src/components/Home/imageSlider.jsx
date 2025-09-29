@@ -100,15 +100,6 @@ export default function ImageSlider() {
           />
         ))}
       </div>
-
-      {/* Optional: Auto-play functionality */}
-      {/* You can uncomment this useEffect to enable auto-play */}
-      {/*
-      React.useEffect(() => {
-        const interval = setInterval(nextSlide, 5000);
-        return () => clearInterval(interval);
-      }, []);
-      */}
     </div>
   );
 }
