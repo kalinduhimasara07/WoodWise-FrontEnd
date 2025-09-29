@@ -509,10 +509,10 @@ export function StoreDashboard() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">
-                              ${item.salePrice || item.price}
+                              LKR {item.salePrice || item.price}
                               {item.salePrice && (
                                 <span className="text-xs text-gray-500 line-through ml-2">
-                                  ${item.price}
+                                  LKR {item.price}
                                 </span>
                               )}
                             </div>

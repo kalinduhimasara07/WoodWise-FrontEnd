@@ -803,14 +803,14 @@ export default function AddFurniture() {
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-              <button
+              {/* <button
                 type="button"
                 onClick={handlePreview}
                 className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2"
               >
                 <Eye size={16} />
                 Preview
-              </button>
+              </button> */}
 
               <button
                 type="button"
