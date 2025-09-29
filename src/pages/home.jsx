@@ -1,3 +1,4 @@
+import CommitmentSection from "../components/Home/commitment";
 import ImageSlider from "../components/Home/imageSlider";
 import FurnitureSlider from "../components/Home/productSlider";
 import VideoComponent from "../components/Home/video";
@@ -9,6 +10,7 @@ export default function Home() {
       <ImageSlider />
       <FurnitureSlider />
       <WoodenFurnitureFeatures />
+      <CommitmentSection />
       <VideoComponent />
     </div>
   );

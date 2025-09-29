@@ -62,21 +62,21 @@ const AboutUs = () => {
 
   const testimonials = [
     {
-      name: "Sarah Johnson",
+      name: "Kasun Mapalagama",
       role: "Interior Designer",
       content:
         "WoodWise transformed our vision into reality. Their attention to detail is unmatched.",
       rating: 5,
     },
     {
-      name: "Michael Chen",
+      name: "Kosala Edirisinghe",
       role: "Homeowner",
       content:
         "The quality of craftsmanship exceeded our expectations. Truly exceptional work.",
       rating: 5,
     },
     {
-      name: "Emma Rodriguez",
+      name: "Niroshan Perera",
       role: "Restaurant Owner",
       content:
         "Professional, reliable, and incredibly talented. Our restaurant looks amazing!",
@@ -392,7 +392,7 @@ const AboutUs = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-amber-600 to-orange-700 text-white">
+      {/* <section className="py-20 bg-gradient-to-r from-amber-600 to-orange-700 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-6">
             Ready to Create Something Beautiful?
@@ -410,7 +410,7 @@ const AboutUs = () => {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
