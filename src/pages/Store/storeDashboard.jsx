@@ -69,7 +69,7 @@ export default function StoreHome() {
   return (
     <div>
       <Header />
-      <div className="flex h-[calc(100vh-70px)] bg-[#d9d9d9]">
+      <div className="flex h-[calc(100vh-70px)] bg-gradient-to-r from-[#f5e9da] via-[#f7f3ee] to-[#e7d3bc] shadow h-[70px]">
         <div>
           <StoreSidebar />
         </div>

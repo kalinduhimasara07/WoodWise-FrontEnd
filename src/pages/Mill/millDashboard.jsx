@@ -15,7 +15,6 @@ import Loading from "../../components/loader";
 import AddSupplier from "./addsupplier";
 import {
   Package,
-  Truck,
   AlertTriangle,
   TrendingUp,
   Search,
@@ -59,7 +58,7 @@ export default function MillHomePage() {
     };
 
     checkAuth();
-  }, [navigate]); // ✅ no [status] loop
+  }, [navigate]); 
 
   // While checking, show loader
   if (status === "loading") {
@@ -78,7 +77,7 @@ export default function MillHomePage() {
   return (
     <div>
       <Header />
-      <div className="flex h-[calc(100vh-70px)] bg-[#d9d9d9]">
+      <div className="flex h-[calc(100vh-70px)] bg-gradient-to-r from-[#f5e9da] via-[#f7f3ee] to-[#e7d3bc] shadow h-[70px]">
         <div>
           <Sidebar />
         </div>
