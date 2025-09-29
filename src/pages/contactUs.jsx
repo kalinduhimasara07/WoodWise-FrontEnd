@@ -67,7 +67,7 @@ const ContactUs = () => {
     {
       icon: Phone,
       title: "Call Us",
-      details: ["011 711 0084", "0778 838 939", "Mon-Sat: 9AM-6PM"],
+      details: ["011 224 9108", "077 418 7068", "Mon-Sat: 9AM-6PM"],
       color: "text-green-700",
       bgColor: "bg-green-50",
     },
