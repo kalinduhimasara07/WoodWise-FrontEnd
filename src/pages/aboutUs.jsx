@@ -152,7 +152,7 @@ const AboutUs = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-6xl md:text-7xl font-extrabold mb-4 tracking-tight drop-shadow-lg"
           >
-            About WoodWise
+            About Jayasiri Furniture
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: -30 }}
@@ -226,7 +226,7 @@ const AboutUs = () => {
                 Our Story
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Founded in 2009 by master craftsman David Wilson, WoodWise began
+                Founded in 1996 by master craftsman E A D Jayasiri, Jayasiri Furniture began
                 as a small workshop with a simple mission: to create furniture
                 that tells a story. What started with hand-carved chairs for
                 local families has grown into a renowned furniture house serving

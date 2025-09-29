@@ -27,7 +27,6 @@ export default function LandingPage() {
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-
       <Footer />
     </div>
   );
