@@ -18,7 +18,7 @@ const OBJECTS = [
   "Outdoor Swing",
   "Writing Desk",
   "Sideboard",
-  "Altar Table",
+  "Table",
   "Mirror Frame",
   "Kitchen Cupboard",
 ];
