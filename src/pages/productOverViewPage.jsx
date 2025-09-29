@@ -245,26 +245,14 @@ export default function ProductOverview() {
           </div>
 
           {/* 3D Model and Gallery */}
-          <div className="flex gap-6">
+          <div className="flex gap-6 items-center justify-center m-10">
             {/* Main 3D Model Display */}
             <div className="w-[600px] h-[600px] flex items-center justify-center border-1 border-amber-700 rounded-2xl overflow-hidden bg-gray-100">
               <ThreeDScene modelPath={furnitureModels[selectedModel]?.url || "/path/to/defaultModel.glb"} />
             </div>
 
             {/* Gallery Model Thumbnails */}
-            <div className="space-y-4">
-              {furnitureModels.map((model, index) => (
-                <div
-                  key={index}
-                  className={`w-20 h-20 m-2 cursor-pointer border-2 ${
-                    selectedModel === index ? "border-amber-500" : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  onClick={() => setSelectedModel(index)}
-                >
-                  {/* <ThreeDScene modelPath={model.url} /> */}
-                </div>
-              ))}
-            </div>
+            
           </div>
 
 
