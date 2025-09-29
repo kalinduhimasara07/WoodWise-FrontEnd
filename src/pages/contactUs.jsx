@@ -74,7 +74,7 @@ const ContactUs = () => {
     {
       icon: Mail,
       title: "Email",
-      details: ["woodwise.services@gmail.com",],
+      details: ["woodwise.services@gmail.com"],
       color: "text-orange-700",
       bgColor: "bg-orange-50",
     },
@@ -133,26 +133,30 @@ const ContactUs = () => {
       {/* Contact Information Cards */}
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {contactInfo.map((info, index) => {
               const Icon = info.icon;
               return (
                 <div
                   key={index}
-                  className="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5"
+                  className={`relative group bg-gradient-to-br from-amber-50 via-white to-orange-100 border border-gray-200 rounded-2xl shadow-lg p-6 flex items-center gap-5 transition-all duration-300 hover:shadow-2xl`}
                 >
+                  {/* Icon */}
                   <div
-                    className={`flex-shrink-0 w-14 h-14 ${info.bgColor} rounded-xl flex items-center justify-center mr-5`}
+                    className={`flex-shrink-0 w-16 h-16 ${info.bgColor} rounded-2xl flex items-center justify-center shadow-md z-10 transition-all duration-300 group-hover:scale-105`}
                   >
-                    <Icon className={`w-7 h-7 ${info.color}`} />
+                    <Icon
+                      className={`w-8 h-8 ${info.color} transition-all duration-300 group-hover:scale-110`}
+                    />
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {/* Content */}
+                  <div className="z-10">
+                    <h3 className="text-xl font-bold text-gray-800 mb-2 tracking-tight group-hover:text-amber-700 transition-colors">
                       {info.title}
                     </h3>
                     <div className="space-y-1">
                       {info.details.map((detail, idx) => (
-                        <p key={idx} className="text-gray-600 text-sm">
+                        <p key={idx} className="text-gray-600 text-base">
                           {detail}
                         </p>
                       ))}
