@@ -33,7 +33,71 @@ const MillOrderPage = () => {
   const [updatingStatus, setUpdatingStatus] = useState(null);
   const [furnitureDetails, setFurnitureDetails] = useState({});
   const [loadingFurniture, setLoadingFurniture] = useState({});
+  const [millWorkerInput, setMillWorkerInput] = useState("");
+  const [assigningWorker, setAssigningWorker] = useState(false);
   const navigate = useNavigate();
+  // Assign mill worker to order
+  const handleAssignMillWorker = async () => {
+    if (!millWorkerInput.trim() || !selectedOrder) return;
+    setAssigningWorker(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/change-mill-worker`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderNumber: selectedOrder.orderNumber,
+            millWorker: millWorkerInput.trim(),
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (result.success) {
+        // Update local state
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.orderNumber === selectedOrder.orderNumber
+              ? { ...order, millWorker: millWorkerInput.trim() }
+              : order
+          )
+        );
+        setSelectedOrder((prev) =>
+          prev ? { ...prev, millWorker: millWorkerInput.trim() } : prev
+        );
+        toast.success("Mill worker assigned successfully", {
+          style: {
+            border: "1px solid #059669",
+            padding: "16px",
+            color: "#065f46",
+            backgroundColor: "#ecfdf5",
+            borderRadius: "12px",
+            fontSize: "14px",
+            fontWeight: "500",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          },
+          iconTheme: {
+            primary: "#059669",
+            secondary: "#ecfdf5",
+          },
+          duration: 4000,
+        });
+        setMillWorkerInput("");
+      } else {
+        throw new Error(result.message || "Failed to assign mill worker");
+      }
+    } catch (err) {
+      toast.error(`Error assigning mill worker: ${err.message}`);
+    } finally {
+      setAssigningWorker(false);
+    }
+  };
 
   // New state for the full-size image modal
   const [showImageModal, setShowImageModal] = useState(false);
@@ -651,6 +715,24 @@ const MillOrderPage = () => {
                       <span className="font-medium">Mill Worker:</span>{" "}
                       {selectedOrder.millWorker || "Not Assigned"}
                     </p>
+                    {/* Assign mill worker input */}
+                    <div className="mt-2 flex gap-2 items-center">
+                      <input
+                        type="text"
+                        value={millWorkerInput}
+                        onChange={(e) => setMillWorkerInput(e.target.value)}
+                        placeholder="Assign mill worker..."
+                        className="px-3 py-1 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 text-sm"
+                        disabled={assigningWorker}
+                      />
+                      <button
+                        onClick={handleAssignMillWorker}
+                        disabled={assigningWorker || !millWorkerInput.trim()}
+                        className={`px-3 py-1 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors ${assigningWorker ? "opacity-50 cursor-not-allowed" : ""}`}
+                      >
+                        {assigningWorker ? "Assigning..." : "Assign"}
+                      </button>
+                    </div>
                     <p>
                       <span className="font-medium">Created:</span>{" "}
                       {formatDate(selectedOrder.createdAt)}

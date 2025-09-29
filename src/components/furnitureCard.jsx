@@ -29,7 +29,7 @@ const FurnitureCard = ({ furniture }) => {
     const formatPrice = (amount) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
-            currency: 'USD', // Change currency as needed
+            currency: 'LKR', // Change currency as needed
         }).format(amount);
     };
 
