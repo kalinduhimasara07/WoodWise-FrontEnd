@@ -5,30 +5,34 @@ import Model from './Model'
 
 export default function ThreeDScene({ modelPath }) {
   return (
-    <Canvas camera={{ position: [0, 0, 5], fov: 50 }} shadows>
-      {/* Base light */}
-      <ambientLight intensity={0.5} />
+    <Canvas 
+      camera={{ position: [0, 0, 5], fov: 50 }} shadows>
+      <ambientLight intensity={1.2} />
 
-      {/* Strong directional light from top-right */}
+      <hemisphereLight
+        intensity={2}
+        color="#ffffff"
+        groundColor="#ffffff"
+      />
+
       <directionalLight
         position={[5, 5, 5]}
-        intensity={4}
+        intensity={3}
         castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
       />
 
-      {/* Fill light from the left to reduce harsh shadows */}
-      <directionalLight position={[-5, 5, 5]} intensity={2} />
+      <directionalLight position={[-5, 3, 5]} intensity={2.5} />
 
-      {/* Optional spotlight for extra focus */}
-      <spotLight
-        position={[2, 5, 2]}
-        angle={0.3}
-        intensity={2}
-        penumbra={1}
-        castShadow
-      />
+      <directionalLight position={[0, 3, -5]} intensity={2} />
+
+      <directionalLight position={[0, -5, 0]} intensity={2} />
+
+      <pointLight position={[0, 0, 5]} intensity={3} />
+      
+      <pointLight position={[5, 0, 0]} intensity={2} />
+      <pointLight position={[-5, 0, 0]} intensity={2} />
 
       <Suspense fallback={null}>
         <Model url={modelPath} />
