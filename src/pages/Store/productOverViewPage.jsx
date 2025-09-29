@@ -391,7 +391,7 @@ export default function ProductOverview() {
                 </p>
                 {/* Show new price only if AI image is generated */}
                 <div className="mt-4">
-                  <span className="text-green-700 font-bold text-lg">New Price with Custom Design: </span>
+                  <span className="text-green-700 font-bold text-lg">Estimated price with Custom Design: </span>
                   <span className="text-green-900 font-bold text-xl">
                     Rs {getAdjustedSalePrice(furniture.data.salePrice).toLocaleString("en-US", {
                       minimumFractionDigits: 2,
