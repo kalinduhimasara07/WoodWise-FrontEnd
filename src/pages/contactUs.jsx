@@ -36,19 +36,34 @@ const ContactUs = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setSubmitStatus("success");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/contact`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        setSubmitStatus("success");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+          inquiryType: "general",
+        });
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch (error) {
+      setSubmitStatus("error");
+    } finally {
       setIsSubmitting(false);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-        inquiryType: "general",
-      });
-    }, 2000);
+    }
   };
 
   const contactInfo = [
@@ -359,7 +374,7 @@ const ContactUs = () => {
                     Call Now
                   </a>
                   <a
-                    href="mailto:info@woodwise.lk"
+                    href="mailto:woodwise.services@gmail.com"
                     className="border-2 border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-amber-600 transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     <Mail className="w-5 h-5" />

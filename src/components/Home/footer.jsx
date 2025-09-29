@@ -173,7 +173,9 @@ const Footer = () => {
           <p className="text-sm text-[#5c4322]">
             <span className="font-semibold">Registered Business:</span>
             <br />
-            WoodWise (Pvt) Ltd, Reg. No: PV00234567
+            Jayasiri Furniture (Pvt) Ltd,
+            <br />
+            Reg. No: PV00234567
           </p>
         </div>
       </div>
