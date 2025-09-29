@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { useLocation } from "react-router-dom";
+import { Home, MapPin, Phone, Mail } from "lucide-react";
 
 const PosterGenerator = () => {
   const location = useLocation();
@@ -14,26 +15,34 @@ const PosterGenerator = () => {
   const [contact, setContact] = useState('Call us: +94 77 123 4567');
   const [imageSize, setImageSize] = useState(230);
 
-  // Create the background template as SVG since we can't import external images
+  // Modern, elegant background template
   const BackgroundTemplate = () => (
-    <svg width="600" height="800" viewBox="0 0 600 800" className="w-full h-auto">
-      <rect width="600" height="800" fill="#5a5a5a" />
-      <circle cx="500" cy="100" r="80" fill="#3a3a3a" />
-      <circle cx="450" cy="650" r="120" fill="#6a6a6a" />
-      <path d="M 400 0 Q 500 200 400 400 Q 300 600 400 800"
-        stroke="white" strokeWidth="8" fill="none" />
-      <path d="M 500 200 Q 600 300 500 500 Q 400 700 600 800"
-        stroke="white" strokeWidth="6" fill="none" />
-      <rect x="40" y="140" width="300" height="200" fill="rgba(0,0,0,0.1)" rx="10" />
-      <rect x="40" y="380" width="140" height="50" fill="none" stroke="none" strokeWidth="2" rx="5" />
+    <svg width="600" height="800" viewBox="0 0 600 800" className="w-full h-auto absolute inset-0 z-0">
+      <defs>
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f7e9da" />
+          <stop offset="100%" stopColor="#cbb08c" />
+        </linearGradient>
+        <radialGradient id="circleGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#a86523" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#f7e9da" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="600" height="800" fill="url(#bgGrad)" />
+      <ellipse cx="500" cy="120" rx="120" ry="80" fill="url(#circleGrad)" />
+      <ellipse cx="120" cy="700" rx="100" ry="60" fill="url(#circleGrad)" />
+      <ellipse cx="300" cy="400" rx="250" ry="120" fill="#fff" opacity="0.08" />
+      <ellipse cx="300" cy="600" rx="180" ry="80" fill="#fff" opacity="0.06" />
+      <rect x="40" y="140" width="300" height="200" fill="#fff" opacity="0.07" rx="20" />
+      <rect x="40" y="380" width="140" height="50" fill="#fff" opacity="0.04" rx="10" />
+      <path d="M 80 700 Q 200 650 400 780" stroke="#a86523" strokeWidth="6" fill="none" opacity="0.18" />
+      <path d="M 500 100 Q 400 300 600 400" stroke="#a86523" strokeWidth="4" fill="none" opacity="0.12" />
     </svg>
   );
 
   const generate = async () => {
     if (!captureRef.current) return;
-
     try {
-      // Use modern browser API to capture the actual preview
       if (typeof html2canvas !== 'undefined') {
         const canvas = await html2canvas(captureRef.current, {
           backgroundColor: null,
@@ -43,95 +52,9 @@ const PosterGenerator = () => {
         });
         const imageData = canvas.toDataURL('image/png');
         updatePreview(imageData);
-      } else {
-        const element = captureRef.current;
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        const rect = element.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-
-        const captureElement = () => {
-          return new Promise((resolve) => {
-            const data = `<svg xmlns="http://www.w3.org/2000/svg" width="${rect.width}" height="${rect.height}">
-              <foreignObject width="100%" height="100%">
-                <div xmlns="http://www.w3.org/1999/xhtml" style="width: ${rect.width}px; height: ${rect.height}px;">
-                  ${element.innerHTML}
-                </div>
-              </foreignObject>
-            </svg>`;
-
-            const img = new Image();
-            img.onload = () => {
-              ctx.drawImage(img, 0, 0);
-              resolve(canvas.toDataURL('image/png'));
-            };
-            img.onerror = () => {
-              createSimpleCapture(canvas, ctx);
-              resolve(canvas.toDataURL('image/png'));
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(data);
-          });
-        };
-
-        const imageData = await captureElement();
-        updatePreview(imageData);
       }
     } catch (error) {
       console.error('Error generating poster:', error);
-      cloneElementAsImage();
-    }
-  };
-
-  const createSimpleCapture = (canvas, ctx) => {
-    const width = canvas.width;
-    const height = canvas.height;
-
-    ctx.fillStyle = '#5a5a5a';
-    ctx.fillRect(0, 0, width, height);
-
-    // Add text and elements to match preview
-    ctx.fillStyle = 'white';
-    ctx.font = 'bold 36px Arial';
-    ctx.fillText('Classic', width * 0.07, height * 0.15);
-    ctx.fillText('Furniture', width * 0.07, height * 0.23);
-    ctx.fillText('Style', width * 0.07, height * 0.31);
-
-    // Quote text
-    ctx.font = '16px Arial';
-    const lines = quote.match(/.{1,40}/g) || [quote];
-    lines.forEach((line, index) => {
-      ctx.fillText(line.trim(), width * 0.07, height * 0.45 + (index * 25));
-    });
-
-    // Buy Now button
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(width * 0.07, height * 0.6, width * 0.23, height * 0.06);
-    ctx.font = 'bold 14px Arial';
-    ctx.fillText('BUY NOW', width * 0.12, height * 0.635);
-  };
-
-  const cloneElementAsImage = () => {
-    // Direct cloning approach - copy the preview as is
-    const element = captureRef.current.cloneNode(true);
-    const renderDiv = document.getElementById('render');
-
-    if (renderDiv) {
-      renderDiv.innerHTML = '<h2 class="text-xl font-bold text-gray-800 mb-4">Generated Preview</h2>';
-      element.className = 'max-w-full border shadow-lg rounded-lg bg-white';
-      renderDiv.appendChild(element);
-
-      const canvas = document.createElement('canvas');
-      canvas.width = 600;
-      canvas.height = 800;
-      const ctx = canvas.getContext('2d');
-      createSimpleCapture(canvas, ctx);
-
-      if (downloadLinkRef.current) {
-        downloadLinkRef.current.href = canvas.toDataURL('image/png');
-      }
     }
   };
 
@@ -139,14 +62,12 @@ const PosterGenerator = () => {
     if (downloadLinkRef.current) {
       downloadLinkRef.current.href = imageData;
     }
-
-    // Show preview
     const renderDiv = document.getElementById('render');
     if (renderDiv) {
       renderDiv.innerHTML = '<h2 class="text-xl font-bold text-gray-800 mb-4">Generated Preview</h2>';
       const imgElement = new Image();
       imgElement.src = imageData;
-      imgElement.className = 'max-w-full border shadow-lg rounded-lg';
+      imgElement.className = 'max-w-full shadow-lg rounded-lg';
       renderDiv.appendChild(imgElement);
     }
   };
@@ -168,116 +89,167 @@ const PosterGenerator = () => {
               className="relative w-[350px] md:w-[500px] bg-white shadow-xl rounded-lg overflow-hidden"
               style={{ aspectRatio: '3/4' }}
             >
-
-
               <BackgroundTemplate />
 
               {/* Title */}
-              <div className="absolute top-16 left-10 right-4">
-                <h1 className="text-white text-5xl font-bold leading-tight whitespace-pre-line">
+              <div className="absolute top-12 left-8 right-8 z-10">
+                <h1
+                  className="text-5xl font-extrabold leading-tight drop-shadow-lg"
+                  style={{ color: "#a86523" }}
+                >
                   {title}
                 </h1>
               </div>
 
               {/* Quote */}
-              <div className="absolute top-72 left-10 right-4 max-w-sm">
-                <p className="text-white text-lg font-light leading-relaxed">
-                  {quote}
+              <div className="absolute top-45 left-8 right-8 z-10">
+                <p className="text-lg font-medium leading-relaxed italic" style={{ color: "#4b5563" }}>
+                  “{quote}”
                 </p>
               </div>
 
-              {/* Address */}
-              <div className="absolute bottom-20 left-10 right-4">
-                <p className="text-white text-sm font-light leading-snug">
-                  {address}
-                </p>
-              </div>
-
-              {/* Contact */}
-              <div className="absolute bottom-10 left-10 right-4">
-                <p className="text-white text-sm font-light leading-snug">
-                  {contact}
-                </p>
-              </div>
-
-              <div className="absolute top-96 left-10">
-                <div className="border-2 border-white text-white px-6 py-3 text-lg font-semibold tracking-wide">
-                  BUY NOW
-                </div>
-              </div>
-
+              {/* Furniture Image */}
               {furnitureImage && (
                 <div
-                  className="absolute bottom-20 right-16 rounded-full overflow-hidden border-4 border-white shadow-2xl"
-                  style={{ width: `${imageSize}px`, height: `${imageSize}px` }}
+                  className="absolute left-1/2 transform -translate-x-1/2 rounded-2xl overflow-hidden border-4 shadow-2xl z-10 bg-white"
+                  style={{
+                    top: "220px",
+                    width: `${imageSize}px`,
+                    height: `${imageSize}px`,
+                    borderColor: "#a86523"
+                  }}
                 >
                   <img src={furnitureImage} alt="Furniture" className="w-full h-full object-cover" />
                 </div>
-
               )}
+
+              {/* Buy Now Button */}
+              <div
+                className="absolute left-1/2 transform -translate-x-1/2 z-10"
+                style={{
+                  top: `${220 + Number(imageSize) + 24}px`
+                }}
+              >
+                <button
+                  className="text-white px-8 py-3 text-lg font-bold rounded-full shadow-lg hover:scale-105 transition-transform"
+                  style={{
+                    background: "linear-gradient(to right, #a86523, #cbb08c)"
+                  }}
+                >
+                  BUY NOW
+                </button>
+              </div>
+
+              {/* Address */}
+              <div className="absolute left-8 right-8 z-10 flex items-center gap-2"
+                   style={{ bottom: "72px", color: "#4b5563" }}>
+                <MapPin className="w-5 h-5" style={{ color: "#a86523" }} />
+                <span className="text-sm font-semibold">{address}</span>
+              </div>
+
+              {/* Contact */}
+              <div className="absolute left-8 right-8 z-10 flex items-center gap-2"
+                   style={{ bottom: "32px", color: "#4b5563" }}>
+                <Phone className="w-5 h-5" style={{ color: "#a86523" }} />
+                <span className="text-sm font-semibold">{contact}</span>
+              </div>
             </div>
 
             {/* Controls */}
-            <div className="w-[600px] max-w-full space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Image Size (px)
-                </label>
-                <input
-                  type="number"
-                  value={imageSize}
-                  onChange={(e) => setImageSize(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-
+            <div className="w-[600px] max-w-full space-y-6 bg-white rounded-xl shadow p-6 mt-4">
+              <h2 className="text-xl font-bold text-[#a86523] mb-4">Customize Your Poster</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Title input */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Enter poster title..."
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#a86523] focus:border-[#a86523]"
+                  />
+                </div>
+                {/* Quote input */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Subtitle / Quote
+                  </label>
+                  <input
+                    type="text"
+                    value={quote}
+                    onChange={(e) => setQuote(e.target.value)}
+                    placeholder="Enter a catchy quote..."
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#a86523] focus:border-[#a86523]"
+                  />
+                </div>
+                {/* Address input */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Enter address..."
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#a86523] focus:border-[#a86523]"
+                  />
+                </div>
+                {/* Contact input */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Contact
+                  </label>
+                  <input
+                    type="text"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    placeholder="Enter contact info..."
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#a86523] focus:border-[#a86523]"
+                  />
+                </div>
+                {/* Image Size input */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Furniture Image Size (px)
+                  </label>
+                  <input
+                    type="number"
+                    min={100}
+                    max={400}
+                    value={imageSize}
+                    onChange={(e) => setImageSize(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#a86523] focus:border-[#a86523]"
+                  />
+                </div>
+                {/* Furniture Image upload */}
+                {/* <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Furniture Image
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = ev => setFurnitureImage(ev.target.result);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#a86523] focus:border-[#a86523]"
+                  />
+                </div> */}
               </div>
-              {/* Title input */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Title Text
-                </label>
-                <textarea
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Enter your title text..."
-                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  rows="2"
-                />
-              </div>
-
-              {/* Existing Subtitle Text (quote) */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Subtitle Text
-                </label>
-                <textarea
-                  value={quote}
-                  onChange={(e) => setQuote(e.target.value)}
-                  placeholder="Enter your subtitle text..."
-                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  rows="3"
-                />
-              </div>
-
-              {/* Address input */}
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Enter address..."
-                  className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div> */}
-
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-4 justify-center mt-6">
                 <button
                   type="button"
                   onClick={generate}
-                  className="px-8 py-3 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-colors font-semibold"
+                  className="px-8 py-3 bg-[#a86523] text-white rounded-md shadow-lg hover:bg-[#cbb08c] transition-colors font-semibold"
                 >
                   Generate Poster
                 </button>
@@ -302,7 +274,6 @@ const PosterGenerator = () => {
       </section>
     </div>
   );
-
 };
 
 export default PosterGenerator;
