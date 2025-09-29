@@ -32,6 +32,20 @@ export default function ProductOverview() {
   const [notFound, setNotFound] = useState(false);
   const navigate = useNavigate();
 
+  // Calculate price with AI image markup
+  const getAdjustedPrice = (price) => {
+    if (generatedImage) {
+      return Math.round(price * 1.1); // 10% increase
+    }
+    return price;
+  };
+  const getAdjustedSalePrice = (salePrice) => {
+    if (generatedImage) {
+      return Math.round(salePrice * 1.1);
+    }
+    return salePrice;
+  };
+
   const handleNewOrder = async () => {
     let finalImageUrl = uploadedImageUrl;
 
@@ -48,8 +62,8 @@ export default function ProductOverview() {
     const orderData = {
       sku: furniture?.data?.sku || "",
       productName: furniture?.data?.name || "",
-      originalPrice: furniture?.data?.price || 0,
-      salePrice: furniture?.data?.salePrice || 0,
+      originalPrice: getAdjustedPrice(furniture?.data?.price || 0),
+      salePrice: getAdjustedSalePrice(furniture?.data?.salePrice || 0),
       category: furniture?.data?.category || "",
       subcategory: furniture?.data?.subcategory || "",
       dimensions: furniture?.data?.dimensions || {},
@@ -375,6 +389,22 @@ export default function ProductOverview() {
                   Your generated design will be uploaded and included with your
                   order once you click "Create New Order".
                 </p>
+                {/* Show new price only if AI image is generated */}
+                <div className="mt-4">
+                  <span className="text-green-700 font-bold text-lg">New Price with Custom Design: </span>
+                  <span className="text-green-900 font-bold text-xl">
+                    Rs {getAdjustedSalePrice(furniture.data.salePrice).toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                  <span className="text-green-700 font-bold mx-4 line-through text-base">
+                    Rs {getAdjustedPrice(furniture.data.price).toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
               </div>
             )}
           </div>
