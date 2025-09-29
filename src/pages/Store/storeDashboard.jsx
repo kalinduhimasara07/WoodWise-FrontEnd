@@ -400,7 +400,7 @@ export function StoreDashboard() {
                             {order.customerInfo.name}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            ${order.totalAmount.toLocaleString()}
+                            LKR {order.totalAmount.toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
