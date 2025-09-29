@@ -132,7 +132,7 @@ export default function StoreInventory() {
         setFurnitureToDelete(null);
       } catch (error) {
         console.error("Error deleting furniture:", error);
-        // You might want to show an error message to the user here
+        //Error message to the user here
       }
     }
   };
