@@ -40,7 +40,12 @@ export default function MillSidebar() {
       path: ["/mill/orders", "/mill/orders/add-order"],
       defaultPath: "/mill/orders",
     },
-    { name: "Suppliers", icon: PiBuildingsDuotone, path: ["/mill/suppliers","/mill/suppliers/add-supplier"],defaultPath:"/mill/suppliers" },
+    {
+      name: "Suppliers",
+      icon: PiBuildingsDuotone,
+      path: ["/mill/suppliers", "/mill/suppliers/add-supplier"],
+      defaultPath: "/mill/suppliers",
+    },
   ];
 
   const bottomItems = [
@@ -69,8 +74,8 @@ export default function MillSidebar() {
                 onClick={() => handleNavigation(item)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors duration-200 ${
                   isPathActive(item.path)
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#a86523] text-white shadow"
+                    : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
                 }`}
               >
                 <item.icon
@@ -93,8 +98,8 @@ export default function MillSidebar() {
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200 ${
                   pathname === item.path
-                    ? "bg-[#a86523] text-white"
-                    : "text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#a86523] text-white shadow"
+                    : "text-gray-700 hover:bg-[#f3e3c7] hover:text-[#a86523]"
                 }`}
               >
                 <item.icon
