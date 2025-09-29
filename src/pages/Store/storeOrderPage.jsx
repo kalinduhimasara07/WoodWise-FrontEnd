@@ -160,21 +160,21 @@ const StoreOrdersPage = () => {
             duration: 5000,
           }
         );
-        // if(newStatus=="Completed"){
-        //   const smsResponse = await axios.post(
-        //   `${import.meta.env.VITE_BACKEND_URL}/api/orders/send-sms`,
-        //   {
-        //     toPhoneNumber: contactNumber,
-        //     orderId: orderNumber,
-        //     orderStatus: "Completed",
-        //     customerName: name,
-        //     totalAmount: totalAmount,
-        //     advanceAmount: advanceAmount,
-        //     balanceAmount: totalAmount - advanceAmount,
-        //   }
-        // );
-        // console.log("SMS sent successfully:", smsResponse.data);
-        // }
+        if(newStatus=="Completed"){
+          const smsResponse = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/orders/send-sms`,
+          {
+            toPhoneNumber: contactNumber,
+            orderId: orderNumber,
+            orderStatus: "Completed",
+            customerName: name,
+            totalAmount: totalAmount,
+            advanceAmount: advanceAmount,
+            balanceAmount: totalAmount - advanceAmount,
+          }
+        );
+        console.log("SMS sent successfully:", smsResponse.data);
+        }
       } else {
         throw new Error(result.message || "Failed to update order status");
       }

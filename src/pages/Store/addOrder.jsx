@@ -169,18 +169,18 @@ export default function PlaceOrder() {
 
       const result = await response.json();
       console.log("Order submitted successfully:", result);
-      // const smsResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/orders/send-sms`,
-      // {
-      //   toPhoneNumber: order.customerInfo.contactNumber,
-      //   orderId: result.data.orderNumber,
-      //   orderStatus: "received",
-      //   customerName: order.customerInfo.name,
-      //   totalAmount: order.totalAmount,
-      //   advanceAmount: order.advanceAmount,
-      //   balanceAmount: order.totalAmount - order.advanceAmount,
-      // }
-      // );
-      // console.log("SMS sent successfully:", smsResponse.data);
+      const smsResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/orders/send-sms`,
+      {
+        toPhoneNumber: order.customerInfo.contactNumber,
+        orderId: result.data.orderNumber,
+        orderStatus: "received",
+        customerName: order.customerInfo.name,
+        totalAmount: order.totalAmount,
+        advanceAmount: order.advanceAmount,
+        balanceAmount: order.totalAmount - order.advanceAmount,
+      }
+      );
+      console.log("SMS sent successfully:", smsResponse.data);
       toast.success(`Order submitted successfully!`, {
         style: {
           border: "1px solid #059669",
