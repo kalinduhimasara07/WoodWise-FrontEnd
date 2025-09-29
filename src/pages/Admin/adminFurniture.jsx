@@ -44,7 +44,7 @@ export default function AdminFurniture() {
         : null;
 
     navigate("/admin/poster-generator", {
-      state: { furnitureImage: imageUrl }
+      state: { furnitureImage: imageUrl },
     });
   };
 
@@ -54,7 +54,9 @@ export default function AdminFurniture() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/furniture`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture`
+        );
 
         if (response.data.success) {
           setFurniture(response.data.data);
@@ -114,7 +116,9 @@ export default function AdminFurniture() {
     if (furnitureToDelete) {
       try {
         await axios.delete(
-          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${furnitureToDelete._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/furniture/${
+            furnitureToDelete._id
+          }`
         );
         toast.success(`Furniture deleted successfully`, {
           style: {
@@ -219,7 +223,10 @@ export default function AdminFurniture() {
         <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
           <div className="text-green-800 text-sm font-medium">In Stock</div>
           <div className="text-2xl font-bold text-green-900">
-            {furniture.filter((item) => item.inStock && item.stock !== 0).length}
+            {
+              furniture.filter((item) => item.inStock && item.stock !== 0)
+                .length
+            }
           </div>
         </div>
         <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
@@ -301,7 +308,7 @@ export default function AdminFurniture() {
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                        <div className="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                           {item.images && item.images.length > 0 ? (
                             <img
                               src={item.images[0].url}
@@ -354,12 +361,19 @@ export default function AdminFurniture() {
                     <td className="p-4">
                       <div className="flex flex-col gap-1">
                         <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.stock > 5
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                            }`}
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            item.stock === 0
+                              ? "bg-red-100 text-red-800" // Out of stock
+                              : item.stock < 2
+                              ? "bg-yellow-100 text-yellow-800" // Low stock
+                              : "bg-green-100 text-green-800" // In stock
+                          }`}
                         >
-                          {item.stock > 0 ? "In Stock" : "Out of Stock"}
+                          {item.stock === 0
+                            ? "Out of Stock"
+                            : item.stock < 2
+                            ? "Low Stock"
+                            : "In Stock"}
                         </span>
                         {item.featured && (
                           <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 flex items-center gap-1">
@@ -420,7 +434,10 @@ export default function AdminFurniture() {
       {/* View Modal */}
       {showViewModal && selectedFurniture && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div
+            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-2xl font-bold text-gray-900">
@@ -442,7 +459,7 @@ export default function AdminFurniture() {
                   <h4 className="text-lg font-semibold mb-4">Images</h4>
                   <div className="grid grid-cols-2 gap-4">
                     {selectedFurniture.images &&
-                      selectedFurniture.images.length > 0 ? (
+                    selectedFurniture.images.length > 0 ? (
                       selectedFurniture.images.map((image, index) => (
                         <div
                           key={index}
@@ -598,10 +615,11 @@ export default function AdminFurniture() {
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-3 py-1 text-sm font-medium rounded-full ${selectedFurniture.inStock
+                        className={`px-3 py-1 text-sm font-medium rounded-full ${
+                          selectedFurniture.inStock
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
-                          }`}
+                        }`}
                       >
                         {selectedFurniture.inStock
                           ? "In Stock"
