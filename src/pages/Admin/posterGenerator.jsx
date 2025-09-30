@@ -11,8 +11,8 @@ const PosterGenerator = () => {
   const downloadLinkRef = useRef(null);
 
   const [title, setTitle] = useState('Classic Furniture Style');
-  const [address, setAddress] = useState('123 Main Street, Colombo, Sri Lanka');
-  const [contact, setContact] = useState('Call us: +94 77 123 4567');
+  const [address, setAddress] = useState('No 322, School Road, Batuwatta, Ragama, Sri Lanka');
+  const [contact, setContact] = useState('Call us: +94 11 224 9108');
   const [imageSize, setImageSize] = useState(230);
 
   // Modern, elegant background template
